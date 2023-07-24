@@ -24,8 +24,8 @@ const InputText: React.FC<InputProps> = ({ label, placeholder,eye=false,...props
             <div className='flex-grow'>
             </div>
             {
-              show ? (<AiFillEyeInvisible onClick={handleShow} className='text-xl translate-y-5 -translate-x-3'/>):
-              (<AiFillEye onClick={handleShow} className='text-xl translate-y-5 -translate-x-3' />)
+              show ? (<AiFillEyeInvisible onClick={handleShow} className='text-xl translate-y-5 -translate-x-3 cursor-pointer'/>):
+              (<AiFillEye onClick={handleShow} className='text-xl translate-y-5 -translate-x-3 cursor-pointer' />)
             }
           </div>
         )

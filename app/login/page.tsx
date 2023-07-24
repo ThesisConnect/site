@@ -11,7 +11,7 @@ const Login = () => {
       >
         <div className="text-5xl font-bold text-green-900">Login</div>
         <Input label="Username*" placeholder="username" type="text" />
-        <Input label="Password*" eye placeholder="password" />
+        <Input label="Password*" eye placeholder="password"  />
         <div className="flex mt-2 w-10/12">
           <div>
             <label htmlFor="remember" className="flex">
@@ -22,18 +22,18 @@ const Login = () => {
           <div className="flex-grow"></div>
           <div className="text-sm text-gray-400">Forgot password?</div>
         </div>
-        <Button type="submit">
+        <Button type="submit" className="hover:bg-green-700 hover:transition hover:ease-in-out ">
           <div className="text-white">
             Sign in
           </div>
-        </Button>
+        </Button> 
         <div className="flex w-10/12 ">
           
           <hr className="border-solid border-black w-5/12  mt-2 " />
           <div className="text-sm text-gray-400 flex-grow text-center mx-1">Or</div>
-          <hr className="border-solid border-black w-5/12 mt-2 " />
+          <hr className="border-solid border-black w-5/12 mt-2  " />
         </div> 
-        <Button type="button" color="bg-white" className="border border-[#A3A3A3] ">
+        <Button type="button" color="bg-white" className="border border-[#A3A3A3]  ">
           <div className="text-black">
             register
           </div>
