@@ -1,10 +1,19 @@
+
 "use client";
 import Input from "@/components/login/Input";
 import Button from "@/components/login/Button";
+import { useRouter } from 'next/navigation'
+import { ChangeEvent, MouseEvent } from "react";
 
 const Login = () => {
+  const router = useRouter()
+  const clickRegister = (event: MouseEvent<HTMLButtonElement>) =>{
+    // console.log("click")
+    event.preventDefault()
+    router.push('/register')
+  }
   return (
-    <div className="flex justify-center items-center w-full h-screen ">
+    <form className="flex justify-center items-center w-full h-screen ">
       <div
         className="relative flex flex-col items-center rounded-xl 
         bg-[#F6F6F6] w-[600px] h-[700px] py-6 shadow-lg justify-evenly"
@@ -33,13 +42,13 @@ const Login = () => {
           <div className="text-sm text-gray-400 flex-grow text-center mx-1">Or</div>
           <hr className="border-solid border-black w-5/12 mt-2  " />
         </div> 
-        <Button type="button" color="bg-white" className="border border-[#A3A3A3]  ">
-          <div className="text-black">
-            register
-          </div>
+        <Button type="button" color="bg-white" className="border border-[#A3A3A3] " onClick={clickRegister} >
+            <div className="text-black">
+              register
+            </div>
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 
