@@ -4,34 +4,54 @@ import Input from "@/components/login/Input";
 import Button from "@/components/login/Button";
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, MouseEvent } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema,LoginSchemaType } from "@/models/Login";
+
 
 const Login = () => {
   const router = useRouter()
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>(
+    {
+      resolver: zodResolver(LoginSchema),
+    }
+  )
   const clickRegister = (event: MouseEvent<HTMLButtonElement>) =>{
     // console.log("click")
     event.preventDefault()
     router.push('/register')
   }
+  const onSubmit:SubmitHandler<LoginSchemaType> = (data) => {
+    console.log("submit")
+    console.log(data)
+  }
   return (
-    <form className="flex justify-center items-center w-full h-screen ">
-      <div
+    <div className="flex justify-center items-center w-full h-screen " >
+      <form
         className="relative flex flex-col items-center rounded-xl 
         bg-[#F6F6F6] w-[600px] h-[700px] py-6 shadow-lg justify-evenly"
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-5xl font-bold text-green-900">Login</div>
-        <Input label="Username*" placeholder="username" type="text" />
-        <Input label="Password*" eye placeholder="password"  />
+        <Input label="Email*" placeholder="Email" type="text" {...register("email",{required:true})} />
+        {
+          errors.email && <div className="text-red-500 text-sm ">{errors.email?.message}</div>
+        }
+        <Input label="Password*" eye placeholder="password" {...register("password",{required:true})} />
+        {
+          errors.password && <div className="text-red-500 text-sm">{errors.password?.message}</div>
+        }
         <div className="flex mt-2 w-10/12">
           <div>
             <label htmlFor="remember" className="flex">
-              <input type="checkbox" name="remember" id="remember" />
+              <input type="checkbox"  id="remember"  {...register("rememberMe")} />
               <div className="ms-2 text-sm text-gray-400">Remember me</div>
             </label>
           </div>
           <div className="flex-grow"></div>
           <div className="text-sm text-gray-400">Forgot password?</div>
         </div>
-        <Button type="submit" className="hover:bg-green-700 hover:transition hover:ease-in-out ">
+        <Button type="submit" className="hover:bg-green-700 hover:transition hover:ease-in-out " >
           <div className="text-white">
             Sign in
           </div>
@@ -47,8 +67,8 @@ const Login = () => {
               register
             </div>
         </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
