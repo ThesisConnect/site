@@ -2,14 +2,13 @@
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import { InputHTMLAttributes, useCallback, useState } from "react";
 import { twMerge } from 'tailwind-merge';
-
+import React, { forwardRef,FC } from "react";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   placeholder: string;
   eye?: boolean;
 }
-
-const InputText: React.FC<InputProps> = ({ label, placeholder,eye=false,...props}) => {
+const InputText = forwardRef<HTMLInputElement, InputProps>(({ label, placeholder,eye=false,...props},ref) => {
   const [show, setShow] = useState<boolean>(false);
   const  handleShow = useCallback(() => {
     setShow((prev) => !prev);
@@ -31,6 +30,7 @@ const InputText: React.FC<InputProps> = ({ label, placeholder,eye=false,...props
         )
         }
         <input
+          ref={ref}
           className="rounded-md border border-solid border-[#949494] w-full h-14 ps-2"
           placeholder={`${placeholder}`}
           type={show ? "text" : "password"}
@@ -40,6 +40,8 @@ const InputText: React.FC<InputProps> = ({ label, placeholder,eye=false,...props
       </div>
     </div>
   );
-};
+});
+
+InputText.displayName = "InputText";
 
 export default InputText;
