@@ -32,7 +32,7 @@ const SelectRole: FC<SelectProps> =
               name="role"
               render={({ field }) => (
                 <Select onValueChange={field.onChange}
-                  {...field}
+                 
                 >
                   <SelectTrigger  className="rounded-md border border-solid border-[#949494] w-full h-14 ps-2"  >
                     <SelectValue placeholder={placeholder}/>
