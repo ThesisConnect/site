@@ -1,9 +1,11 @@
-import { redirect } from 'next/navigation'
+"use client";
+
 import Link from 'next/link'
 import Button from '@/components/login/Button';
-import Register from './register/page';
+import userStore, { userAtom } from '@/stores/User';
 
 export default function Home() {
+  const user  = userStore((state) => state.user)
   return (
     <div className=' h-44 flex flex-col justify-center items-center' >
       <Link  href={"/login"}>
@@ -16,6 +18,8 @@ export default function Home() {
               Register
         </Button>
       </Link>
+      <div className='text-2xl font-bold text-green-900'>Welcome {user.name}</div>
+      <div className='text-2xl font-bold text-green-900'>email {user.email}</div>
     </div>
   )
 }

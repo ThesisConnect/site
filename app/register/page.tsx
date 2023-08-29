@@ -6,17 +6,24 @@ import SelectRole from "@/components/register/SelectRole";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, RegisterSchemaType } from "@/models/Register";
+import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence } from "firebase/auth";
+import {auth } from '@/config/firebase';
+import  axiosBaseurl  from '@/config/baseUrl';
+import userStore, { userAtom } from "@/stores/User";
+import { useRouter } from "next/navigation";
 const Register: React.FC = () => {
   const { register, handleSubmit, getValues,control,formState: { errors } } = useForm<RegisterSchemaType>(
     {
       resolver: zodResolver(RegisterSchema),
     }
   )
+  const route = useRouter()
   const confirmPassword = useRef<HTMLInputElement>(null)
   const [show , setShow] = useState<boolean>(false)
   const  handleShow = useCallback(() => {
     setShow((prev) => !prev);
   },[]);
+  const setUser = userStore((state) => state.setUser)
   const checkConfirmPassword = () => {
     if(getValues("password") !== confirmPassword.current?.value){
       setShow(true)
@@ -24,9 +31,30 @@ const Register: React.FC = () => {
       handleShow()
     }
   }
-  const onSubmit:SubmitHandler<RegisterSchemaType> = (data) => {
-    console.log("submit")
-    console.log(data)
+  const onSubmit:SubmitHandler<RegisterSchemaType> = async (data) => {
+    // console.log("submit")
+    //console.log(data)
+    try{
+      setPersistence(auth, browserSessionPersistence)
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
+      const token = await userCredential.user.getIdToken()
+      const sendData ={
+        idToken:token,
+        name:data.name,
+        surname:data.surname,
+        username:data.username,
+        role:data.role,
+      }
+      const resData = await axiosBaseurl.post('/auth/register',sendData, {withCredentials: true})
+      setUser(resData.data)
+      // console.log(resData.data)
+      if(resData.data.isAuthenticated){
+        route.push('/')
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
   }
 
   return (

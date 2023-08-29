@@ -40,8 +40,8 @@ const SelectRole: FC<SelectProps> =
                   <SelectContent  >
                     <SelectGroup>
                       <SelectLabel>Role</SelectLabel>
-                      <SelectItem value="student">student</SelectItem>
-                      <SelectItem value="teacher">teacher</SelectItem>
+                      <SelectItem value="advisor">advisor</SelectItem>
+                      <SelectItem value="advisee">advisee</SelectItem>
                       
                     </SelectGroup>
                   </SelectContent>

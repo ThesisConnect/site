@@ -4,26 +4,47 @@ import Input from "@/components/login/Input";
 import Button from "@/components/login/Button";
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, MouseEvent } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema,LoginSchemaType } from "@/models/Login";
-
-
+import axiosBaseurl from "@/config/baseUrl"
+import { signInWithEmailAndPassword,getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
+import {auth} from '@/config/firebase';
+import useAuth from "@/hook/useAuth";
 const Login = () => {
   const router = useRouter()
+  const  {user,setUser,isAuthenticated} = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>(
     {
       resolver: zodResolver(LoginSchema),
     }
   )
+  if(isAuthenticated){
+    router.push('/')
+    return
+  }
   const clickRegister = (event: MouseEvent<HTMLButtonElement>) =>{
     // console.log("click")
     event.preventDefault()
     router.push('/register')
   }
-  const onSubmit:SubmitHandler<LoginSchemaType> = (data) => {
-    console.log("submit")
-    console.log(data)
+  const onSubmit:SubmitHandler<LoginSchemaType> = async (data) => {
+    // console.log("submit")
+    // console.log(data)
+    try{
+      setPersistence(auth, browserSessionPersistence)
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+      const token = await userCredential.user.getIdToken()
+      const resData = await axiosBaseurl.post('/auth/login',{idToken:token},{withCredentials: true})
+      setUser(resData.data)
+      // console.log("user:",user)
+      if(resData.data.role){
+        router.push('/')
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
   }
   return (
     <div className="flex justify-center items-center w-full h-screen " >
@@ -44,7 +65,7 @@ const Login = () => {
         <div className="flex mt-2 w-10/12">
           <div>
             <label htmlFor="remember" className="flex">
-              <input type="checkbox"  id="remember"  {...register("rememberMe")} />
+              <input type="checkbox"  id="remember" defaultChecked={true} {...register("rememberMe")} />
               <div className="ms-2 text-sm text-gray-400">Remember me</div>
             </label>
           </div>
