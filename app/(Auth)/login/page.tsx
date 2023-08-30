@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation'
 import { ChangeEvent, MouseEvent } from "react";
 import { SubmitHandler, set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema,LoginSchemaType } from "@/models/Login";
+import { LoginSchema,LoginSchemaType } from "@/models/Auth/Login";
 import axiosBaseurl from "@/config/baseUrl"
 import { signInWithEmailAndPassword,getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 import {auth} from '@/config/firebase';
 import useAuth from "@/hook/useAuth";
+import Link from "next/link";
 const Login = () => {
   const router = useRouter()
   const  {user,setUser,isAuthenticated} = useAuth()
@@ -70,7 +71,11 @@ const Login = () => {
             </label>
           </div>
           <div className="flex-grow"></div>
-          <div className="text-sm text-gray-400">Forgot password?</div>
+          <div className="text-sm text-gray-400">
+            <Link href="/resetPassword" className="cursor-pointer">
+              Forgot password?
+            </Link>
+          </div>
         </div>
         <Button type="submit" className="hover:bg-green-700 hover:transition hover:ease-in-out " >
           <div className="text-white">

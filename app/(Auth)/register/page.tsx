@@ -5,7 +5,7 @@ import Button from "@/components/login/Button";
 import SelectRole from "@/components/register/SelectRole";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterSchema, RegisterSchemaType } from "@/models/Register";
+import { RegisterSchema, RegisterSchemaType } from "@/models/Auth/Register";
 import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence } from "firebase/auth";
 import {auth } from '@/config/firebase';
 import  axiosBaseurl  from '@/config/baseUrl';
