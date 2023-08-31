@@ -83,7 +83,7 @@ const Login = () => {
           </div>
           <div className="flex-grow"></div>
           <div className="text-sm text-gray-400">
-            <Link href="/reset" className="cursor-pointer">
+            <Link href="/verify" className="cursor-pointer">
               Forgot password?
             </Link>
           </div>
