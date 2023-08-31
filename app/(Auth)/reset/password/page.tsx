@@ -2,17 +2,13 @@
 import React, { useCallback, useRef, useState } from "react";
 import Input from "@/components/login/Input";
 import Button from "@/components/login/Button";
-import SelectRole from "@/components/register/SelectRole";
 import { SubmitHandler, set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  ForgotPasswordSchema,
-  ForgotSchemaType,
   ResetPasswordSchema,
   ResetSchemaType,
 } from "@/models/Auth/ForgotPassword";
 import { useRouter } from "next/navigation";
-import axiosBaseurl from "@/config/baseUrl";
 import { confirmPasswordReset } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { useSearchParams } from "next/navigation";
