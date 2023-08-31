@@ -59,7 +59,7 @@ const Register: React.FC = () => {
       console.log("After axios call");
       setUser(resData?.data)
       // console.log(resData.data)
-      if(resData?.data.isAuthenticated){
+      if(resData?.data.role){
         setSuccessMessage("Register success. Please verify your email address")
       }
       reset()

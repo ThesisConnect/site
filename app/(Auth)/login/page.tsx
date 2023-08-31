@@ -22,6 +22,7 @@ const Login = () => {
       resolver: zodResolver(LoginSchema),
     }
   )
+  console.log("isAuthenticated:",isAuthenticated)
   if(isAuthenticated){
     router.push('/')
     return

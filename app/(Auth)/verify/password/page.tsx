@@ -15,7 +15,7 @@ import { useSearchParams } from "next/navigation";
 const Register: React.FC = () => {
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState<boolean>(false);
-  const [mode, setMode] = useState<string>("resetPassword" as const);
+  const [mode, setMode] = useState<string|null>(null);
   const {
     register,
     handleSubmit,
