@@ -3,7 +3,7 @@
 import Input from "@/components/login/Input";
 import Button from "@/components/login/Button";
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import { SubmitHandler, set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema,LoginSchemaType } from "@/models/Auth/Login";
@@ -12,9 +12,11 @@ import { signInWithEmailAndPassword,getAuth, setPersistence, browserSessionPersi
 import {auth} from '@/config/firebase';
 import useAuth from "@/hook/useAuth";
 import Link from "next/link";
+import Modal from "@/components/ModelPopup";
 const Login = () => {
   const router = useRouter()
   const  {user,setUser,isAuthenticated} = useAuth()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>(
     {
       resolver: zodResolver(LoginSchema),
@@ -29,6 +31,9 @@ const Login = () => {
     event.preventDefault()
     router.push('/register')
   }
+  const handleCloseErrorModal = () => {
+    setErrorMessage(null);
+};
   const onSubmit:SubmitHandler<LoginSchemaType> = async (data) => {
     // console.log("submit")
     // console.log(data)
@@ -43,10 +48,16 @@ const Login = () => {
         router.push('/')
       }
     }
-    catch(err){
+    catch(err :any){
       console.log(err)
+      let errCode 
+      if(err.code === "auth/user-not-found"){
+        errCode = "Sorry, we could not find your account. Please try again."
+      }
+      setErrorMessage(errCode||err.code.split("/")[1]||err.message || 'An error occurred');
     }
   }
+  
   return (
     <div className="flex justify-center items-center w-full h-screen " >
       <form
@@ -94,6 +105,8 @@ const Login = () => {
             </div>
         </Button>
       </form>
+      <Modal show={!!errorMessage} onClose={handleCloseErrorModal} message={errorMessage || ''} />
+      
     </div>
   );
 };

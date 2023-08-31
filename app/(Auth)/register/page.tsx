@@ -11,8 +11,9 @@ import {auth } from '@/config/firebase';
 import  axiosBaseurl  from '@/config/baseUrl';
 import userStore, { userAtom } from "@/stores/User";
 import { useRouter } from "next/navigation";
+import  Modal  from '@/components/ModelPopup';
 const Register: React.FC = () => {
-  const { register, handleSubmit, getValues,control,formState: { errors } } = useForm<RegisterSchemaType>(
+  const { register, handleSubmit, reset,getValues,control,formState: { errors } } = useForm<RegisterSchemaType>(
     {
       resolver: zodResolver(RegisterSchema),
     }
@@ -20,6 +21,8 @@ const Register: React.FC = () => {
   const route = useRouter()
   const confirmPassword = useRef<HTMLInputElement>(null)
   const [show , setShow] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const  handleShow = useCallback(() => {
     setShow((prev) => !prev);
   },[]);
@@ -31,12 +34,16 @@ const Register: React.FC = () => {
       handleShow()
     }
   }
-  const onSubmit:SubmitHandler<RegisterSchemaType> = async (data) => {
+  const onSubmit:SubmitHandler<RegisterSchemaType> = async (data,e) => {
     // console.log("submit")
+    console.log("Form is being submitted");
     //console.log(data)
     try{
       setPersistence(auth, browserSessionPersistence)
+      console.log("Before firebase call")
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
+      console.log("After firebase call")
+      console.log(userCredential.user)
       const token = await userCredential.user.getIdToken()
       const sendData ={
         idToken:token,
@@ -45,18 +52,40 @@ const Register: React.FC = () => {
         username:data.username,
         role:data.role,
       }
+      console.log("Before axios call");
       const resData = await axiosBaseurl.post('/auth/register',sendData, {withCredentials: true})
-      setUser(resData.data)
+      console.log("After axios call");
+      setUser(resData?.data)
       // console.log(resData.data)
-      if(resData.data.isAuthenticated){
-        route.push('/')
+      if(resData?.data.isAuthenticated){
+        setSuccessMessage("Register success")
+        
       }
+      reset()
     }
-    catch(err){
-      console.log(err)
+    catch (err:any){
+      console.log("register error:",err)
+      if(err.name === "AxiosError"){
+        console.log(err.name)
+        setErrorMessage("Network Error")
+        auth.currentUser?.delete()
+      }
+      else if (err.code) {
+        setErrorMessage(err.code.split('/')[1] || "An error occurred.");
+      } else {
+        setErrorMessage(err.message || "An error occurred.");
+      }
+      // Optionally, if there's a need to delete the user in case of errors:
+
+      console.error(err); //
     }
   }
-
+  const handleCloseSuccessModal = () => {
+    route.push('/')
+  };
+  const handleCloseErrorModal = () => {
+    setErrorMessage(null);
+  };
   return (
     <div className="flex justify-center items-center w-full h-screen ">
       <form className="relative flex flex-col items-center rounded-xl bg-[#F6F6F6]
@@ -111,7 +140,18 @@ const Register: React.FC = () => {
         >
           <div className="text-white">Register</div>
         </Button>
+        <div className="flex w-10/12 ">
+          
+          <hr className="border-solid border-black w-5/12  mt-2 " />
+          <div className="text-sm text-gray-400 flex-grow text-center mx-1">Or</div>
+          <hr className="border-solid border-black w-5/12 mt-2  " />
+        </div> 
+        <Button type="button" color="bg-white" className="border border-[#A3A3A3] " onClick={() => route.push("/login")} >
+          login
+        </Button>
       </form>
+        <Modal show={!!successMessage} onClose={handleCloseSuccessModal} header="Success"  message={successMessage || ''} />
+        <Modal show={!!errorMessage} onClose={handleCloseErrorModal} message={errorMessage || ''} />
     </div>
   );
 };

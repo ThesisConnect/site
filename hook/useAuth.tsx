@@ -21,6 +21,7 @@ export const useAuth = () : Auth => {
   const checkUserAuth = useCallback(async () => {
     try{
       const res = await axiosBaseurl.get('/auth/checkAuth',{withCredentials: true})
+      console.log("check")
       const data = res.data as User
       // console.log(data)
       const {isAuthenticated } = data
