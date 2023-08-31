@@ -40,6 +40,10 @@ const Login = () => {
     try{
       setPersistence(auth, browserSessionPersistence)
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+      if(userCredential.user.emailVerified === false){
+        setErrorMessage("Please verify your email address")
+        return
+      }
       const token = await userCredential.user.getIdToken()
       const resData = await axiosBaseurl.post('/auth/login',{idToken:token},{withCredentials: true})
       setUser(resData.data)

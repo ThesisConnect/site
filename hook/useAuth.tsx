@@ -24,6 +24,7 @@ export const useAuth = () : Auth => {
       console.log("check")
       const data = res.data as User
       // console.log(data)
+      console.log(data)
       const {isAuthenticated } = data
       if(isAuthenticated)
         setUser(data)

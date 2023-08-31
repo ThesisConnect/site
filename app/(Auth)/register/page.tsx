@@ -6,7 +6,7 @@ import SelectRole from "@/components/register/SelectRole";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, RegisterSchemaType } from "@/models/Auth/Register";
-import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, sendEmailVerification, setPersistence } from "firebase/auth";
 import {auth } from '@/config/firebase';
 import  axiosBaseurl  from '@/config/baseUrl';
 import userStore, { userAtom } from "@/stores/User";
@@ -40,10 +40,12 @@ const Register: React.FC = () => {
     //console.log(data)
     try{
       setPersistence(auth, browserSessionPersistence)
-      console.log("Before firebase call")
+      // console.log("Before firebase call")
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
-      console.log("After firebase call")
-      console.log(userCredential.user)
+
+      // console.log("After firebase call")
+      // console.log(userCredential.user)
+      await sendEmailVerification(userCredential.user)
       const token = await userCredential.user.getIdToken()
       const sendData ={
         idToken:token,
@@ -58,8 +60,7 @@ const Register: React.FC = () => {
       setUser(resData?.data)
       // console.log(resData.data)
       if(resData?.data.isAuthenticated){
-        setSuccessMessage("Register success")
-        
+        setSuccessMessage("Register success. Please verify your email address")
       }
       reset()
     }
@@ -81,7 +82,7 @@ const Register: React.FC = () => {
     }
   }
   const handleCloseSuccessModal = () => {
-    route.push('/')
+    route.push('/login')
   };
   const handleCloseErrorModal = () => {
     setErrorMessage(null);
