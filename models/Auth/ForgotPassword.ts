@@ -5,3 +5,9 @@ export const ForgotPasswordSchema = z.object({
 });
 
 export type ForgotSchemaType = z.infer<typeof ForgotPasswordSchema>;
+
+export const ResetPasswordSchema = z.object({
+  password: z.string().min(8).max(100)
+});
+
+export type ResetSchemaType = z.infer<typeof ResetPasswordSchema>;

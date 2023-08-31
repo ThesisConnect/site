@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ForgotPasswordSchema, ForgotSchemaType } from "@/models/Auth/ForgotPassword";
 import { useRouter } from "next/navigation";
 import  axiosBaseurl  from '@/config/baseUrl';
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/config/firebase";
 const Register: React.FC = () => {
   const [error,setError] = useState<string>("")
   const [success,setSuccess] = useState<string>("")
@@ -22,13 +24,13 @@ const Register: React.FC = () => {
     // console.log("submit")
     // console.log(data)
     try {
-      const res = await axiosBaseurl.post('/auth/forgot/password',data,{withCredentials: true})
-      console.log(res)
-      setSuccess(res.data.message)
+      await sendPasswordResetEmail(auth,data.email,{url:"http://localhost:3000/login"})
+      setSuccess("Check your email to reset password")
       setError("")
     }
     catch(err: any ){
-      setError(err.response.data.codeError)
+      console.log(err)
+      setError(err.code.split('/')[1])
       setSuccess("")
     }
   }
