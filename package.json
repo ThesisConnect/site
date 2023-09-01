@@ -39,19 +39,6 @@
   },
   "devDependencies": {
     "encoding": "^0.1.13",
-    "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
     "prettier": "^3.0.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./**/*.{js,jsx,ts,tsx,json,css,md}": [
-      "prettier --write",
-      "git add"
-    ]
   }
 }

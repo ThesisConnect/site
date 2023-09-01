@@ -11,9 +11,8 @@ import Image from 'next/image';
 import profileDownload from '@/utils/profileImage';
 const Navbar: FC = () => {
   const { user, clearUser, isAuth } = userStore((state) => ({
-    clearUser:   
-    state.clearUser,
-        isAuth: state.isAuth(),
+    clearUser: state.clearUser,
+    isAuth: state.isAuth(),
     user: state.user,
   }));
   const route = useRouter();

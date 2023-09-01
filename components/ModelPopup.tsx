@@ -1,5 +1,5 @@
 // components/Modal.tsx
-import React from "react";
+import React from 'react';
 
 interface ModalProps {
   show: boolean;
@@ -20,7 +20,9 @@ const Modal: React.FC<ModalProps> = ({
     <div className="fixed top-0 left-0 w-fullh-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
       <div className="bg-white rounded-t-lg  p-3 w-96 h-32 flex flex-col  justify-evenly items-center">
         <h2
-          className={`font-bold ${header === 'Success' ? 'text-green-500' : ''} `}
+          className={`font-bold ${
+            header === 'Success' ? 'text-green-500' : ''
+          } `}
         >
           {header}
         </h2>
