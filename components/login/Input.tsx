@@ -1,49 +1,56 @@
-"use client"
-import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
-import { InputHTMLAttributes, useCallback, useState } from "react";
+'use client';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { InputHTMLAttributes, useCallback, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import React, { forwardRef,FC } from "react";
+import React, { forwardRef, FC } from 'react';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   placeholder: string;
   eye?: boolean;
-  width?: string 
+  width?: string;
 }
-const InputText = forwardRef<HTMLInputElement, InputProps>(({ label,width="w-10/12", placeholder,eye=false,...props},ref) => {
-  const [show, setShow] = useState<boolean>(false);
-  const  handleShow = useCallback(() => {
-    setShow((prev) => !prev);
-  },[]);
-  return (
-    <div className={`${width} relative`}>
-      
-      <div className="text-xs">
-        <label >{label}
-        {eye && (
-          <div className='w-full flex absolute'>
-            <div className='flex-grow'>
-            </div>
-            {
-              show ? (<AiFillEyeInvisible onClick={handleShow} className='text-xl translate-y-5 -translate-x-3 cursor-pointer'/>):
-              (<AiFillEye onClick={handleShow} className='text-xl translate-y-5 -translate-x-3 cursor-pointer' />)
-            }
-          </div>
-        )
-        }
-        <input
-          ref={ref}
-          id={label}
-          className="rounded-md border border-solid border-[#949494] w-full h-14 ps-2"
-          placeholder={`${placeholder}`}
-          type={show ? "text" : "password"}
-          {...props}
-        />
-        </label>
+const InputText = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, width = 'w-10/12', placeholder, eye = false, ...props }, ref) => {
+    const [show, setShow] = useState<boolean>(false);
+    const handleShow = useCallback(() => {
+      setShow((prev) => !prev);
+    }, []);
+    return (
+      <div className={`${width} relative`}>
+        <div className="text-xs">
+          <label>
+            {label}
+            {eye && (
+              <div className="w-full flex absolute">
+                <div className="flex-grow"></div>
+                {show ? (
+                  <AiFillEyeInvisible
+                    onClick={handleShow}
+                    className="text-xl translate-y-5 -translate-x-3 cursor-pointer"
+                  />
+                ) : (
+                  <AiFillEye
+                    onClick={handleShow}
+                    className="text-xl translate-y-5 -translate-x-3 cursor-pointer"
+                  />
+                )}
+              </div>
+            )}
+            <input
+              ref={ref}
+              id={label}
+              className="rounded-md border border-solid border-[#949494] w-full h-14 ps-2"
+              placeholder={`${placeholder}`}
+              type={show ? 'text' : 'password'}
+              {...props}
+            />
+          </label>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
-InputText.displayName = "InputText";
+InputText.displayName = 'InputText';
 
 export default InputText;

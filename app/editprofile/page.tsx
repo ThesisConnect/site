@@ -1,6 +1,6 @@
-"use client";
-import Sidebar from "@/components/Sidebar";
-import userStore from "@/stores/User";
+'use client';
+import Sidebar from '@/components/Sidebar';
+import userStore from '@/stores/User';
 
 const EditProfile = () => {
   const user = userStore((state) => state.user);
