@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write './**/*.{js,jsx,ts,tsx,json,css,md}'"
+    
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",
@@ -39,6 +40,19 @@
   },
   "devDependencies": {
     "encoding": "^0.1.13",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
     "prettier": "^3.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
