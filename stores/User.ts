@@ -39,12 +39,14 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
 interface UserStore {
   user: User;
+  isAuth: () => boolean;
   setUser: (user: User) => void;
   clearUser: () => void;
 }
 
-export const userStore = createWithEqualityFn<UserStore>((set) => ({
+export const userStore = createWithEqualityFn<UserStore>((set,get) => ({
   user: defaultUser,
+  isAuth: ()=>get().user.isAuthenticated,
   setUser: (newUser: User) => {
     console.log("set");
     set({user: newUser});

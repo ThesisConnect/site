@@ -7,11 +7,13 @@ import axiosBaseurl from "@/config/baseUrl";
 
 import { useRouter } from "next/navigation";
 import userStore from "@/stores/User";
-
+import Image from "next/image";
+import profileDownload from "@/utils/profileImage";
 const Navbar: FC = () => {
-  const { clearUser, isAuthenticated } = userStore((state) => ({
+  const { user,clearUser, isAuth } = userStore((state) => ({
     clearUser: state.clearUser,
-    isAuthenticated: state.user.isAuthenticated,
+    isAuth: state.isAuth(),
+    user: state.user,
   }));
   const route = useRouter();
   const logout = async () => {
@@ -24,6 +26,9 @@ const Navbar: FC = () => {
       route.push("/login");
     }
   };
+  const editProfile = () => {
+    route.push("/editprofile");
+  };
   return (
     <div className="sticky top-0 z-40 w-screen bg-white">
       <div className="flex p-3 border-slate-10 border">
@@ -35,13 +40,21 @@ const Navbar: FC = () => {
           <Link href="/">
             <FaHome className="text-gray-800 cursor-pointer me-2" size={30} />
           </Link>
-          {isAuthenticated && (
-            <VscSignOut
-              className="text-gray-800 cursor-pointer"
-              onClick={logout}
-              size={30}
-            />
-          )}
+          {
+            isAuth &&(
+                <>
+                <VscSignOut
+                className="text-gray-800 cursor-pointer"
+                onClick={logout}
+                size={30}
+                />
+                <span className="me-4 ">{user.name} {user.surname}</span>
+                <Image onClick={editProfile} src={user.avatar||"/profilebase.png"} alt="profile picture" width={50} height={50} loader={user.avatar ? profileDownload:undefined} placeholder="empty" 
+                className="rounded-full cursor-pointer"
+                />
+              </>
+            )
+          }
         </div>
       </div>
     </div>

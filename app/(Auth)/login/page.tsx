@@ -64,7 +64,7 @@ const Login = () => {
   }
   
   return (
-    <div className="flex justify-center items-center w-full h-screen " >
+    <div className="flex justify-center items-center w-full h-[calc(100vh-62px)] " >
       <form
         className="relative flex flex-col items-center rounded-xl 
         bg-[#F6F6F6] w-[600px] h-[700px] py-6 shadow-lg justify-evenly"
@@ -87,7 +87,7 @@ const Login = () => {
             </label>
           </div>
           <div className="flex-grow"></div>
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-400 hover:underline">
             <Link href="/verify" className="cursor-pointer">
               Forgot password?
             </Link>

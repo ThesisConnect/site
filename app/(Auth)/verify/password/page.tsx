@@ -45,7 +45,7 @@ const Register: React.FC = () => {
   }, [route, searchParams]);
   if (mode === "verifyEmail") {
     return (
-      <div className="flex justify-center items-center w-full h-screen ">
+      <div className="flex justify-center items-center w-full h-[calc(100vh-62px)] ">
         <form
           className="relative flex flex-col items-center rounded-xl bg-[#F6F6F6]
        w-[600px] h-[350px] py-6 shadow-lg justify-evenly"
@@ -69,7 +69,7 @@ const Register: React.FC = () => {
     )}
   else if (mode === "resetPassword"){
     return (
-      <div className="flex justify-center items-center w-full h-screen ">
+      <div className="flex justify-center items-center w-full h-[calc(100vh-62px)] ">
         <form
           className="relative flex flex-col items-center rounded-xl bg-[#F6F6F6]
        w-[600px] h-[350px] py-6 shadow-lg justify-evenly"

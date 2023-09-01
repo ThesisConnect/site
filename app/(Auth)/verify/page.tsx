@@ -36,7 +36,7 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="flex justify-center items-center w-full h-screen ">
+    <div className="flex justify-center items-center w-full h-[calc(100vh-62px)] ">
       <form className="relative flex flex-col items-center rounded-xl bg-[#F6F6F6]
        w-[600px] h-[350px] py-6 shadow-lg justify-evenly" onSubmit={handleSubmit(onSubmit)}>
         <div className="text-2xl font-bold text-green-900 flex flex-col">

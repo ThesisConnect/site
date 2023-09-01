@@ -88,7 +88,7 @@ const Register: React.FC = () => {
     setErrorMessage(null);
   };
   return (
-    <div className="flex justify-center items-center w-full h-screen ">
+    <div className="flex justify-center items-center w-full h-[calc(100vh-62px)] ">
       <form className="relative flex flex-col items-center rounded-xl bg-[#F6F6F6]
        w-[600px] h-[700px] py-6 shadow-lg justify-evenly" onSubmit={handleSubmit(onSubmit)}>
         <div className="text-5xl font-bold text-green-900 flex flex-col">
