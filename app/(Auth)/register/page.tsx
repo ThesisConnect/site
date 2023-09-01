@@ -54,9 +54,9 @@ const Register: React.FC = () => {
         username:data.username,
         role:data.role,
       }
-      console.log("Before axios call");
+      // console.log("Before axios call");
       const resData = await axiosBaseurl.post('/auth/register',sendData, {withCredentials: true})
-      console.log("After axios call");
+      // console.log("After axios call");
       setUser(resData?.data)
       // console.log(resData.data)
       if(resData?.data.role){
