@@ -1,5 +1,5 @@
-const Project = () => {
-  return <div>Project</div>;
+const Advisor = () => {
+  return <div>Advisor</div>;
 };
 
-export default Project;
+export default Advisor;

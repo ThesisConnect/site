@@ -54,8 +54,8 @@ const Navbar: FC = () => {
                 onClick={editProfile}
                 src={user.avatar || '/profilebase.png'}
                 alt="profile picture"
-                width={50}
-                height={50}
+                width={35}
+                height={35}
                 loader={user.avatar ? profileDownload : undefined}
                 placeholder="empty"
                 className="rounded-full cursor-pointer"
