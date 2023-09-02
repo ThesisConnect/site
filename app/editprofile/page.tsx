@@ -7,7 +7,7 @@ const EditProfile = () => {
   return (
     <div className="flex relative flex-row ">
       <Sidebar />
-      <div className="flex flex-col w-full items-center justify-center ">
+      <div className="flex flex-col w-full items-center justify-center mt-2 mx-2  ">
         <div className="w-32">
           <h1>Edit Profile</h1>
           <div>Name: {user.surname}</div>
