@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import userStore from '@/stores/User';
 import Image from 'next/image';
 import profileDownload from '@/utils/profileImage';
+import Profile from './Profile';
 const Navbar: FC = () => {
   const { user, clearUser, isAuth } = userStore((state) => ({
     clearUser: state.clearUser,
@@ -16,16 +17,6 @@ const Navbar: FC = () => {
     user: state.user,
   }));
   const route = useRouter();
-  const logout = async () => {
-    console.log('logout');
-    const res = await axiosBaseurl.get('/auth/logout', {
-      withCredentials: true,
-    });
-    if (res.status === 200) {
-      clearUser();
-      route.push('/login');
-    }
-  };
   const editProfile = () => {
     route.push('/editprofile');
   };
@@ -42,24 +33,10 @@ const Navbar: FC = () => {
           </Link>
           {isAuth && (
             <>
-              <VscSignOut
-                className="text-gray-800 cursor-pointer"
-                onClick={logout}
-                size={30}
-              />
               <span className="me-4 ">
                 {user.name} {user.surname}
               </span>
-              <Image
-                onClick={editProfile}
-                src={user.avatar || '/profilebase.png'}
-                alt="profile picture"
-                width={35}
-                height={35}
-                loader={user.avatar ? profileDownload : undefined}
-                placeholder="empty"
-                className="rounded-full cursor-pointer"
-              />
+              <Profile user={user} width='35' onClick={editProfile} />
             </>
           )}
         </div>

@@ -2,6 +2,9 @@ import { userStore } from '@/stores/User';
 import { useCallback, useEffect } from 'react';
 import axiosBaseurl from '@/config/baseUrl';
 import { User } from '@/stores/User';
+import * as _ from 'lodash';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '@/config/firebase';
 interface Auth {
   user: User;
   clearUser: () => void;
@@ -25,7 +28,11 @@ export const useAuth = (): Auth => {
       // console.log(data)
       console.log(data);
       const { isAuthenticated } = data;
-      if (isAuthenticated) setUser(data);
+      if (isAuthenticated) {
+        // console.log("data",data.customToken)
+        await signInWithCustomToken(auth, data.customToken!);
+        setUser(data);
+      }
       else {
         clearUser();
       }

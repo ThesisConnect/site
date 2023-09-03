@@ -8,6 +8,7 @@ export interface User {
   email: string;
   avatar?: string;
   isAuthenticated: boolean;
+  customToken?: string;
 }
 
 const defaultUser: User = {
