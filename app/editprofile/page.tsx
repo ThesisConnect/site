@@ -49,7 +49,7 @@ const EditProfile = () => {
       const file = inputFileRef.current?.files?.[0];
       if (!file) return;
       filename = `${user.email}_${uuid4()}`;
-      const storageRef = ref(storage, `imageProfile/${filename}`);
+      let storageRef = ref(storage, `imageProfile/${filename}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
       console.log('uploadTask', uploadTask);
       uploadTask.on(
@@ -73,10 +73,16 @@ const EditProfile = () => {
               withCredentials: true,
             }
           );
+          if(user.avatar){
+            const filename = extractFilenameFromURL(user.avatar);
+            const storageRef = ref(storage, `imageProfile/${filename}`);
+            await deleteObject(storageRef);
+          }
           if (res.status === 200) {
             setUser({ ...user, avatar: url });
             setUploadProgess(0);
           }
+          
         }
       );
     } catch (err) {
@@ -120,7 +126,7 @@ const EditProfile = () => {
           <div className="flex flex-col text-base font-semibold w-5/12 ">
             <div>Profile image</div>
             <div className="flex flex-row items-center justify-start mt-4">
-              <Profile user={user} />
+              <Profile user={user} progress={uploadProgess} />
               <button
                 className="bg-neutral-200 h-12 ms-10 px-5 rounded-full"
                 onClick={handleButtonUploadImage}
@@ -142,15 +148,6 @@ const EditProfile = () => {
                 className="hidden"
                 onChange={handleUploadImageProfile}
               />
-            </div>
-            <div>
-              {uploadProgess > 0 && (
-                <progress
-                  className="w-full h-1 mt-2"
-                  value={uploadProgess}
-                  max="100"
-                />
-              )}
             </div>
           </div>
           <div className="border-l-[1px] border-solid border-black" />
