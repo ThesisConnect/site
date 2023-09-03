@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({
   if (!show) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-fullh-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
+    <div className="fixed top-0 left-0 w-full h-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
       <div className="bg-white rounded-t-lg  p-3 w-96 h-32 flex flex-col  justify-evenly items-center">
         <h2
           className={`font-bold ${

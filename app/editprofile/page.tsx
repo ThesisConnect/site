@@ -22,7 +22,7 @@ import { signOut } from 'firebase/auth';
 import Profile from '../../components/Profile';
 const EditProfile = () => {
   const route = useRouter();
-  const { user, setUser, clearUser } = useAuth();
+  const { user, setUser, clearUser, isAuthenticated } = useAuth();
   const [edit, setEdit] = useState<boolean>(false);
   const [uploadProgess, setUploadProgess] = useState<number>(0);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -31,7 +31,7 @@ const EditProfile = () => {
     const res = await axiosBaseurl.get('/auth/logout', {
       withCredentials: true,
     });
-    signOut(auth)
+    signOut(auth);
     if (res.status === 200) {
       clearUser();
       route.push('/login');
@@ -120,7 +120,7 @@ const EditProfile = () => {
           <div className="flex flex-col text-base font-semibold w-5/12 ">
             <div>Profile image</div>
             <div className="flex flex-row items-center justify-start mt-4">
-             <Profile user={user}/>
+              <Profile user={user} />
               <button
                 className="bg-neutral-200 h-12 ms-10 px-5 rounded-full"
                 onClick={handleButtonUploadImage}
@@ -224,7 +224,7 @@ const EditProfile = () => {
               placeholder="newPassword"
             />
             {!edit && (
-              <div className='flex'>
+              <div className="flex">
                 <button
                   className="bg-neutral-200 h-10 px-5 rounded-full me-3"
                   type="button"
@@ -232,14 +232,15 @@ const EditProfile = () => {
                 >
                   Edit Profile
                 </button>
-                <button
-                  className="bg-neutral-200 h-10 px-5 rounded-full "
-                  type="button"
-                  onClick={logout}
-
-                >
-                 logout
-                </button>
+                {isAuthenticated && (
+                  <button
+                    className="bg-neutral-200 h-10 px-5 rounded-full "
+                    type="button"
+                    onClick={logout}
+                  >
+                    logout
+                  </button>
+                )}
               </div>
             )}
 
