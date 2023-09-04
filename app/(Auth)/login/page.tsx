@@ -19,7 +19,7 @@ import Link from 'next/link';
 import Modal from '@/components/ModelPopup';
 const Login = () => {
   const router = useRouter();
-  const { user, setUser, isAuthenticated } = useAuth();
+  const { user, setUserNew : setUser, isAuthenticated } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
