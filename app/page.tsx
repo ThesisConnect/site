@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import Button from '@/components/login/Button';
 import userStore, { userAtom } from '@/stores/User';
+import ProtectedPage from '@/components/ProtectedPage';
 
 export default function Home() {
   const user = userStore((state) => state.user);
   return (
+    // <ProtectedPage>
     <div className="  flex flex-col justify-center items-center">
       <Link href={'/login'}>
         <Button type="button" className="w-24 bg-green-300">
@@ -31,5 +33,6 @@ export default function Home() {
         email {user.email}
       </div>
     </div>
+    // </ProtectedPage>
   );
 }
