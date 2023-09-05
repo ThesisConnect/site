@@ -9,7 +9,7 @@ const Sidebar = () => {
   const back = () => {
     router.back();
   };
-  if (pathname === '/editprofile')
+  if (pathname === '/editProfile')
     return (
       <>
         <div className="overflow-auto w-20 h-[calc(100vh-62px)] p-2 bg-neutral-100 ">
@@ -29,7 +29,25 @@ const Sidebar = () => {
         </div>
       </>
     );
-  return <></>;
+
+  return (
+    <>
+      <div className="overflow-auto w-20 h-full p-2 bg-neutral-100 ">
+        <div
+          className="flex flex-col justify-center items-center cursor-pointer"
+        >
+          <MdArrowBackIosNew className="text-neutral-400 mt-3" size={40} />
+          <h2
+            className="text-xs font-semibold 
+            mt-1 
+            text-neutral-400 "
+          >
+            Test
+          </h2>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Sidebar;

@@ -20,9 +20,14 @@ export default function Home() {
           Register
         </Button>
       </Link>
-      <Link href={'/editprofile'}>
+      <Link href={'/editProfile'}>
         <Button type="button" className="w-24 bg-yellow-400">
           EditProfile
+        </Button>
+      </Link>
+      <Link href={'/mainPage/projectTest'}>
+        <Button type="button" className="w-24 bg-blue-400">
+          ProjecTest
         </Button>
       </Link>
 
