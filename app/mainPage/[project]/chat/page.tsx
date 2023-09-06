@@ -1,8 +1,8 @@
 
-const pageChat = () => {
+const PageChat = () => {
     return (
-      <div>pageChat</div>
+      <div>PageChat</div>
     )
   }
   
-  export default pageChat
+  export default PageChat

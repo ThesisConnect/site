@@ -1,8 +1,8 @@
 
-const pageDetail = () => {
+const PageDetail = () => {
     return (
-      <div>pageDetail</div>
+      <div>PageDetail</div>
     )
   }
   
-  export default pageDetail
+  export default PageDetail

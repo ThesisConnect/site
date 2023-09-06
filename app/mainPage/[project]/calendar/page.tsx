@@ -1,8 +1,8 @@
 
-const pageCalendar = () => {
+const PageCalendar = () => {
   return (
-    <div>pageCalendar</div>
+    <div>PageCalendar</div>
   )
 }
 
-export default pageCalendar
+export default PageCalendar

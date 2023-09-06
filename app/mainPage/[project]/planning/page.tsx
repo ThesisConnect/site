@@ -1,8 +1,8 @@
 
-const pagePlanning = () => {
+const PagePlanning = () => {
     return (
-      <div>pagePlanning</div>
+      <div>PagePlanning</div>
     )
   }
   
-  export default pagePlanning
+  export default PagePlanning

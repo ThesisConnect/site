@@ -1,8 +1,8 @@
 
-const pageGanttChart = () => {
+const PageGanttChart = () => {
     return (
       <div>pageGanttChart</div>
     )
   }
   
-  export default pageGanttChart
+  export default PageGanttChart
