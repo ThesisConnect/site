@@ -9,6 +9,7 @@ import CalenderIcon from './icon/Calender';
 import PlaningIcon from './icon/PlaningIcon';
 import GanttIcon from './icon/GanttIcon';
 import ChatIcon from './icon/ChatIcon';
+import { MouseEvent } from 'react';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -37,6 +38,29 @@ const Sidebar = () => {
         </div>
       </>
     );
+  const handleHover = (e:MouseEvent<HTMLDivElement>) => {
+    if(e.currentTarget.innerText === "Home"){
+      router.prefetch("/mainPage")
+    }
+    else if (e.currentTarget.innerText === "Detail"){
+      router.prefetch(`/mainPage/${projectID}/detail`)
+    }
+    else if (e.currentTarget.innerText === "File"){
+      router.prefetch(`/mainPage/${projectID}/files`)
+    }
+    else if (e.currentTarget.innerText === "Calender"){
+      router.prefetch(`/mainPage/${projectID}/calendar`)
+    }
+    else if (e.currentTarget.innerText === "Planning"){
+      router.prefetch(`/mainPage/${projectID}/planning`)
+    }
+    else if (e.currentTarget.innerText === "Gantt Chart"){
+      router.prefetch(`/mainPage/${projectID}/ganttChart`)
+    }
+    else if (e.currentTarget.innerText === "Chat"){
+      router.prefetch(`/mainPage/${projectID}/chat`)
+    }
+  }
 
   return (
     <>
@@ -48,6 +72,7 @@ const Sidebar = () => {
               : ''
           }`}
           onClick={() => router.push('/mainPage')}
+          onMouseOver={handleHover}
         >
           <HomeIcon className={pathname === `/mainPage`? "fill-teal-800":"fill-neutral-400"} />
           <h2
@@ -65,6 +90,7 @@ const Sidebar = () => {
               : ''
           }`}
           onClick={() => router.push(`/mainPage/${projectID}/detail`)}
+          onMouseOver={handleHover}
         >
           <DetailIcon className={pathname === `/mainPage/${projectID}/detail`? "fill-teal-800":"fill-neutral-400"} />
           <h2
@@ -82,6 +108,7 @@ const Sidebar = () => {
               : ''
           }`}
           onClick={() => router.push(`/mainPage/${projectID}/files`)}
+          onMouseOver={handleHover}
         >
           <FileIcon className={pathname === `/mainPage/${projectID}/files`? "fill-teal-800":"fill-neutral-400"} />
           <h2
@@ -99,6 +126,7 @@ const Sidebar = () => {
               : ''
           } `}
           onClick={() => router.push(`/mainPage/${projectID}/calendar`)}
+          onMouseOver={handleHover}
         >
           <CalenderIcon
             className={
@@ -122,6 +150,7 @@ const Sidebar = () => {
               : ''
           } `}
           onClick={() => router.push(`/mainPage/${projectID}/planning`)}
+          onMouseOver={handleHover}
         >
           <PlaningIcon className={
               pathname === `/mainPage/${projectID}/planning`
@@ -143,6 +172,7 @@ const Sidebar = () => {
               : ''
           } `}
           onClick={() => router.push(`/mainPage/${projectID}/ganttChart`)}
+          onMouseOver={handleHover}
         >
           <GanttIcon className={
               pathname === `/mainPage/${projectID}/ganttChart`
@@ -164,6 +194,7 @@ const Sidebar = () => {
               : ''
           } `}
           onClick={() => router.push(`/mainPage/${projectID}/chat`)}
+          onMouseOver={handleHover}
         >
           <ChatIcon className={
               pathname === `/mainPage/${projectID}/chat`

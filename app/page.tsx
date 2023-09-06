@@ -7,6 +7,7 @@ import ProtectedPage from '@/components/ProtectedPage';
 
 export default function Home() {
   const user = userStore((state) => state.user);
+
   return (
     // <ProtectedPage>
     <div className="  flex flex-col justify-center items-center">

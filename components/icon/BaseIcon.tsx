@@ -8,7 +8,7 @@ export interface BaseIconProps extends React.SVGProps<SVGSVGElement>{
     children?: ReactNode;
 }
 
-const BaseIcon:FC<BaseIconProps> = ({ width, height, fill, children, className }) => {
+const BaseIcon:FC<BaseIconProps> = ({ width="36", height="33", fill="#A3A3A3", children, className }) => {
     return (
         <svg
             width={width}
@@ -22,12 +22,4 @@ const BaseIcon:FC<BaseIconProps> = ({ width, height, fill, children, className }
         </svg>
     );
 };
-
-BaseIcon.defaultProps = {
-    width: '36',
-    height: '33',
-    fill: '#A3A3A3',
-    className: ''
-};
-
 export default BaseIcon;
