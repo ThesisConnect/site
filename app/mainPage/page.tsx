@@ -1,5 +1,5 @@
-const Advisor = () => {
-  return <div>Advisor</div>;
+const pageHomeRole = () => {
+  return <div>pageHomeRole</div>;
 };
 
-export default Advisor;
+export default pageHomeRole;
