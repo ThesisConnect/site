@@ -20,9 +20,11 @@ import { extractFilenameFromURL } from '@/utils/extractFilenameFromURL';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import Profile from '../../components/Profile';
+import { set, update } from 'lodash';
+import { mutate } from 'swr';
 const EditProfile = () => {
   const route = useRouter();
-  const { user, setUser, clearUser, isAuthenticated } = useAuth();
+  const { user, clearUser, isAuthenticated,updateUser } = useAuth();
   const [edit, setEdit] = useState<boolean>(false);
   const [uploadProgess, setUploadProgess] = useState<number>(0);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -35,7 +37,9 @@ const EditProfile = () => {
     if (res.status === 200) {
       clearUser();
       route.push('/login');
+      mutate("/auth/checkAuth",null,false)
     }
+
   };
   const handleButtonUploadImage = () => {
     inputFileRef.current?.click();
@@ -66,32 +70,23 @@ const EditProfile = () => {
         async () => {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           const data = { avatar: url };
-          const res = await axiosBaseurl.post(
-            '/auth/update/profileImage',
-            data,
-            {
-              withCredentials: true,
-            }
-          );
+          updateUser(data);
           if(user.avatar){
             const filename = extractFilenameFromURL(user.avatar);
             const storageRef = ref(storage, `imageProfile/${filename}`);
             await deleteObject(storageRef);
           }
-          if (res.status === 200) {
-            setUser({ ...user, avatar: url });
-            setUploadProgess(0);
-          }
-          
+          setUploadProgess(0);
         }
       );
     } catch (err) {
       console.log(err);
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
-      setUser({ ...user, avatar: '' });
+      setUploadProgess(0);
+      updateUser({avatar:''});
     }
-  }, [user, setUser]);
+  }, [user, updateUser]);
   const handleButtonRemove = useCallback(async () => {
     try {
       if (!user.avatar) return;
@@ -100,21 +95,12 @@ const EditProfile = () => {
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
       const data = { avatar: '' };
-      const res = await axiosBaseurl.post(
-        '/auth/update/deleteProfileImage',
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-      if (res.status === 200) {
-        setUser({ ...user, avatar: '' });
-      }
+      updateUser({avatar:''});
     } catch (err) {
       console.log(err);
-      setUser({ ...user, avatar: '' });
+      updateUser({avatar:''});
     }
-  }, [user, setUser]);
+  }, [user, updateUser]);
   return (
     <div className="flex relative flex-row ">
       <Sidebar />

@@ -18,7 +18,7 @@ const Navbar: FC = () => {
   }));
   const route = useRouter();
   const editProfile = () => {
-    route.push('/editprofile');
+    route.push('/editProfile');
   };
   return (
     <div className="sticky top-0 z-40 w-screen bg-white">

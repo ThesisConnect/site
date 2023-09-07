@@ -38,6 +38,7 @@ export const clearUserAtom = atom(null, async (get, set) => {
 import { create } from 'zustand';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
+import { mutate } from 'swr';
 interface UserStore {
   user: User;
   isAuth: () => boolean;
