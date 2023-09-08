@@ -56,7 +56,7 @@ const DetailPopup: React.FC<DataPlan> = (
     setPickEnd(!pick_endDate)
     return pick_endDate
   }
-  // const form = useRef(null);
+
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date)
   const updateDate = (selDate: Date) => {
     setSelectedDate(selDate);
@@ -65,6 +65,7 @@ const DetailPopup: React.FC<DataPlan> = (
   const updateEndDate = (selDate: Date) => {
     setSelectedEndDate(selDate);
   }
+
 
 
   if (!show) return null;

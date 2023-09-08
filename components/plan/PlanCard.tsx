@@ -16,17 +16,19 @@ interface DataPlan {
 }
 
 
-const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_date, progress, task}) => {
+const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_date, progress, task }) => {
   // const Task = true;
+  console.log(new Date(start_date).toLocaleString())
   const Start = start_date.slice(0, 10).split("-");
-  const StartDate = Start[2]+"/"+Start[1]+"/"+Start[0];
+  const StartDate = Start[1] + "/" + (Number(Start[2]) + 1).toString() + "/" + Start[0];
   const End = end_date.slice(0, 10).split("-");
-  const EndDate = End[2]+"/"+End[1]+"/"+End[0];
+  const EndDate = End[1] + "/" + (Number(End[2]) + 1).toString() + "/" + End[0];
+  console.log("Start - End: ", new Date(Start[1] + "/" + (Number(Start[2])).toString() + "/" + Start[0]), new Date(End[1] + "/" + (Number(End[2])).toString() + "/" + End[0]))
 
-  function getDayDiff(startDate: Date, endDate: Date): number {
+  function getDayDiff(): number {
     const msInDay = 24 * 60 * 60 * 1000;
     return Math.round(
-      Math.abs(Number(endDate) - Number(startDate)) / msInDay
+      Math.abs(+(new Date((Number(Start[2])).toString() + "/" + Start[1] + "/" + Start[0])) - +(new Date((Number(End[2])).toString() + "/" + End[1]  + "/" + End[0]))) / msInDay
     );
   }
 
@@ -56,7 +58,7 @@ const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_dat
   const ref = useOutsideClick(() => {
     setSelect(!select)
   });
-  
+
   const [state, setState] = React.useState<boolean>(false);
   const [edit, setEdit] = React.useState<boolean>(false);
 
@@ -70,28 +72,28 @@ const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_dat
   }
 
   return (
-    <div 
+    <div
       className="flex w-full aspect-square bg-neutral-100 py-5 px-4 rounded-lg overflow-hidden"
     >
 
-      <DetailPopup show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff(new Date(start_date), new Date(end_date))} onClose={showPlanDetail} />
-      <EditPopup show={edit} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff(new Date(start_date), new Date(end_date))} onClose={showPlanEdit} />
-      <div  className="relative w-full">
+      <DetailPopup show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanDetail} />
+      <EditPopup show={edit} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} />
+      <div className="relative w-full">
         {select && (
           <div ref={ref} className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
-            <button 
+            <button
               className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
               onClick={showPlanEdit}
             >
               <AiOutlineEdit className="text-xl" />
-                Edit
-              </button>
-            <button 
+              Edit
+            </button>
+            <button
               className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
-              // onClick={}  
+            // onClick={}  
             >
               <AiOutlineDelete className="text-xl" />
-                Delete
+              Delete
             </button>
           </div>
         )}
@@ -107,7 +109,7 @@ const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_dat
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center">not Gantt</div>
+                  <div className="flex items-center"></div>
                 )}
               </div>
               <div className="grid relative z-100">
@@ -129,7 +131,7 @@ const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_dat
                 <div className="h-[100%] w-full flex flex-col items-center">
                   <div className="w-[100%] rounded-lg h-2 bg-neutral-400">
                     <div
-                      className={`bg-teal-800 h-2 rounded-full`} style={{width: `${progress}%`}}
+                      className={`bg-teal-800 h-2 rounded-full`} style={{ width: `${progress}%` }}
                     ></div>
                   </div>
                   <div className="flex flex-row w-full justify-between">
@@ -140,11 +142,11 @@ const PlanCard:React.FC<DataPlan> = ({id, name, description, start_date, end_dat
               </div>
               <div className="flex h-auto items-center justify-between md:hidden lg:flex">
                 <div className="flex h-[100%] rounded-full py-1.5 items-center justify-center cursor-pointer" onClick={showPlanDetail}>
-                  <CgDetailsMore  className="text-[30px]  text-neutral-400  hover:text-neutral-300 hover:transition hover:ease-in-out" />
+                  <CgDetailsMore className="text-[30px]  text-neutral-400  hover:text-neutral-300 hover:transition hover:ease-in-out" />
                 </div>
                 <div className="flex w-auto w-min-[35%] h-[100%] rounded-full py-1.5 px-4 bg-teal-800 items-center justify-center ">
                   <div className="text-white text-sm">
-                    {getDayDiff(new Date(start_date), new Date(end_date))} Days Left
+                    {getDayDiff()} Days Left
                   </div>
                 </div>
               </div>

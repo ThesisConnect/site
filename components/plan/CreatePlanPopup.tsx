@@ -13,19 +13,26 @@ import CalendarPick from './calendar';
 interface ModalProps {
   show: boolean;
   onClose: () => void;
+  onSucces: () => void;
+  projectID: string;
 }
-const Modal: React.FC<ModalProps> = (
+const CreatePopup: React.FC<ModalProps> = (
   {
     show,
-    onClose
+    onClose,
+    projectID,
+    onSucces,
   }) => {
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm<PlanSchemaType>({
-      resolver: zodResolver(PlanSchema),
-    });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm<PlanSchemaType>({
+    resolver: zodResolver(PlanSchema),
+  });
 
   const [pick_startDate, setPickStart] = React.useState<boolean>(false);
   function showDatePicker() {
@@ -37,8 +44,8 @@ const Modal: React.FC<ModalProps> = (
     setPickEnd(!pick_endDate)
     return pick_endDate
   }
-  // const form = useRef(null);
-  const project_Id = "60b9b0b7e6b9a1b4b8f0a0b1"
+  console.log(projectID)
+
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date)
   const updateDate = (selDate: Date) => {
     setSelectedDate(selDate);
@@ -47,35 +54,38 @@ const Modal: React.FC<ModalProps> = (
   const updateEndDate = (selDate: Date) => {
     setSelectedEndDate(selDate);
   }
+  useEffect(() => {
+    console.log("project_id");
+  }, [show])
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
-    console.log("create data");
-    // try {
-    //   const sendData = {
-    //     project_id: project_Id,
-    //     name: data.name,
-    //     description: data.description,
-    //     start_date: data.start_date,
-    //     end_date: data.end_date,
-    //     progress: 0,
-    //     task: data.task,
-    //   };
-    //   console.log(sendData)
-    //   const resData = await axios.post('/plan/create/', sendData, { withCredentials: true })
-    //   // reset();
-    // }
-    // catch (err: any) {
-    //   console.log(err);
-    
-    // }
+    console.log(data);
+    try {
+      const sendData = {
+        project_id: projectID,
+        name: data.name,
+        description: data.description,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        progress: 0,
+        task: data.task,
+      };
+      console.log(sendData)
+      const resData = await axiosBaseurl.post('/plan/create', sendData)
+      onSucces()
+      console.log("create success")
+      reset();
+    }
+    catch (err: any) {
+      console.log(err);
+      onClose()
+      reset()
+    }
   };
   if (!show) return null;
-  
+
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
-      {
-        JSON.stringify(errors)
-      }
       <form className=" bg-white rounded-lg w-[50%] h-3/5 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Create Plan</h2>
@@ -92,30 +102,34 @@ const Modal: React.FC<ModalProps> = (
                 Add plan to gantt chart
               </label>
             </div>
-              <label className="text-xs">
-                Plan name
-                <input
-                  id="name"
-                  className={" rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                  placeholder="Plan name"
-                  {...register('name', { required: true })}
-                />
-                {errors.name ? (
-                  <div className="text-red-500">{errors.name?.message}</div>
-                ) : (
-                  <div className="h-[16px]"></div>
-                )}
-              </label>
-              <label className="text-xs">
-                Description
-                <textarea
-                  id="description"
-                  className={"min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                  placeholder="Description"
-                  {...register('description')}
-                />
+            <label className="text-xs">
+              Plan name
+              <input
+                id="name"
+                className={" rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
+                placeholder="Plan name"
+                {...register('name', { required: true })}
+              />
+              {errors.name ? (
+                <div className="text-red-500">{errors.name?.message}</div>
+              ) : (
                 <div className="h-[16px]"></div>
-              </label>
+              )}
+            </label>
+            <label className="text-xs">
+              Description
+              <textarea
+                id="description"
+                className={"min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
+                placeholder="Description"
+                {...register('description')}
+              />
+              {errors.description ? (
+                <div className="text-red-500">{errors.description?.message}</div>
+              ) : (
+                <div className="h-[16px]"></div>
+              )}
+            </label>
             <div className='flex flex-row justify-between items-center gap-2 '>
               <div className=' flex flex-col w-[40%]'>
                 <label className="text-xs relative block">
@@ -131,16 +145,11 @@ const Modal: React.FC<ModalProps> = (
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                     placeholder="Start date"
                     onClick={showDatePicker}
-                    value={selectedDate.getDate() + "/" + selectedDate.getMonth() + "/" + selectedDate.getFullYear()}
+                    value={selectedDate.getDate() + "/" + (Number(selectedDate.getMonth()) + 1).toString() + "/" + selectedDate.getFullYear()}
                     {...register('start_date', { required: true })}
                     onChange={(event) => setSelectedDate}
                   />
                   <div className="h-[16px]"></div>
-                  {/* {errors.start_date ? (
-                    <div className="text-red-500">{errors.start_date.message}</div>
-                  ) : (
-                    
-                  )} */}
                 </label>
               </div>
               <hr className='w-[17%] border-b-2 border-t-0 border-dashed border-teal-800' />
@@ -158,8 +167,9 @@ const Modal: React.FC<ModalProps> = (
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                     placeholder="End date"
                     onClick={showEndDatePicker}
-                    value={selectedEndDate.getDate() + "/" + selectedEndDate.getMonth() + "/" + selectedEndDate.getFullYear()}
+                    value={selectedEndDate.getDate() + "/" + (Number(selectedEndDate.getMonth()) + 1).toString() + "/" + selectedEndDate.getFullYear()}
                     {...register('end_date', { required: true })}
+                    onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]"></div>
                 </label>
@@ -175,17 +185,17 @@ const Modal: React.FC<ModalProps> = (
           >
             <div className="text-neutral-800">Cancel</div>
           </Button>
-          
-            <Button
-              type="submit"
-              className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-            >
-              <div className="text-white">Create</div>
-            </Button>
+
+          <Button
+            type="submit"
+            className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+          >
+            <div className="text-white">Create</div>
+          </Button>
         </div>
       </form>
     </div>
   );
 };
 
-export default Modal;
+export default CreatePopup;

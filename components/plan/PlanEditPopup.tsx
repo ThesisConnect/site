@@ -24,7 +24,6 @@ interface DataPlan {
   duration: number,
 }
 
-
 const EditPopup: React.FC<DataPlan> = (
   {
     show,
@@ -41,6 +40,8 @@ const EditPopup: React.FC<DataPlan> = (
   const {
     register,
     handleSubmit,
+    reset,
+    
     formState: { errors },
   } = useForm<PlanSchemaType>({
     resolver: zodResolver(PlanSchema),
@@ -66,12 +67,37 @@ const EditPopup: React.FC<DataPlan> = (
     setSelectedEndDate(selDate);
   }
 
+  const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
+    console.log(data);
+    try {
+      const sendData = {
+        project_id: id,
+        name: data.name,
+        description: data.description,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        progress: 0,
+        task: data.task,
+      };
+      console.log(sendData)
+      const resData = await axiosBaseurl.post('/plan/create', sendData)
+      // onSucces()
+      console.log("create success")
+      reset();
+    }
+    catch (err: any) {
+      console.log(err);
+      onClose()
+      reset()
+    }
+  };
+
 
   if (!show) return null;
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[50%] h-3/5 flex flex-col">
+      <div className=" bg-white rounded-lg w-[50%] h-2/3 flex flex-col">
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Plan Edit</h2>
           <div className="flex flex-col py-3 px-4 gap-1">
@@ -93,9 +119,14 @@ const EditPopup: React.FC<DataPlan> = (
                 id="name"
                 className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                 placeholder="Plan name"
-                value={name}
-                // disabled
+                defaultValue={name}
+              // disabled
               />
+              {errors.name ? (
+                <div className="text-red-500">{errors.name?.message}</div>
+              ) : (
+                <div className="h-[16px]"></div>
+              )}
             </label>
             <label className="text-xs">
               Description
@@ -104,14 +135,19 @@ const EditPopup: React.FC<DataPlan> = (
                 className={"min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                 placeholder="Description"
                 // disabled
-                value={description}
+                defaultValue={description}
               />
+              {errors.description ? (
+                <div className="text-red-500">{errors.description?.message}</div>
+              ) : (
+                <div className="h-[16px]"></div>
+              )}
             </label>
             <div className=' flex flex-row justify-between items-center gap-2 '>
-            <div className='flex flex-col w-[40%] '>
+              <div className=' flex flex-col w-[40%]'>
                 <label className="text-xs relative block">
                   Start Date
-                  <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[0px] transform -translate-y-1/2 right-3' />
+                  <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_startDate && (
                     <div className='absolute w-[300px] h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
                       <CalendarPick DateSelect={selectedDate} updateDate={updateDate} />
@@ -120,19 +156,20 @@ const EditPopup: React.FC<DataPlan> = (
                   <input
                     id="start_date"
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                    placeholder={start_date}
+                    placeholder="Start date"
                     onClick={showDatePicker}
                     defaultValue={start_date}
-                    value={selectedDate.getDate() + "/" + selectedDate.getMonth() + "/" + selectedDate.getFullYear()}
                     {...register('start_date', { required: true })}
+                    onChange={(event) => setSelectedDate}
                   />
+                  <div className="h-[16px]"></div>
                 </label>
               </div>
               <hr className='w-[12%] h-[15px] border-b-2 border-t-0 border-dashed border-teal-800' />
               <div className='flex flex-col w-[40%] '>
                 <label className="text-xs relative block">
                   End Date
-                  <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[0px] transform -translate-y-1/2 right-3' />
+                  <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_endDate && (
                     <div className='absolute w-[300px] h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
                       <CalendarPick DateSelect={selectedEndDate} updateDate={updateEndDate} />
@@ -141,12 +178,13 @@ const EditPopup: React.FC<DataPlan> = (
                   <input
                     id="end_date"
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                    placeholder={end_date}
+                    placeholder="End date"
                     onClick={showEndDatePicker}
                     defaultValue={end_date}
-                    value={selectedEndDate.getDate() + "/" + selectedEndDate.getMonth() + "/" + selectedEndDate.getFullYear()}
                     {...register('end_date', { required: true })}
+                    onChange={(event) => setSelectedEndDate}
                   />
+                  <div className="h-[16px]"></div>
                 </label>
               </div>
             </div>
@@ -157,21 +195,21 @@ const EditPopup: React.FC<DataPlan> = (
                   <div className='text-[20px] w-6 h-6 absolute bottom-[-3px] transform -translate-y-1/2 right-3'>%</div>
                   {task ? (
                     <input
-                    id="start_date"
-                    className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                    placeholder="Start date"
-                    value={progress}
-                    disabled
-                  />
+                      id="start_date"
+                      className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
+                      placeholder="Start date"
+                      defaultValue={progress}
+                      disabled
+                    />
                   ) : (
                     <input
-                    id="start_date"
-                    className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                    placeholder="Start date"
-                    value={progress}
+                      id="start_date"
+                      className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
+                      placeholder="Start date"
+                      defaultValue={progress}
                     />
                   )}
-                  
+
                 </label>
               </div>
             </div>
