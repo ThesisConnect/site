@@ -26,11 +26,11 @@ export default function Home() {
           EditProfile
         </Button>
       </Link>
-      <Link href={'/mainPage/projectTest'}>
+      {/* <Link href={'/mainPage/projectTest'}>
         <Button type="button" className="w-24 bg-green-400">
           ProjecTest
         </Button>
-      </Link>
+      </Link> */}
       <Link href={'/mainPage/projectTest/calendar'}>
         <Button type="button" className="w-24 bg-yellow-400">
           Calendar
