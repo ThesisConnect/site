@@ -1,11 +1,8 @@
 'use client';
 import Sidebar from '@/components/Sidebar';
-import userStore from '@/stores/User';
-import Image from 'next/image';
-import profileDownload from '@/utils/profileImage';
+
 import { useCallback, useRef, useState } from 'react';
 import Input from '@/components/login/Input';
-import SelectRole from '@/components/register/SelectRole';
 import { useAuth } from '@/hook/useAuth';
 import axiosBaseurl from '@/config/baseUrl';
 import { auth, storage } from '@/config/firebase';
@@ -20,7 +17,6 @@ import { extractFilenameFromURL } from '@/utils/extractFilenameFromURL';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import Profile from '../../components/Profile';
-import { set, update } from 'lodash';
 import { mutate } from 'swr';
 const EditProfile = () => {
   const route = useRouter();

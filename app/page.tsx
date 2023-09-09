@@ -22,7 +22,7 @@ export default function Home() {
           Register
         </Button>
       </Link>
-      <Link href={'/editProfile'}>
+      <Link href={'/editprofile'}>
         <Button type="button" className="w-24 bg-blue-300">
           EditProfile
         </Button>
