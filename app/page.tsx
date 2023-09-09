@@ -13,6 +13,7 @@ export default function Home() {
     <div className="  flex flex-col justify-center items-center">
       <Link href={'/login'}>
         <Button type="button" className="w-24 bg-purple-500">
+          
           Login
         </Button>
       </Link>
