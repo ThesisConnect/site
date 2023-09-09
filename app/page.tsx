@@ -24,7 +24,7 @@ export default function Home() {
       </Link>
       <Link href={'/editprofile'}>
         <Button type="button" className="w-24 bg-blue-300">
-          EditProfile
+          editprofile
         </Button>
       </Link>
       {/* <Link href={'/mainPage/projectTest'}>

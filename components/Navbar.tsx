@@ -17,8 +17,8 @@ const Navbar: FC = () => {
     user: state.user,
   }));
   const route = useRouter();
-  const editProfile = () => {
-    route.push('/editProfile');
+  const editprofile = () => {
+    route.push('/editprofile');
   };
   return (
     <div className="sticky top-0 z-40 w-screen bg-white">
@@ -36,7 +36,7 @@ const Navbar: FC = () => {
               <span className="me-4 ">
                 {user.name} {user.surname}
               </span>
-              <Profile user={user} width="35" onClick={editProfile} />
+              <Profile user={user} width="35" onClick={editprofile} />
             </>
           )}
         </div>

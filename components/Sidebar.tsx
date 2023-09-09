@@ -18,7 +18,7 @@ const Sidebar = () => {
   const back = () => {
     router.back();
   };
-  if (pathname === '/editProfile')
+  if (pathname === '/editprofile')
     return (
       <>
         <div className="overflow-auto w-20 h-[calc(100vh-62px)] p-2 bg-neutral-100 ">
@@ -80,7 +80,7 @@ const Sidebar = () => {
           </h2>
         </div>
         <div
-          className={`flex flex-col justify-center items-center cursor-pointe pt-2 ${
+          className={`flex flex-col justify-center items-center cursor-pointer pt-2 ${
             pathname === `/mainPage/${projectID}/detail` ? 'bg-neutral-300' : ''
           }`}
           onClick={() => router.push(`/mainPage/${projectID}/detail`)}
