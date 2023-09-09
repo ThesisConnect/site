@@ -1,8 +1,5 @@
-
 const PageGanttChart = () => {
-    return (
-      <div>pageGanttChart</div>
-    )
-  }
-  
-  export default PageGanttChart
+  return <div>pageGanttChart</div>;
+};
+
+export default PageGanttChart;

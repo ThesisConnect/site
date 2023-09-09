@@ -6,7 +6,11 @@ interface CircularProgressProps {
   size: number; // size of SVG
 }
 
-const CircularProgress: React.FC<CircularProgressProps> = ({ progress, strokeWidth, size }) => {
+const CircularProgress: React.FC<CircularProgressProps> = ({
+  progress,
+  strokeWidth,
+  size,
+}) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (progress / 100) * circumference;

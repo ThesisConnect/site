@@ -7,7 +7,7 @@ import { relative } from 'path';
 import CircularProgress from './CircleProgress';
 
 interface IProfile {
-  user: User;
+  user: Partial<User>;
   width?: string;
   height?: string;
   className?: string;
@@ -31,8 +31,8 @@ const Profile: FC<IProfile> = ({
         height: `${height || width}px`,
       }}
     >
-      {progress != 0&&progress && (
-        <div className='absolute top-0 left-0 z-20'>
+      {progress != 0 && progress && (
+        <div className="absolute top-0 left-0 z-20">
           <CircularProgress
             progress={progress}
             strokeWidth={2}
@@ -56,7 +56,6 @@ const Profile: FC<IProfile> = ({
           className={cn(`rounded-full cursor-pointer object-cover `, className)}
         />
       </div>
-      
     </div>
   );
 };

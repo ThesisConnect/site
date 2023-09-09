@@ -1,8 +1,5 @@
-
 const PageCalendar = () => {
-  return (
-    <div>PageCalendar</div>
-  )
-}
+  return <div>PageCalendar</div>;
+};
 
-export default PageCalendar
+export default PageCalendar;

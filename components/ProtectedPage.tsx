@@ -19,9 +19,7 @@ const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-62px)] bg-gray-200">
         <div className="p-6 max-w-sm w-full h-36 bg-white shadow-md rounded-lg">
-          <h1 className="text-2xl font-bold mb-4">
-            Redirecting...
-          </h1>
+          <h1 className="text-2xl font-bold mb-4">Redirecting...</h1>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-green-300"></div>
           </div>

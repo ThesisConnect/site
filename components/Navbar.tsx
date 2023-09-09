@@ -36,7 +36,7 @@ const Navbar: FC = () => {
               <span className="me-4 ">
                 {user.name} {user.surname}
               </span>
-              <Profile user={user} width='35' onClick={editProfile} />
+              <Profile user={user} width="35" onClick={editProfile} />
             </>
           )}
         </div>

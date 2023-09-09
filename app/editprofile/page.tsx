@@ -24,7 +24,7 @@ import { set, update } from 'lodash';
 import { mutate } from 'swr';
 const EditProfile = () => {
   const route = useRouter();
-  const { user, clearUser, isAuthenticated,updateUser } = useAuth();
+  const { user, clearUser, isAuthenticated, updateUser } = useAuth();
   const [edit, setEdit] = useState<boolean>(false);
   const [uploadProgess, setUploadProgess] = useState<number>(0);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -37,9 +37,8 @@ const EditProfile = () => {
     if (res.status === 200) {
       clearUser();
       route.push('/login');
-      mutate("/auth/checkAuth",null,false)
+      mutate('/auth/checkAuth', null, false);
     }
-
   };
   const handleButtonUploadImage = () => {
     inputFileRef.current?.click();
@@ -71,7 +70,7 @@ const EditProfile = () => {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           const data = { avatar: url };
           updateUser(data);
-          if(user.avatar){
+          if (user.avatar) {
             const filename = extractFilenameFromURL(user.avatar);
             const storageRef = ref(storage, `imageProfile/${filename}`);
             await deleteObject(storageRef);
@@ -84,7 +83,7 @@ const EditProfile = () => {
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
       setUploadProgess(0);
-      updateUser({avatar:''});
+      updateUser({ avatar: '' });
     }
   }, [user, updateUser]);
   const handleButtonRemove = useCallback(async () => {
@@ -95,10 +94,10 @@ const EditProfile = () => {
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
       const data = { avatar: '' };
-      updateUser({avatar:''});
+      updateUser({ avatar: '' });
     } catch (err) {
       console.log(err);
-      updateUser({avatar:''});
+      updateUser({ avatar: '' });
     }
   }, [user, updateUser]);
   return (

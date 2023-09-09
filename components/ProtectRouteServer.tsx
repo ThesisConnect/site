@@ -2,7 +2,7 @@
 import axiosBaseurl from '@/config/baseUrl';
 
 const protectRouteServer = async <T = any,>(
-  additionalProps?: () => Promise<T>,
+  additionalProps?: () => Promise<T>
 ) => {
   try {
     const res = await axiosBaseurl.get('/auth/checkAuth', {
@@ -35,10 +35,9 @@ const protectRouteServer = async <T = any,>(
 export default protectRouteServer;
 // export const getServerSideProps = async (context) => {
 //     const userId = context.params?.id;
-  
+
 //     return await protectRouteServer(async () => {
 //       const userData = await getUserData(userId); // Using the userId directly here
 //       return { user: userData };
 //     });
 //   };
-  

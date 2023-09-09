@@ -7,7 +7,7 @@ import { auth } from '@/config/firebase';
 import useSWR from 'swr';
 interface Auth {
   user: User;
-  clearUser: () => void
+  clearUser: () => void;
   isAuthenticated: boolean;
   updateUser: (user: Partial<User>) => void;
   setUserNew: (user: User) => void;
@@ -29,27 +29,35 @@ export const useAuth = (): Auth => {
     clearUser: state.clearUser,
     setUser: state.setUser,
   }));
-  const { data, error,mutate } = useSWR<User,Error>('/auth/checkAuth', fetcher,{
-    dedupingInterval: ONE_HOUR_IN_MS
-  });
-  const updateUser = useCallback(
-    async (updateData:Partial<User>) => {
-      try{
-        console.log("updateData",updateData)
-        setUser({...user,...updateData});
-        await axiosBaseurl.post('/auth/update/profile', updateData, { withCredentials: true });
-        mutate({...user,...updateData})
-      }
-      catch(err){
-        console.log(err)
-      }
+  const { data, error, mutate } = useSWR<User, Error>(
+    '/auth/checkAuth',
+    fetcher,
+    {
+      dedupingInterval: ONE_HOUR_IN_MS,
     }
-  , [setUser,mutate,user]);
-  const setUserNew = useCallback((user: User) => {
-    setUser(user);
-    mutate();
-  }
-  , [setUser,mutate]);
+  );
+  const updateUser = useCallback(
+    async (updateData: Partial<User>) => {
+      try {
+        console.log('updateData', updateData);
+        setUser({ ...user, ...updateData });
+        await axiosBaseurl.post('/auth/update/profile', updateData, {
+          withCredentials: true,
+        });
+        mutate({ ...user, ...updateData });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [setUser, mutate, user]
+  );
+  const setUserNew = useCallback(
+    (user: User) => {
+      setUser(user);
+      mutate();
+    },
+    [setUser, mutate]
+  );
   // const checkUserAuth = useCallback(async () => {
   //   try {
   //     const res = await axiosBaseurl.get('/auth/checkAuth', {
@@ -75,9 +83,7 @@ export const useAuth = (): Auth => {
   useEffect(() => {
     if (data?.isAuthenticated) {
       signInWithCustomToken(auth, data.customToken!)
-        .then(() => 
-        setUser(data)
-        )
+        .then(() => setUser(data))
         .catch((err) => {
           console.log('sign', err);
           clearUser();
@@ -86,14 +92,14 @@ export const useAuth = (): Auth => {
     } else if (error || !data?.isAuthenticated) {
       clearUser();
     }
-  }, [data, error, setUser, clearUser,mutate]);
+  }, [data, error, setUser, clearUser, mutate]);
   return {
     user,
     clearUser,
     isAuthenticated: user.isAuthenticated || false,
     updateUser,
     setUserNew,
-    mutate
+    mutate,
   };
 };
 
