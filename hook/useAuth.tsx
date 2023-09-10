@@ -40,11 +40,12 @@ export const useAuth = (): Auth => {
     async (updateData: Partial<User>) => {
       try {
         console.log('updateData', updateData);
-        setUser({ ...user, ...updateData });
-        await axiosBaseurl.post('/auth/update/profile', updateData, {
+        const updateNew= { ...user, ...updateData }
+        setUser(updateNew);
+        await axiosBaseurl.post('/auth/update/profile', (updateNew), {
           withCredentials: true,
         });
-        mutate({ ...user, ...updateData });
+        mutate(updateNew);
       } catch (err) {
         console.log(err);
       }

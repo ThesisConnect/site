@@ -18,11 +18,21 @@ import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import Profile from '../../components/Profile';
 import { mutate } from 'swr';
+import { EditProfileSchema, EditProfileSchemaType } from '@/models/Auth/Editprofile';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 const EditProfile = () => {
   const route = useRouter();
   const { user, clearUser, isAuthenticated, updateUser } = useAuth();
   const [edit, setEdit] = useState<boolean>(false);
   const [uploadProgess, setUploadProgess] = useState<number>(0);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EditProfileSchemaType>({
+    resolver: zodResolver(EditProfileSchema),
+  });
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const logout = async () => {
     console.log('logout');
@@ -96,6 +106,18 @@ const EditProfile = () => {
       updateUser({ avatar: '' });
     }
   }, [user, updateUser]);
+  const handleSaveEditProfile = useCallback(
+    async (data: EditProfileSchemaType) => {
+      try {
+        console.log(data)
+        updateUser(data);
+        setEdit(false);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    , [updateUser]);
+
   return (
     <div className="flex relative flex-row ">
       <Sidebar />
@@ -133,7 +155,7 @@ const EditProfile = () => {
           </div>
           <div className="border-l-[1px] border-solid border-black" />
 
-          <form className="flex flex-col items-center justify-evenly w-5/12">
+          <form className="flex flex-col items-center justify-evenly w-5/12" onSubmit={handleSubmit(handleSaveEditProfile)}>
             <div className="flex flex-row w-10/12 justify-center gap-x-2 ">
               <Input
                 label="Name"
@@ -144,6 +166,7 @@ const EditProfile = () => {
                 readOnly={!edit}
                 disabled={!edit}
                 className="disabled:opacity-50 focus:outline-none"
+                {...register('name')}
               />
               <Input
                 label="Surname"
@@ -154,6 +177,7 @@ const EditProfile = () => {
                 readOnly={!edit}
                 disabled={!edit}
                 className="disabled:opacity-50 focus:outline-none"
+                {...register('surname')}
               />
             </div>
 
@@ -167,6 +191,7 @@ const EditProfile = () => {
                 readOnly={!edit}
                 disabled={!edit}
                 defaultValue={user.username}
+                {...register('username')}
               />
               <Input
                 label="Role"
@@ -200,7 +225,13 @@ const EditProfile = () => {
               readOnly={!edit}
               eye
               placeholder="newPassword"
+              {...register('newPassword')}
             />
+            {
+              errors.newPassword && (
+                <div className="text-red-500 text-sm">{errors.newPassword?.message}</div>
+              )
+            }
             {!edit && (
               <div className="flex">
                 <button
@@ -233,7 +264,7 @@ const EditProfile = () => {
                 </button>
                 <button
                   className="bg-neutral-200 h-10 px-5 rounded-full"
-                  type="button"
+                  type="submit"
                 >
                   Save
                 </button>
