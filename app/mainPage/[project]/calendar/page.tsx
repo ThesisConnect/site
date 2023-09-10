@@ -28,7 +28,8 @@ function PageCalendar({ params: { project } }: {
   }
 }) {
   const [dataItem, setData] = useState<DataModelInterface[]>([]);
-  
+  // const [data, setData] = useState<DataModelInterface[]>([]);
+
   // let dataItem: DataModelInterface[] = dataModel.map((o) => {
   //   let dd = {
   //     _id: o._id,
@@ -44,7 +45,7 @@ function PageCalendar({ params: { project } }: {
 
   useEffect(() => {
     (async () => {
-      const res = await axiosBaseurl.get(`/page/plan/80eb258d-2db8-4694-b0b5-08590767727b`);
+      const res = await axiosBaseurl.get(`/page/plan/${project}`);
       if (Array.isArray(res?.data)) {
         let arrData = (res.data || []).map((o) => {
           let dd = {
@@ -114,7 +115,6 @@ function PageCalendar({ params: { project } }: {
   const openPopup = (day: Date) => {
     setSelectedDay(day);
 
-    // Filter and set the selected data based on the clicked day
     const selectedDataItems = dataItem.filter((o) => {
       return (
         day.getTime() >= o.startDate.getTime() &&
@@ -250,7 +250,7 @@ function PageCalendar({ params: { project } }: {
                   <p>End Date: {format(item.endDate, "MMMM d, yyyy")}</p>
                 </div>
               ))}
-              {/* You can display additional information related to the selected day here */}
+              {/* wait */}
               <button
                 className="mt-2 bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                 onClick={closePopup}
