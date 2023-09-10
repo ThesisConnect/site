@@ -15,12 +15,12 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { useState } from "react";
 
 interface DatePickerProps {
-  DateSelect?: Date;
+  DateSelect: Date;
   updateDate: (DateSelect: Date) => void;
 }
 
 const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
-  const today = startOfToday();
+  const today = DateSelect;
   const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const colStartClasses = [
     "",

@@ -3,6 +3,7 @@ import { AiOutlineMore, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai"
 import DetailPopup from "./PlanDetailPopup";
 import { CgDetailsMore } from "react-icons/cg";
 import EditPopup from "./PlanEditPopup";
+import DeletePopup from "./DeletePopup";
 
 
 interface DataPlan {
@@ -13,22 +14,23 @@ interface DataPlan {
   end_date: string,
   progress: number,
   task: boolean,
+  projectID:string
+  onSucces: () => void;
 }
 
 
-const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_date, progress, task }) => {
-  // const Task = true;
-  console.log(new Date(start_date).toLocaleString())
+const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_date, progress, task, projectID, onSucces }) => {
+  // console.log(start_date)
+
   const Start = start_date.slice(0, 10).split("-");
-  const StartDate = Start[1] + "/" + (Number(Start[2]) + 1).toString() + "/" + Start[0];
+  const StartDate = Start[2] + "/" + Start[1] + "/" + Start[0];
   const End = end_date.slice(0, 10).split("-");
-  const EndDate = End[1] + "/" + (Number(End[2]) + 1).toString() + "/" + End[0];
-  console.log("Start - End: ", new Date(Start[1] + "/" + (Number(Start[2])).toString() + "/" + Start[0]), new Date(End[1] + "/" + (Number(End[2])).toString() + "/" + End[0]))
+  const EndDate = End[2] + "/" + End[1] + "/" + End[0];
 
   function getDayDiff(): number {
     const msInDay = 24 * 60 * 60 * 1000;
     return Math.round(
-      Math.abs(+(new Date((Number(Start[2])).toString() + "/" + Start[1] + "/" + Start[0])) - +(new Date((Number(End[2])).toString() + "/" + End[1]  + "/" + End[0]))) / msInDay
+      Math.abs(+(new Date(start_date)) - +(new Date(end_date))) / msInDay
     );
   }
 
@@ -61,6 +63,7 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
 
   const [state, setState] = React.useState<boolean>(false);
   const [edit, setEdit] = React.useState<boolean>(false);
+  const [Delete, setDelete] = React.useState<boolean>(false);
 
   function showPlanDetail() {
     setState(!state)
@@ -71,13 +74,19 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
     setSelect(false)
   }
 
+  function showDeletePlan() {
+    setDelete(!Delete)
+    setSelect(false)
+  }
+
   return (
     <div
       className="flex w-full aspect-square bg-neutral-100 py-5 px-4 rounded-lg overflow-hidden"
     >
 
       <DetailPopup show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanDetail} />
-      <EditPopup show={edit} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} />
+      <EditPopup show={edit} id={id} name={name} description={description} start_date={start_date} end_date={end_date} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} onSucces={onSucces}/>
+      <DeletePopup show={Delete} onClose={showDeletePlan} name={name} id={id} onSuccess={onSucces}/>
       <div className="relative w-full">
         {select && (
           <div ref={ref} className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
@@ -90,7 +99,7 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
             </button>
             <button
               className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
-            // onClick={}  
+            onClick={showDeletePlan}  
             >
               <AiOutlineDelete className="text-xl" />
               Delete

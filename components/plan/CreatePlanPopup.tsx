@@ -9,6 +9,7 @@ import Button from './Button';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import axiosBaseurl from '@/config/baseUrl';
 import CalendarPick from './calendar';
+import { DateTime } from 'luxon';
 
 interface ModalProps {
   show: boolean;
@@ -44,7 +45,6 @@ const CreatePopup: React.FC<ModalProps> = (
     setPickEnd(!pick_endDate)
     return pick_endDate
   }
-  console.log(projectID)
 
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date)
   const updateDate = (selDate: Date) => {
@@ -54,9 +54,12 @@ const CreatePopup: React.FC<ModalProps> = (
   const updateEndDate = (selDate: Date) => {
     setSelectedEndDate(selDate);
   }
+
   useEffect(() => {
     console.log("project_id");
   }, [show])
+
+  // console.log(projectID)
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
     console.log(data);
@@ -65,15 +68,13 @@ const CreatePopup: React.FC<ModalProps> = (
         project_id: projectID,
         name: data.name,
         description: data.description,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        progress: 0,
+        start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+        end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
         task: data.task,
       };
       console.log(sendData)
       const resData = await axiosBaseurl.post('/plan/create', sendData)
       onSucces()
-      console.log("create success")
       reset();
     }
     catch (err: any) {
@@ -122,7 +123,7 @@ const CreatePopup: React.FC<ModalProps> = (
                 id="description"
                 className={"min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                 placeholder="Description"
-                {...register('description')}
+                {...register('description', { required: true })}
               />
               {errors.description ? (
                 <div className="text-red-500">{errors.description?.message}</div>
@@ -145,8 +146,8 @@ const CreatePopup: React.FC<ModalProps> = (
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                     placeholder="Start date"
                     onClick={showDatePicker}
-                    value={selectedDate.getDate() + "/" + (Number(selectedDate.getMonth()) + 1).toString() + "/" + selectedDate.getFullYear()}
-                    {...register('start_date', { required: true })}
+                    value={("0" + selectedDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedDate.getFullYear()}
+                    // {...register('start_date', { required: true })}
                     onChange={(event) => setSelectedDate}
                   />
                   <div className="h-[16px]"></div>
@@ -167,8 +168,8 @@ const CreatePopup: React.FC<ModalProps> = (
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                     placeholder="End date"
                     onClick={showEndDatePicker}
-                    value={selectedEndDate.getDate() + "/" + (Number(selectedEndDate.getMonth()) + 1).toString() + "/" + selectedEndDate.getFullYear()}
-                    {...register('end_date', { required: true })}
+                    value={("0" + selectedEndDate.getDate()).slice(-2) + "/" +( "0"+(Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
+                    // {...register('end_date', { required: true })}
                     onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]"></div>

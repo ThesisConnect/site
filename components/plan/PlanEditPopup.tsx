@@ -1,7 +1,7 @@
 // components/Modal.tsx
 'use client';
 import React, { useCallback, useRef, useState, MouseEvent, useEffect } from 'react';
-import { PlanSchema, PlanSchemaType } from '@/models/Auth/Plan';
+import { PlanEditSchema, PlanEditSchemaType } from '@/models/Auth/Plan';
 import { BsCheckSquare, BsCheckSquareFill, BsCalendarEvent } from "react-icons/bs";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,11 +9,13 @@ import Button from './Button';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import axiosBaseurl from '@/config/baseUrl';
 import CalendarPick from './calendar';
+import { DateTime } from 'luxon';
 
 
 interface DataPlan {
   show: boolean;
   onClose: () => void;
+  onSucces: () => void; 
   id: string,
   name: string,
   description: string,
@@ -26,25 +28,26 @@ interface DataPlan {
 
 const EditPopup: React.FC<DataPlan> = (
   {
+    id,
     show,
     onClose,
-    id,
     name,
     description,
     start_date,
     end_date,
     progress,
     task,
-    duration
+    duration,
+    onSucces
   }) => {
   const {
     register,
     handleSubmit,
     reset,
-    
+    setValue,
     formState: { errors },
-  } = useForm<PlanSchemaType>({
-    resolver: zodResolver(PlanSchema),
+  } = useForm<PlanEditSchemaType>({
+    resolver: zodResolver(PlanEditSchema),
   });
 
   const [pick_startDate, setPickStart] = React.useState<boolean>(false);
@@ -52,38 +55,48 @@ const EditPopup: React.FC<DataPlan> = (
     setPickStart(!pick_startDate)
     return pick_startDate
   }
+
+  const originalDate = DateTime.fromFormat('1/29/2019', 'M/d/yyyy', { zone: 'America/New_York' });
+  const isoDate = originalDate.toISO({ includeOffset: true });
+
+  const Start = start_date.slice(0, 10).split("-");
+  const StartDate = Start[2] + "/" + Start[1] + "/" + Start[0];
+  const End = end_date.slice(0, 10).split("-");
+  const EndDate = End[2] + "/" + End[1] + "/" + End[0];
+
   const [pick_endDate, setPickEnd] = React.useState<boolean>(false);
   function showEndDatePicker() {
     setPickEnd(!pick_endDate)
     return pick_endDate
   }
   // const form = useRef(null);
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date)
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date(Start[1] + "/" + Start[2] + "/" + Start[0]))
   const updateDate = (selDate: Date) => {
     setSelectedDate(selDate);
   }
-  const [selectedEndDate, setSelectedEndDate] = React.useState<Date>(new Date)
+  const [selectedEndDate, setSelectedEndDate] = React.useState<Date>(new Date(End[1] + "/" + End[2] + "/" + End[0]))
   const updateEndDate = (selDate: Date) => {
     setSelectedEndDate(selDate);
   }
 
-  const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<PlanEditSchemaType> = async (data) => {
+    console.log("Begin Edit")
     console.log(data);
     try {
+
       const sendData = {
-        project_id: id,
+        id: id,
         name: data.name,
         description: data.description,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        progress: 0,
-        task: data.task,
+        // start_date: selectedDate.toISOString(),
+        start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+        end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+        progress: data.progress,
       };
-      console.log(sendData)
-      const resData = await axiosBaseurl.post('/plan/create', sendData)
-      // onSucces()
-      console.log("create success")
-      reset();
+      console.log(sendData)   
+      const resData = await axiosBaseurl.put('/plan/edit', sendData)
+      onSucces()
+      onClose();
     }
     catch (err: any) {
       console.log(err);
@@ -92,12 +105,11 @@ const EditPopup: React.FC<DataPlan> = (
     }
   };
 
-
   if (!show) return null;
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[50%] h-2/3 flex flex-col">
+      <form className=" bg-white rounded-lg w-[50%] h-[70%] flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Plan Edit</h2>
           <div className="flex flex-col py-3 px-4 gap-1">
@@ -106,9 +118,10 @@ const EditPopup: React.FC<DataPlan> = (
                 <input
                   id="task"
                   type="checkbox"
-                  checked={task}
-                  className="w-4 h-4 accent-teal-700 border-teal-300 rounded focus:text-teal-400 "
+                  defaultChecked={task}
                   disabled
+                  className="w-4 h-4 accent-teal-700 border-teal-300 rounded focus:text-teal-400 "
+                // {...register('task')}
                 />
                 Gantt
               </label>
@@ -120,6 +133,7 @@ const EditPopup: React.FC<DataPlan> = (
                 className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                 placeholder="Plan name"
                 defaultValue={name}
+                {...register('name', { required: true })}
               // disabled
               />
               {errors.name ? (
@@ -136,6 +150,7 @@ const EditPopup: React.FC<DataPlan> = (
                 placeholder="Description"
                 // disabled
                 defaultValue={description}
+                {...register('description', { required: true })}
               />
               {errors.description ? (
                 <div className="text-red-500">{errors.description?.message}</div>
@@ -159,7 +174,10 @@ const EditPopup: React.FC<DataPlan> = (
                     placeholder="Start date"
                     onClick={showDatePicker}
                     defaultValue={start_date}
-                    {...register('start_date', { required: true })}
+                    // value={new Date(selectedDate.setMinutes(originalDate.getMinutes() - originalTimezoneOffset)).toISOString().slice(0,10).split("-")[2] +}
+                    value={("0" + selectedDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedDate.getFullYear()}
+                    // value={new Date(Start[1] + "/" + Start[2] + "/" + Start[0])}
+                    // {...register('start_date')}
                     onChange={(event) => setSelectedDate}
                   />
                   <div className="h-[16px]"></div>
@@ -181,7 +199,9 @@ const EditPopup: React.FC<DataPlan> = (
                     placeholder="End date"
                     onClick={showEndDatePicker}
                     defaultValue={end_date}
-                    {...register('end_date', { required: true })}
+                    // value={end_date}
+                    value={("0" + selectedEndDate.getDate()).slice(-2) + "/" +( "0"+(Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
+                    // {...register('end_date')}
                     onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]"></div>
@@ -192,22 +212,31 @@ const EditPopup: React.FC<DataPlan> = (
               <div className=' flex flex-col w-[40%]'>
                 <label className="text-xs relative block">
                   Progress
-                  <div className='text-[20px] w-6 h-6 absolute bottom-[-3px] transform -translate-y-1/2 right-3'>%</div>
+                  <div className='text-[20px] w-6 h-6 absolute bottom-[13px] transform -translate-y-1/2 right-3'>%</div>
                   {task ? (
                     <input
-                      id="start_date"
+                      id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                       placeholder="Start date"
                       defaultValue={progress}
+                      // type='number'
+                      {...register('progress', { valueAsNumber: true })}
                       disabled
                     />
                   ) : (
                     <input
-                      id="start_date"
+                      id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                       placeholder="Start date"
                       defaultValue={progress}
+                      // type='number'
+                      {...register('progress', { valueAsNumber: true })}
                     />
+                  )}
+                  {errors.progress ? (
+                    <div className="text-red-500">{errors.progress?.message}</div>
+                  ) : (
+                    <div className="h-[16px]"></div>
                   )}
 
                 </label>
@@ -215,7 +244,7 @@ const EditPopup: React.FC<DataPlan> = (
             </div>
           </div>
         </div>
-        <div className='px-4 py-3 flex flex-row justify-end items-center gap-2 h-full'>
+        <div className='px-4 flex flex-row justify-end items-center gap-2 h-full'>
           <Button
             className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
             onClick={onClose}
@@ -231,7 +260,7 @@ const EditPopup: React.FC<DataPlan> = (
             <div className="text-white">Save</div>
           </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

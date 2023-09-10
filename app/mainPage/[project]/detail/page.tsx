@@ -5,9 +5,28 @@ import UpdateTask from "@/components/summary/UpdateTask";
 import Sidebar from "@/components/Sidebar";
 import userStore from "@/stores/User";
 import axiosBaseurl from '@/config/baseUrl';
+import { useEffect, useState } from "react";
 
-const PageDetail = () => {
-	const projectId = ""
+const PageDetail = ({params:{project:projectID}}:{
+	params:{
+	  project:string
+	}
+  }) => {
+	const [summary, setSummary] = useState([])
+	useEffect(() => {
+		// console.log(create);
+		const res = axiosBaseurl.get(`page/plan/${projectID}`, {
+		  withCredentials: true,
+		})
+		.then(response => {
+		  setSummary(response.data);
+		}).catch(err => {
+		  console.log(err);
+		})
+	
+	  }, []);
+
+
 	return (
 		<div className="flex relative flex-row h-full">
 			<div className="flex flex-row w-full">
