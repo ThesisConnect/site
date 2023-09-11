@@ -6,13 +6,17 @@ import userStore, { userAtom } from '@/stores/User';
 import ProtectedPage from '@/components/ProtectedPage';
 import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
-
+import { motion } from 'framer-motion';
 const Home = () => {
   const user = userStore((state) => state.user);
 
   return (
     // <ProtectedPage>
-    <div className="  flex flex-col justify-center items-center">
+    <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.75 }}
+    className="  flex flex-col justify-center items-center">
       <Link href={'/login'}>
         <Button type="button" className="w-24 bg-purple-500">
           Login
@@ -70,7 +74,7 @@ const Home = () => {
       <div className="text-2xl font-bold text-green-900">
         email {user.email}
       </div>
-    </div>
+    </motion.div>
     // </ProtectedPage>
   );
 };

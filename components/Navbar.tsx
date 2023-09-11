@@ -12,8 +12,9 @@ import profileDownload from '@/utils/profileImage';
 import Profile from './Profile';
 import LoadingNavbar from './loading/LoadingNavbar';
 import { Skeleton } from './ui/skeleton';
+import { AnimatePresence, motion } from 'framer-motion';
 const Navbar: FC = () => {
-   const [hasMounted, setHasMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const { user, clearUser, isAuth } = userStore((state) => ({
     clearUser: state.clearUser,
     isAuth: state.isAuth(),
@@ -23,12 +24,14 @@ const Navbar: FC = () => {
   const editprofile = () => {
     route.push('/editprofile');
   };
-   useEffect(() => {
-     setHasMounted(true);
-   }, []);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
-   if (!hasMounted) {
-     return <LoadingNavbar/> // or return a loader, skeleton, etc.
+  if (!hasMounted) {
+    return (
+          <LoadingNavbar />
+    );
   }
   return (
     <div className="sticky top-0 z-40 w-screen bg-white">
@@ -37,7 +40,12 @@ const Navbar: FC = () => {
           <span>ThesisConnect</span>
         </div>
         <div className="flex-grow" />
-        <div className="flex justify-center items-center me-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.75 }}
+          className="flex justify-center items-center me-4"
+        >
           <Link href="/">
             <FaHome className="text-gray-800 cursor-pointer me-2" size={30} />
           </Link>
@@ -49,7 +57,7 @@ const Navbar: FC = () => {
               <Profile user={user} width="35" onClick={editprofile} />
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
