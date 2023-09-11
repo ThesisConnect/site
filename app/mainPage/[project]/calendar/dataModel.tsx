@@ -2,10 +2,11 @@ export interface DataModelInterface {
     _id: string;
     project_id: string;
     name: string;
-    desc: string;
+    description: string;
     progress: number;
-    startDate: Date;
-    endDate: Date;
+    start_date: Date;
+    end_date: Date;
+    task: boolean;
     [x: string]: any;
 };
 export const dataModel = [

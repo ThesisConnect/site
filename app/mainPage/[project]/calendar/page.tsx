@@ -27,46 +27,64 @@ function PageCalendar({ params: { project } }: {
     project: string
   }
 }) {
-  const [dataItem, setData] = useState<DataModelInterface[]>([]);
+  // const [dataItem, setData] = useState([]);
+  // const [dataItem, setData] = useState<DataModelInterface[]>([]);
   // const [data, setData] = useState<DataModelInterface[]>([]);
+  const [Plans, setPlans] = useState([]);
 
-  // let dataItem: DataModelInterface[] = dataModel.map((o) => {
-  //   let dd = {
-  //     _id: o._id,
-  //     project_id: o.project_id,
-  //     name: o.name,
-  //     desc: o.description,
-  //     progress: o.progress,
-  //     startDate: new Date(o.start_date.$date),
-  //     endDate: new Date(o.end_date.$date),
-  //   } as DataModelInterface;
-  //   return dd;
-  // });
+  let dataItem: DataModelInterface[] = dataModel.map((o) => {
+    let dd = {
+      _id: o._id,
+      project_id: o.project_id,
+      name: o.name,
+      description: o.description,
+      progress: o.progress,
+      start_date: new Date(o.start_date.$date),
+      end_date: new Date(o.end_date.$date),
+    } as DataModelInterface;
+    return dd;
+  });
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await axiosBaseurl.get(`/page/plan/${project}`);
+  //     if (Array.isArray(res?.data)) {
+  //       let arrData = (res.data || []).map((o) => {
+  //         let dd = {
+  //           _id: o.id,
+  //           project_id: o?.project_id,
+  //           name: o.name,
+  //           description: o.description,
+  //           progress: o.progress,
+  //           start_date: new Date(o.start_date),
+  //           end_date: new Date(o.end_date),
+  //         } as DataModelInterface;
+  //         return dd;
+  //       });
+  //       setData(arrData);
+  //       // console.log('arrData', arrData);
+  //     } else {
+  //       setData([])
+  //     }
+  //     console.log('resp', dataItem)
+  //   })()
+  // }, []);
 
   useEffect(() => {
-    (async () => {
-      const res = await axiosBaseurl.get(`/page/plan/${project}`);
-      if (Array.isArray(res?.data)) {
-        let arrData = (res.data || []).map((o) => {
-          let dd = {
-            _id: o.id,
-            project_id: o?.project_id,
-            name: o.name,
-            desc: o.description,
-            progress: o.progress,
-            startDate: new Date(o.start_date),
-            endDate: new Date(o.end_date),
-          } as DataModelInterface;
-          return dd;
-        });
-        setData(arrData);
-        // console.log('arrData', arrData);
-      } else {
-        setData([])
-      }
-      console.log('resp', dataItem)
-    })()
+    console.log();
+    const res = axiosBaseurl.get(`page/plan/${project}`, {
+      withCredentials: true,
+    })
+      .then(response => {
+        setPlans(response.data);
+      }).catch(err => {
+        console.log(err);
+      })
+
   }, []);
+
+  console.log(Plans);
+
   const today = startOfToday();
   const days = [
     "sunday",
@@ -117,8 +135,8 @@ function PageCalendar({ params: { project } }: {
 
     const selectedDataItems = dataItem.filter((o) => {
       return (
-        day.getTime() >= o.startDate.getTime() &&
-        day.getTime() <= o.endDate.getTime()
+        day.getTime() >= o.start_date.getTime() &&
+        day.getTime() <= o.end_date.getTime()
       );
     });
 
@@ -135,8 +153,8 @@ function PageCalendar({ params: { project } }: {
   const isDDay = (day: Date) => {
     let isday = dataItem.filter((o) => {
       return (
-        day.getTime() >= o.startDate.getTime() &&
-        day.getTime() <= o.endDate.getTime()
+        day.getTime() >= o.start_date.getTime() &&
+        day.getTime() <= o.end_date.getTime()
       );
     });
     return isday;
@@ -152,12 +170,12 @@ function PageCalendar({ params: { project } }: {
           className="hover:bg-teal-700 hover:transition hover:ease-in-out "
         // onClick={showCreatePopup}
         >
-          <div className="text-white">Create Plan</div>
+          <div className="text-white"></div>
         </div>
       </div>
       <div className="h-[calc(100vh-165px)] flex flex-col justify-center overflow-hidden px-2">
         <div className="w-[98%] h-[600px] overflow-hidden">
-          <div className="flex items-center justify-between height-50px bg-teal-800">
+          <div className="flex items-center justify-between h-[6%] rounded-t-[3px] bg-teal-800">
             <p
               className="font-semibold text-xl"
               style={{ color: "white", paddingLeft: "3%" }}
@@ -207,9 +225,10 @@ function PageCalendar({ params: { project } }: {
                 evItems.push(
                   <div
                     key={ev._id}
-                    className={`px-2  ${ev._id ? "bg-teal-800" : ""}`}
+                    className={`px-2  ${ev._id ? "bg-teal-800" : ""} hover:bg-teal-700 cursor-pointer hover:transition hover:ease-in-out`}
                     style={{ color: "white", borderRadius: "3px", marginTop: "5%", minWidth: "115px" }}
                   >
+
                     {ev._id ? truncatedName : ""}
                   </div>
                 );
@@ -234,7 +253,7 @@ function PageCalendar({ params: { project } }: {
           </div>
         </div>
         {popupVisible && (
-          <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white p-4 rounded-lg">
               <h2 className="text-lg font-semibold">
                 {format(selectedDay ?? new Date(), "MMMM d, yyyy")}
@@ -244,10 +263,10 @@ function PageCalendar({ params: { project } }: {
                 <div key={item._id}>
                   <p>Project ID: {item.project_id}</p>
                   <p>Name: {item.name}</p>
-                  <p>Description: {item.desc}</p>
+                  <p>Description: {item.description}</p>
                   <p>Progress: {item.progress}</p>
-                  <p>Start Date: {format(item.startDate, "MMMM d, yyyy")}</p>
-                  <p>End Date: {format(item.endDate, "MMMM d, yyyy")}</p>
+                  <p>Start Date: {format(item.start_date, "MMMM d, yyyy")}</p>
+                  <p>End Date: {format(item.end_date, "MMMM d, yyyy")}</p>
                 </div>
               ))}
               {/* wait */}

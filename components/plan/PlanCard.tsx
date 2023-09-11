@@ -91,7 +91,7 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
         {select && (
           <div ref={ref} className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
             <button
-              className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
+              className ="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
               onClick={showPlanEdit}
             >
               <AiOutlineEdit className="text-xl" />

@@ -15,7 +15,7 @@ export type PlanSchemaType = z.infer<typeof PlanSchema>;
 export const PlanEditSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
-  progress: z.number(),
+  progress: z.number().optional(),
   // start_date: z.string(),
   // end_date: z.string(),
 });

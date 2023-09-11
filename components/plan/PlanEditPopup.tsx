@@ -217,7 +217,7 @@ const EditPopup: React.FC<DataPlan> = (
                     <input
                       id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                      placeholder="Start date"
+                      placeholder="Progress"
                       defaultValue={progress}
                       // type='number'
                       {...register('progress', { valueAsNumber: true })}
@@ -227,7 +227,7 @@ const EditPopup: React.FC<DataPlan> = (
                     <input
                       id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                      placeholder="Start date"
+                      placeholder="Progress"
                       defaultValue={progress}
                       // type='number'
                       {...register('progress', { valueAsNumber: true })}
