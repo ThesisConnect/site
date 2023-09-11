@@ -45,12 +45,14 @@ function PageCalendar({ params: { project } }: {
 
   useEffect(() => {
     (async () => {
-      const res = await axiosBaseurl.get(`/page/plan/${project}`);
+      const res = await axiosBaseurl.get(`/page/plan/${project}`, {
+        withCredentials: true
+      });
       if (Array.isArray(res?.data)) {
         let arrData = (res.data || []).map((o) => {
           let dd = {
             _id: o.id,
-            project_id: o?.project_id,
+            project_id: o?.project_id, 
             name: o.name,
             desc: o.description,
             progress: o.progress,
@@ -60,13 +62,15 @@ function PageCalendar({ params: { project } }: {
           return dd;
         });
         setData(arrData);
-        // console.log('arrData', arrData);
+        console.log('arrData', arrData);
       } else {
         setData([])
       }
       console.log('resp', dataItem)
     })()
   }, []);
+
+
   const today = startOfToday();
   const days = [
     "sunday",
