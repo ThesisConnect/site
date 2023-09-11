@@ -38,7 +38,7 @@ export const clearUserAtom = atom(null, async (get, set) => {
 import { create } from 'zustand';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-import { mutate } from 'swr';
+import { createJSONStorage, persist } from 'zustand/middleware';
 interface UserStore {
   user: User;
   isAuth: () => boolean;
@@ -46,7 +46,8 @@ interface UserStore {
   clearUser: () => void;
 }
 
-export const userStore = createWithEqualityFn<UserStore>(
+export const userStore = createWithEqualityFn<UserStore>()(
+  persist(
   (set, get) => ({
     user: defaultUser,
     isAuth: () => get().user.isAuthenticated,
@@ -58,8 +59,15 @@ export const userStore = createWithEqualityFn<UserStore>(
       console.log('clear');
       set({ user: defaultUser });
     },
-  }),
+  })
+  ,
+  {
+    name: 'user-storage',
+    storage: createJSONStorage(()=>sessionStorage),
+  }
+  ),
   shallow
+
 );
 
 userStore.subscribe(console.log); // This will log the entire state every time it changes

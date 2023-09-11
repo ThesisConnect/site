@@ -7,10 +7,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-const SortByHome = () => {
+import { cn } from '@/lib/utils';
+import { FC } from 'react';
+
+interface SortByHomeProps {
+  className?: string;
+}
+
+const SortByHome:FC<SortByHomeProps> = ({className}) => {
   return (
     <Select>
-      <SelectTrigger className="w-40 rounded-full">
+      <SelectTrigger className={cn("w-40 rounded-full",className)}>
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>

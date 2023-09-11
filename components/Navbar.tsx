@@ -1,7 +1,7 @@
 'use client';
 import { FaHome } from 'react-icons/fa';
 import { VscSignOut } from 'react-icons/vsc';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import axiosBaseurl from '@/config/baseUrl';
 
@@ -10,7 +10,10 @@ import userStore from '@/stores/User';
 import Image from 'next/image';
 import profileDownload from '@/utils/profileImage';
 import Profile from './Profile';
+import LoadingNavbar from './loading/LoadingNavbar';
+import { Skeleton } from './ui/skeleton';
 const Navbar: FC = () => {
+   const [hasMounted, setHasMounted] = useState(false);
   const { user, clearUser, isAuth } = userStore((state) => ({
     clearUser: state.clearUser,
     isAuth: state.isAuth(),
@@ -20,6 +23,13 @@ const Navbar: FC = () => {
   const editprofile = () => {
     route.push('/editprofile');
   };
+   useEffect(() => {
+     setHasMounted(true);
+   }, []);
+
+   if (!hasMounted) {
+     return <LoadingNavbar/> // or return a loader, skeleton, etc.
+  }
   return (
     <div className="sticky top-0 z-40 w-screen bg-white">
       <div className="flex p-3 border-slate-10 border">

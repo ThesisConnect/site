@@ -4,8 +4,10 @@ import Link from 'next/link';
 import Button from '@/components/login/Button';
 import userStore, { userAtom } from '@/stores/User';
 import ProtectedPage from '@/components/ProtectedPage';
+import dynamic from 'next/dynamic';
+import LoadingNormal from '@/components/loading/LoadingNormal';
 
-export default function Home() {
+const Home = () => {
   const user = userStore((state) => state.user);
 
   return (
@@ -13,7 +15,6 @@ export default function Home() {
     <div className="  flex flex-col justify-center items-center">
       <Link href={'/login'}>
         <Button type="button" className="w-24 bg-purple-500">
-          
           Login
         </Button>
       </Link>
@@ -27,11 +28,11 @@ export default function Home() {
           editprofile
         </Button>
       </Link>
-      {/* <Link href={'/mainPage/projectTest'}>
+      <Link href={'/mainPage'}>
         <Button type="button" className="w-24 bg-green-400">
-          ProjecTest
+          MainPage
         </Button>
-      </Link> */}
+      </Link>
       <Link href={'/mainPage/projectTest/calendar'}>
         <Button type="button" className="w-24 bg-yellow-400">
           Calendar
@@ -72,4 +73,11 @@ export default function Home() {
     </div>
     // </ProtectedPage>
   );
-}
+};
+
+export default dynamic(() => Promise.resolve(Home), {
+  ssr: false,
+  loading: () => (
+    <LoadingNormal/>
+  ),
+});

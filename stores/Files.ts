@@ -1,6 +1,8 @@
+
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import axiosBaseurl from '../config/baseUrl';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface File {
   type: 'file';
@@ -76,7 +78,7 @@ export const FecherFile = async (childrenID: string[]) => {
   return data;
 };
 
-const fileStore = createWithEqualityFn<FileStore>(
+const fileStore = createWithEqualityFn<FileStore>()(persist(
   (set, get) => ({
     defaultFiles: baseData,
 
@@ -107,11 +109,15 @@ const fileStore = createWithEqualityFn<FileStore>(
     getPathName: (folderID) => {
       return folderID.map((id) => get().defaultFiles[id]?.name).join('/');
     },
-  }),
+  })
+  ,{
+    name: 'file-storage',
+    storage: createJSONStorage(()=>sessionStorage),
+  }
+  ),
   shallow
 );
 
 export default fileStore;
 
-let cat = { dog: 'dog', cat: 'cat' };
-cat = { ...cat, dog: 'dog' };
+

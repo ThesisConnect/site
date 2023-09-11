@@ -1,6 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
+import { Suspense } from 'react';
+import { divide } from 'lodash';
 
 export const metadata: Metadata = {
   title: 'ThesisConnect',
@@ -13,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <Navbar />
-        <div className="relative">{children}</div>
+        <div className="relative">
+          {children}
+        </div>
       </body>
     </html>
   );

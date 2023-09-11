@@ -47,6 +47,7 @@ const AutoResizingTextArea: React.FC<AutoResizingTextAreaProps> = ({
         {...props}
         ref={textAreaRef}
         value={message}
+        rows={1}
         style={{
           maxHeight,
           minHeight,
