@@ -41,12 +41,18 @@ interface UserStore {
   isAuth: () => boolean;
   setUser: (user: User) => void;
   clearUser: () => void;
+  firstLoad: boolean;
+  setFirstLoad: (firstload: boolean) => void;
 }
 
 export const userStore = createWithEqualityFn<UserStore>()(
   persist(
   (set, get) => ({
     user: defaultUser,
+    firstLoad: true,
+    setFirstLoad: (firstload: boolean) => {
+      set({ firstLoad: firstload });
+    },
     isAuth: () => get().user.isAuthenticated,
     setUser: (newUser: User) => {
       console.log('set');

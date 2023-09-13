@@ -5,13 +5,15 @@ import { User } from '@/stores/User';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '@/config/firebase';
 import useSWR from 'swr';
+
 interface Auth {
   user: User;
   clearUser: () => void;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean|null;
   updateUser: (user: Partial<User>) => void;
   setUserNew: (user: User) => void;
   mutate: () => void;
+  isLoading:boolean
 }
 
 const fetcher = async (url: string) => {
@@ -81,10 +83,11 @@ export const useAuth = (): Auth => {
   return {
     user,
     clearUser,
-    isAuthenticated: user.isAuthenticated ,
+    isAuthenticated: user.isAuthenticated || null ,
     updateUser,
     setUserNew,
     mutate,
+    isLoading:!data && !error,
   };
 };
 

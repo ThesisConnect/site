@@ -78,10 +78,18 @@ const Home = () => {
     // </ProtectedPage>
   );
 };
-
-export default dynamic(() => Promise.resolve(Home), {
+const DynamicHome = dynamic(() => Promise.resolve(Home), {
   ssr: false,
   loading: () => (
     <LoadingNormal/>
   ),
 });
+const ProtectedHome = () => {
+  return (
+    <ProtectedPage>
+      <DynamicHome />
+    </ProtectedPage>
+  );
+}
+
+export default ProtectedHome;
