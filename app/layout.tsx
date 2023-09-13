@@ -1,8 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
-import { Suspense } from 'react';
-import { divide } from 'lodash';
+import Provider from './Provider';
 
 export const metadata: Metadata = {
   title: 'ThesisConnect',
@@ -19,7 +18,7 @@ export default function RootLayout({
       <body>
         <Navbar />
         <div className="relative">
-          {children}
+          <Provider>{children}</Provider>
         </div>
       </body>
     </html>

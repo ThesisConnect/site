@@ -31,9 +31,6 @@ export const userAtom = atom<User>({
   isAuthenticated: false,
 });
 
-export const clearUserAtom = atom(null, async (get, set) => {
-  set(userAtom, defaultUser);
-});
 
 import { create } from 'zustand';
 import { shallow } from 'zustand/shallow';

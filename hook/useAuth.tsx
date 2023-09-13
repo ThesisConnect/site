@@ -59,29 +59,13 @@ export const useAuth = (): Auth => {
     },
     [setUser, mutate]
   );
-  // const checkUserAuth = useCallback(async () => {
-  //   try {
-  //     const res = await axiosBaseurl.get('/auth/checkAuth', {
-  //       withCredentials: true,
-  //     });
-  //     console.log('check');
-  //     const data = res.data as User;
-  //     // console.log(data)
-  //     // console.log(data);
-  //     const { isAuthenticated } = data;
-  //     if (isAuthenticated) {
-  //       // console.log("data",data.customToken)
-  //       await signInWithCustomToken(auth, data.customToken!);
-  //       setUser(data);
-  //     } else {
-  //       clearUser();
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     clearUser();
-  //   }
-  // }, [setUser, clearUser]);
+  
   useEffect(() => {
+    if (!data && !error) {
+      // If there's no data and no error, it means the SWR fetching is still ongoing
+      // Do nothing and wait for the fetching to complete
+      return;
+    }
     if (data?.isAuthenticated) {
       signInWithCustomToken(auth, data.customToken!)
         .then(() => setUser(data))
@@ -97,7 +81,7 @@ export const useAuth = (): Auth => {
   return {
     user,
     clearUser,
-    isAuthenticated: user.isAuthenticated || false,
+    isAuthenticated: user.isAuthenticated ,
     updateUser,
     setUserNew,
     mutate,
