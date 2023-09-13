@@ -1,5 +1,5 @@
 import { userStore } from '@/stores/User';
-import { useCallback, useEffect } from 'react';
+import { use, useCallback, useEffect, useMemo } from 'react';
 import axiosBaseurl from '@/config/baseUrl';
 import { User } from '@/stores/User';
 import { signInWithCustomToken } from 'firebase/auth';
@@ -9,7 +9,7 @@ import useSWR from 'swr';
 interface Auth {
   user: User;
   clearUser: () => void;
-  isAuthenticated: boolean|null;
+  isAuthenticated: boolean|undefined;
   updateUser: (user: Partial<User>) => void;
   setUserNew: (user: User) => void;
   mutate: () => void;
@@ -83,11 +83,11 @@ export const useAuth = (): Auth => {
   return {
     user,
     clearUser,
-    isAuthenticated: user.isAuthenticated || null ,
+    isAuthenticated :user.isAuthenticated,
     updateUser,
     setUserNew,
     mutate,
-    isLoading:!data && !error,
+    isLoading:!data&&!error,
   };
 };
 

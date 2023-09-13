@@ -43,6 +43,7 @@ interface UserStore {
   clearUser: () => void;
   firstLoad: boolean;
   setFirstLoad: (firstload: boolean) => void;
+
 }
 
 export const userStore = createWithEqualityFn<UserStore>()(
@@ -50,17 +51,18 @@ export const userStore = createWithEqualityFn<UserStore>()(
   (set, get) => ({
     user: defaultUser,
     firstLoad: true,
+
     setFirstLoad: (firstload: boolean) => {
       set({ firstLoad: firstload });
     },
     isAuth: () => get().user.isAuthenticated,
     setUser: (newUser: User) => {
       console.log('set');
-      set({ user: newUser });
+      set({ user: newUser});
     },
     clearUser: () => {
       console.log('clear');
-      set({ user: defaultUser });
+      set({ user: defaultUser});
     },
   })
   ,
