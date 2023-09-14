@@ -7,6 +7,8 @@ import React, {
   useCallback,
   useState,
   ChangeEvent,
+  ForwardRefRenderFunction,
+  useImperativeHandle,
 } from 'react';
 
 interface AutoResizingTextAreaProps
@@ -18,19 +20,20 @@ interface AutoResizingTextAreaProps
   minHeight?: number;
 }
 
-const AutoResizingTextArea: React.FC<AutoResizingTextAreaProps> = ({
+const AutoResizingTextArea: ForwardRefRenderFunction<HTMLTextAreaElement | null,AutoResizingTextAreaProps> = ({
   label,
   className,
   classNameLabel,
   maxHeight = 9999999,
   minHeight = 70,
   ...props
-}) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+},forwardedRef) => {
+  const textAreaRef = useRef<HTMLTextAreaElement|null>(null);
   const [message, setMessage] = useState<string>('');
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
+  useImperativeHandle(forwardedRef, () => textAreaRef.current!, [textAreaRef]);
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
@@ -59,4 +62,4 @@ const AutoResizingTextArea: React.FC<AutoResizingTextAreaProps> = ({
   );
 };
 
-export default AutoResizingTextArea;
+export default React.forwardRef(AutoResizingTextArea);

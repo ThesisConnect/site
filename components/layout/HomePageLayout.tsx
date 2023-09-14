@@ -11,7 +11,6 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   const handleCreateProject = async() => {
     setOpenModalCreateProject(true);
   };
-  
   return (
     <div className="h-[calc(100vh-62px)]  w-full px-8">
       <div className="h-[10%] flex items-center  ">
@@ -23,7 +22,7 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
          >
           New Project
         </button>
-        <ModalCreateProject isOpen={openModalCreateProject} onClose={()=>setOpenModalCreateProject(false)} />
+        {openModalCreateProject&&  <ModalCreateProject isOpen={openModalCreateProject} onClose={()=>setOpenModalCreateProject(false)} />}
         <div className='flex-grow'/>
         <SortByHome  />
       </div>
