@@ -42,7 +42,7 @@ const PageDetail = ({ params: { project: projectID } }: {
       }).catch(err => {
         console.log(err);
       })
-  }, []);
+  }, [projectID]);
 
   console.log("get summary", summary)
   return (
