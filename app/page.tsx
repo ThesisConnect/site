@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 const Home = () => {
   const user = userStore((state) => state.user);
 
+
   return (
     // <ProtectedPage>
     <motion.div 
@@ -67,9 +68,8 @@ const Home = () => {
           Planning
         </Button>
       </Link>
-
       <div className="text-2xl font-bold text-green-900">
-        Welcome {user.name} {user.surname}
+        Welcome {user.name}
       </div>
       <div className="text-2xl font-bold text-green-900">
         email {user.email}

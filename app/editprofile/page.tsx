@@ -18,9 +18,13 @@ import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import Profile from '../../components/Profile';
 import { mutate } from 'swr';
-import { EditProfileSchema, EditProfileSchemaType } from '@/models/Auth/Editprofile';
+import {
+  EditProfileSchema,
+  EditProfileSchemaType,
+} from '@/models/Auth/Editprofile';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import ProtectedPage from '@/components/ProtectedPage';
 const EditProfile = () => {
   const route = useRouter();
   const { user, clearUser, isAuthenticated, updateUser } = useAuth();
@@ -109,14 +113,15 @@ const EditProfile = () => {
   const handleSaveEditProfile = useCallback(
     async (data: EditProfileSchemaType) => {
       try {
-        console.log(data)
+        console.log(data);
         updateUser(data);
         setEdit(false);
       } catch (err) {
         console.log(err);
       }
-    }
-    , [updateUser]);
+    },
+    [updateUser]
+  );
 
   return (
     <div className="flex relative flex-row ">
@@ -155,7 +160,10 @@ const EditProfile = () => {
           </div>
           <div className="border-l-[1px] border-solid border-black" />
 
-          <form className="flex flex-col items-center justify-evenly w-5/12" onSubmit={handleSubmit(handleSaveEditProfile)}>
+          <form
+            className="flex flex-col items-center justify-evenly w-5/12"
+            onSubmit={handleSubmit(handleSaveEditProfile)}
+          >
             <div className="flex flex-row w-10/12 justify-center gap-x-2 ">
               <Input
                 label="Name"
@@ -227,11 +235,11 @@ const EditProfile = () => {
               placeholder="newPassword"
               {...register('newPassword')}
             />
-            {
-              errors.newPassword && (
-                <div className="text-red-500 text-sm">{errors.newPassword?.message}</div>
-              )
-            }
+            {errors.newPassword && (
+              <div className="text-red-500 text-sm">
+                {errors.newPassword?.message}
+              </div>
+            )}
             {!edit && (
               <div className="flex">
                 <button
@@ -277,4 +285,17 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+const ProtectEditProfile = () => {
+  // const { isAuthenticated } = useAuth();
+  // const route = useRouter();
+  // if (!isAuthenticated) {
+  //   route.push('/login');
+  //   return null;
+  // }
+  return (
+    <ProtectedPage>
+      <EditProfile />
+    </ProtectedPage>
+  );
+};
+export default ProtectEditProfile;

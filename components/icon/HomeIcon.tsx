@@ -12,4 +12,3 @@ const HomeIcon: FC<HomeIconProps> = ({ ...props }) => {
 };
 
 export default HomeIcon;
-``;

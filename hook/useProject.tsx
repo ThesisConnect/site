@@ -3,6 +3,7 @@ import axiosBaseurl from "@/config/baseUrl";
 import useProjectStore, { IProject, createSchema, editSchema } from "@/stores/Project";
 import { useCallback, useEffect } from "react";
 import useSWR from "swr";
+import { checkSchemaCreateProject, createNewProjectType } from '../models/Project/createNewProject';
 
 const fetcher = async (url: string) => {
     const res = await axiosBaseurl.get(url);
@@ -14,7 +15,7 @@ interface IProjectHookReturn {
   isLoading:boolean;
   mutate: any;
   updateProject: (updateData: editSchema,projectID:string) => Promise<void>;
-  createNewProject: (createData: createSchema) => Promise<void>;
+  createNewProject: (createData: createNewProjectType) => Promise<void>;
   error:Error|undefined
 }
 const useProject = (suspense:boolean=false):IProjectHookReturn => {
@@ -34,12 +35,29 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
       console.log(err);
     }
   },[ mutate, updateProjectStore,project])
-  const createNewProject = useCallback(async (createData: createSchema) => {
+  const createNewProject = useCallback(async (createData: createNewProjectType) => {
     try {
-      const newAllProject = await createProject(createData)
+      const newData = {
+        name:createData.projectName,
+        advisors:[]  as string[],
+        co_advisors:[] as string[],
+        advisee:[]  as string[],
+      }
+      for (const user of createData.userInProject) {
+        if(user.role==="Advisor"){
+          newData.advisors.push(user.email)
+        }
+        else if(user.role==="Co_advisor"){
+          newData.co_advisors.push(user.email)
+        }
+        else if(user.role==="Advisee"){
+          newData.advisee.push(user.email)
+        }
+      }
+      const newAllProject = await createProject(newData)
       mutate(newAllProject);
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   }
   , [ mutate,createProject]);

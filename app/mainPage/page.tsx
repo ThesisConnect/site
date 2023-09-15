@@ -6,19 +6,6 @@ const PageHomeRole = () => {
   return (
     <HomePageLayout>
       <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
-      <DisplayProject />
     </HomePageLayout>
   );
 };

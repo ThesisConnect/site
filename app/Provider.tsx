@@ -8,9 +8,7 @@ const Provider = ({
   return (
     <AnimatePresence>{
       children
-      
     }</AnimatePresence>
-    
   )
 }
 

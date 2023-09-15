@@ -1,5 +1,14 @@
 'use client';
-import { FC, useCallback, useRef, useState, forwardRef, MouseEvent, ButtonHTMLAttributes, useEffect } from 'react';
+import {
+  FC,
+  useCallback,
+  useRef,
+  useState,
+  forwardRef,
+  MouseEvent,
+  ButtonHTMLAttributes,
+  useEffect,
+} from 'react';
 import InputText from '../login/Input';
 import AutoResizingTextArea from '../AutoResizingTextArea';
 import { RiDeleteBin6Line } from 'react-icons/ri';
@@ -7,7 +16,8 @@ import SelectRole, { SelectRoleRef } from './selectRole';
 import { checkEmail } from '@/utils/schemaEmail';
 import { checkSchemaCreateProject } from '@/models/Project/createNewProject';
 import { set } from 'lodash';
-
+import { create } from 'zustand';
+import useProject from '@/hook/useProject';
 
 interface ModalCreateProjectProps {
   isOpen: boolean;
@@ -15,7 +25,7 @@ interface ModalCreateProjectProps {
 }
 interface TableMember {
   email: string;
-  role: "Co_advisor" | "Advisee" | "Advisor" ;
+  role: 'Co_advisor' | 'Advisee' | 'Advisor';
 }
 interface TableComponentProps {
   table: TableMember[];
@@ -80,12 +90,17 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
 }) => {
   const [error, setError] = useState('');
   const [table, setTable] = useState<TableMember[]>([]);
+  const [createLoading, setCreateLoading] = useState(false);
+  const { createNewProject } = useProject();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const selectorRole = useRef<SelectRoleRef>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleAddMember = () => {
     const email = emailInputRef.current?.value;
-    const role = selectorRole.current?.getValue() as "Co_advisor" | "Advisee" | "Advisor" ;
+    const role = selectorRole.current?.getValue() as
+      | 'Co_advisor'
+      | 'Advisee'
+      | 'Advisor';
     if (email && role) {
       const data = checkEmail(email);
       console.log(data);
@@ -94,95 +109,132 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
         return;
       } else if (data.email) {
         setError('');
-        setTable([{ email, role  }, ...table]);
+        setTable([{ email, role }, ...table]);
       } else {
         setError(data.error);
       }
     }
   };
-  const handleSummit = (e:MouseEvent<HTMLFormElement>) => {
+  const handleSummit = (e: MouseEvent<HTMLFormElement>) => {
+    setCreateLoading(true);
     e.preventDefault();
     const projectName = textAreaRef.current?.value;
     if (projectName) {
       const checkData = checkSchemaCreateProject({
         projectName,
-        userInProject:[...table]
+        userInProject: [...table],
       });
-      if(checkData.data){
+      if (checkData.data) {
         console.log(checkData.data);
         setError('');
+        createNewProject(checkData.data)
+          .then(() => {
+            console.log('create success')
+            setCreateLoading(false);
+            onClose();
+          })
+          .catch((err) => {
+            console.log(err);
+            setCreateLoading(false);
+            setError(err.message);
+          });
         // onClose();
-      }
-      else{
+      } else {
+        setCreateLoading(false);
         setError(checkData.error);
       }
     }
-  }
+  };
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     setError('');
+  //     setTable([]);
+  //     emailInputRef.current?.focus();
+  //   }
+  // }
+  // , [isOpen]);
   if (!isOpen) return null;
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 flex-col  bg-black bg-opacity-50">
-      <form onSubmit={handleSummit} className="bg-white rounded-lg  flex flex-col w-7/12 h-[75%]  items-center">
-        <div className="border-b-[1px] w-full border-teal-800 h-[10%] flex items-center ps-10  font-semibold text-neutral-800">
-          Create project
+      {createLoading ? (
+        <div className="bg-white rounded-lg  flex flex-col w-7/12 h-[75%]  items-center">
+          <div className="border-b-[1px] w-full border-teal-800 h-[10%] flex items-center ps-10  font-semibold text-neutral-800">
+            Create project
+          </div>
+          <div className="flex h-full w-full px-10 flex-row justify-center items-center overflow-y-scroll ">
+            <div className="w-16 h-16 border-t-4 border-teal-400 border-solid rounded-full animate-spin"></div>
+            <div className="text-center text-2xl ms-5 font-semibold text-neutral-800">
+                Creating project...
+            </div>
         </div>
-        <div className="flex h-full w-full px-10 flex-col overflow-y-scroll ">
-          <AutoResizingTextArea
-            ref={textAreaRef}
-            minHeight={56}
-            classNameLabel="text-base mt-10"
-            label="Project name*"
-            placeholder="Project name"
-            className="border
+        </div>
+      ) : (
+        <form
+          onSubmit={handleSummit}
+          className="bg-white rounded-lg  flex flex-col w-7/12 h-[75%]  items-center"
+        >
+          <div className="border-b-[1px] w-full border-teal-800 h-[10%] flex items-center ps-10  font-semibold text-neutral-800">
+            Create project
+          </div>
+          <div className="flex h-full w-full px-10 flex-col overflow-y-scroll ">
+            <AutoResizingTextArea
+              ref={textAreaRef}
+              minHeight={56}
+              classNameLabel="text-base mt-10"
+              label="Project name*"
+              placeholder="Project name"
+              className="border
              border-neutral-400 rounded-lg text-base py-[17px]
              ps-2
              "
-          />
-          <div className="relative flex">
-            <div className="absolute flex w-full">
-              <div className="flex-grow" />
-              <SelectRole
-                ref={selectorRole}
-                className="text-neutral-800 py-1 me-2 rounded-full px-8 translate-y-[64px] z-20"
-              />
-              <button
-                className="bg-neutral-200 text-neutral-800 py-1 me-2
-               rounded-full px-8 translate-y-[64px] z-20 "
-                type="button"
-                onClick={handleAddMember}
-              >
-                Add
-              </button>
-            </div>
-            <InputText
-              label="Add member"
-              placeholder="Email"
-              classNameLabel="text-base mt-8"
-              width="w-full"
-              className="border-neutral-400 border text-base placeholder:text-base"
-              ref={emailInputRef}
-              type="text"
             />
+            <div className="relative flex">
+              <div className="absolute flex w-full">
+                <div className="flex-grow" />
+                <SelectRole
+                  ref={selectorRole}
+                  className="text-neutral-800 py-1 me-2 rounded-full px-8 translate-y-[64px] z-20"
+                />
+                <button
+                  className="bg-neutral-200 text-neutral-800 py-1 me-2
+               rounded-full px-8 translate-y-[64px] z-20 "
+                  type="button"
+                  onClick={handleAddMember}
+                >
+                  Add
+                </button>
+              </div>
+              <InputText
+                label="Add member"
+                placeholder="Email"
+                classNameLabel="text-base mt-8"
+                width="w-full"
+                className="border-neutral-400 border text-base placeholder:text-base"
+                ref={emailInputRef}
+                type="text"
+              />
+            </div>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+            <div>
+              <TableInModal table={table} onChange={setTable} />
+            </div>
           </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <div>
-            <TableInModal table={table} onChange={setTable} />
+          <div className="h-[10%] self-end mx-10">
+            <button
+              className="bg-neutral-300 rounded-full px-10 py-2"
+              onClick={onClose}
+            >
+              cancel
+            </button>
+            <button
+              className="bg-neutral-300 rounded-full ms-2 px-10 py-2"
+              type="submit"
+            >
+              create
+            </button>
           </div>
-        </div>
-        <div className="h-[10%] self-end mx-10">
-          <button
-            className="bg-neutral-300 rounded-full px-10 py-2"
-            onClick={onClose}
-          >
-            cancel
-          </button>
-          <button
-            className="bg-neutral-300 rounded-full ms-2 px-10 py-2"
-            type="submit"
-          >
-            save
-          </button>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 };

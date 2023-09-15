@@ -31,7 +31,7 @@ const SelectRole=  forwardRef<SelectRoleRef,SelectRoleProps>((props, ref) => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="Co_Advisor">Co_Advisor</SelectItem>
+          <SelectItem value="Co_advisor">Co_advisor</SelectItem>
           <SelectItem value="Advisee">Advisee</SelectItem>
         </SelectGroup>
       </SelectContent>
