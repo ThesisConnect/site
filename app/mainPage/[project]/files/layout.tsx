@@ -27,10 +27,10 @@ const FileLayout = ({
       console.log(files);
       await Array.from(files).forEach(async (file) => {
         if (file.name.endsWith('.zip')) {
-          newFiles = await handleZipFile(file, params.folderID);
+          newFiles = await handleZipFile(file, params.folderID[params.folderID.length-1]);
         } else {
           newFiles = await Promise.all(
-            Array.from(files).map((file) => handleFile(file, params.folderID))
+            Array.from(files).map((file) => handleFile(file, params.folderID[params.folderID.length-1]))
           );
           // You can do something with the file, like uploading it to the server
         }
@@ -47,7 +47,7 @@ const FileLayout = ({
       <div className="h-32 flex flex-col justify-evenly  ">
         <div className="text-[20px] font-semibold">Project: {project}</div>
         <div className="flex justify-end">
-          {params.folderID?.startsWith('Private') && (
+          {params.folderID?.[0] === "Private" && (
             <div>
               <button className="bg-teal-800 w-32 h-full text-white rounded-full me-4">
                 Create Folder
