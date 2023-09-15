@@ -9,7 +9,7 @@ const FolderPathInput = () => {
   const getPathName = fileStore((state) => state.getPathName);
   const pathFromId = useMemo(() => {
     if (!param.folderID) return '';
-    return getPathName(param.folderID.split('/'));
+    return getPathName(param.folderID as string[]);
   }, [param.folderID, getPathName]);
 
   return (
