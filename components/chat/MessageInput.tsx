@@ -12,7 +12,7 @@ const MessageInput = () => {
           placeholder="Message..."
           className="w-full  bg-neutral-200  p-2 text-sm rounded-lg focus:outline-none placeholder:Text-neutral-400"
           minHeight={30}
-          maxHeight={350}
+          maxHeight={192}
         />
       </div>
       <button className="px-3 h-10 mb-2 w-2/12 text-neutral-800 bg-neutral-200 self-end rounded-full">
