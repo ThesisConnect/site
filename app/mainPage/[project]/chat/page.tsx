@@ -59,7 +59,7 @@ const PageChat = () => {
             <div ref={messageEndRef}></div>
           </div>
         </div>
-        <div className=" bg-teal-800 relative min-h-[8%] max-h-[14rem]  py-3  ">
+        <div className=" bg-teal-800 relative min-h-[8%] max-h-[14rem]  py-2  ">
           <MessageInput />
         </div>
       </div>
