@@ -81,7 +81,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({
               </div>
             }
           >
-            <div>
+            <>
               {advisee?.map((user, index) => (
                 <div
                   className="relative flex justify-center items-center"
@@ -96,7 +96,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({
                   </div>
                 </div>
               ))}
-            </div>
+            </>
           </ShowDataHoverProfile>
         </div>
         <div className="w-1/3 justify-center items-center flex ">
