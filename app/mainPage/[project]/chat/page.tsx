@@ -3,45 +3,63 @@ import ChatLayout from '@/components/layout/ChatLayout';
 import { useSearchParams } from 'next/navigation';
 import MessageInput from '../../../../components/chat/MessageInput';
 import Message from '@/components/chat/Message';
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 
 const PageChat = () => {
-  
-  
   const searchParams = useSearchParams();
   const [chat, setChat] = useState(messages);
-  const [displayCount, setDisplayCount] = useState(30);
+  const [displayCount, setDisplayCount] = useState(20);
+  const devRef = useRef<HTMLDivElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
-  useEffect(() => {
-    const currentLoadMoreRef = loadMoreRef.current;
-  let initialRender = true;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting && !initialRender) {
-        setDisplayCount((prevCount) => prevCount + 30);
-      }
-      initialRender = false;
-    },
-    { threshold: 1 }
-  );
-
-  if (currentLoadMoreRef) {
-    observer.observe(currentLoadMoreRef);
-  }
-
-  return () => {
-    if (currentLoadMoreRef) {
-      observer.unobserve(currentLoadMoreRef);
+  const handleInputHeightChange = (newHeight: number) => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ });
     }
   };
+  useEffect(() => {
+    const currentLoadMoreRef = loadMoreRef.current;
+    let initialRender = true;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !initialRender) {
+          setDisplayCount((prevCount) => prevCount + 30);
+        }
+        initialRender = false;
+      },
+      { threshold: 1 }
+    );
+
+    if (currentLoadMoreRef) {
+      observer.observe(currentLoadMoreRef);
+    }
+    return () => {
+      if (currentLoadMoreRef) {
+        observer.unobserve(currentLoadMoreRef);
+      }
+    };
   }, []);
   useEffect(() => {
     if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chat]);
+
+  useEffect(() => {
+    const currentDevRef = devRef.current;
+    const observer = new ResizeObserver((entries) => {
+      handleInputHeightChange(entries[0].contentRect.height);
+    });
+    if (currentDevRef) {
+      observer.observe(currentDevRef);
+    }
+    return () => {
+      if (currentDevRef) {
+        observer.unobserve(currentDevRef);
+      }
+    };
+  }
+  , []);
   return (
     <ChatLayout>
       <div className="flex flex-col w-full h-full">
@@ -60,7 +78,9 @@ const PageChat = () => {
           </div>
         </div>
         <div className=" bg-teal-800 relative min-h-[8%] flex-shrink-0 max-h-[14rem]  py-2  ">
-          <MessageInput />
+          <MessageInput 
+            handleInputHeightChange={handleInputHeightChange}
+          />
         </div>
       </div>
     </ChatLayout>
@@ -95,8 +115,5 @@ const messages = [
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Paxwell', content: 'End', isOwnMessage: false },
-  
-
-  
 ];
 export default PageChat;
