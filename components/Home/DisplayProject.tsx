@@ -69,7 +69,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({
               timeout: 80,
             }}
             title={
-              <div>
+              <div >
                 <div className="text-base text-center">Advisor</div>
                 <div className="flex flex-col">
                   {advisee?.map((user) => (
@@ -81,7 +81,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({
               </div>
             }
           >
-            <>
+            <div  className=" justify-center items-center flex relative ">
               {advisee?.map((user, index) => (
                 <div
                   className="relative flex justify-center items-center"
@@ -96,7 +96,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           </ShowDataHoverProfile>
         </div>
         <div className="w-1/3 justify-center items-center flex ">
