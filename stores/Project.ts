@@ -8,14 +8,23 @@ export interface IStatus {
     name: string
     order: number
   }
+export interface IUserInProject {
+  avatar: string|undefined
+  email: string
+  name: string
+  surname: string
+  userName: string
+  role: string
+  _id: string
+}
 export interface IProject {
     _id: string
     name: string
     progress: number
     status: IStatus
-    advisors: string[]
-    co_advisors: string[]
-    advisee: string[]
+    advisors: IUserInProject[]
+    co_advisors: IUserInProject[]
+    advisee: IUserInProject[]
     chat_id: string
     folder_id: string
   }
@@ -26,12 +35,13 @@ export type createSchema = {
       advisee: string[];
   }
 export type editSchema = {
-      advisors: string[];
-      co_advisors: string[];
-      advisee: string[];
+      advisors: IUserInProject[];
+      co_advisors: IUserInProject[];
+      advisee: IUserInProject[];
       id: string;
       name?: string | undefined;
-  
+      status: IStatus;
+      progress: number;
   }
 export interface ProjectStore {
     project:IProject[]
@@ -64,8 +74,6 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
           };
           return undefined;
         },
-
-
     })
     ,{
       name: 'project-storage',

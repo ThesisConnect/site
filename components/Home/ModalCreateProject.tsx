@@ -18,6 +18,7 @@ import { checkSchemaCreateProject } from '@/models/Project/createNewProject';
 import { set } from 'lodash';
 import { create } from 'zustand';
 import useProject from '@/hook/useProject';
+import userStore from '@/stores/User';
 
 interface ModalCreateProjectProps {
   isOpen: boolean;
@@ -70,11 +71,13 @@ const TableInModal: FC<TableComponentProps> = ({ table = [], onChange }) => {
                   index === 0 ? '' : ''
                 } ${index === table.length - 1 ? 'rounded-br-md' : ''}`}
               >
-                <RiDeleteBin6Line
-                  onClick={() => handleDelete(index)}
-                  size={20}
-                  className="text-red-400 cursor-pointer"
-                />
+                {item.role !== 'Advisor' && (
+                  <RiDeleteBin6Line
+                    onClick={() => handleDelete(index)}
+                    size={20}
+                    className="text-red-400 cursor-pointer"
+                  />
+                )}
               </td>
             </tr>
           ))}
@@ -89,7 +92,13 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
   onClose,
 }) => {
   const [error, setError] = useState('');
-  const [table, setTable] = useState<TableMember[]>([]);
+  const user = userStore((state) => state.user);
+  const [table, setTable] = useState<TableMember[]>(() => {
+    if (user) {
+      return [{ email: user.email, role: 'Advisor' }];
+    }
+    return [];
+  });
   const [createLoading, setCreateLoading] = useState(false);
   const { createNewProject } = useProject();
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -97,6 +106,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleAddMember = () => {
     const email = emailInputRef.current?.value;
+
     const role = selectorRole.current?.getValue() as
       | 'Co_advisor'
       | 'Advisee'
@@ -109,12 +119,13 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
         return;
       } else if (data.email) {
         setError('');
-        setTable([{ email, role }, ...table]);
+        setTable([ ...table,{ email, role }]);
       } else {
         setError(data.error);
       }
     }
   };
+
   const handleSummit = (e: MouseEvent<HTMLFormElement>) => {
     setCreateLoading(true);
     e.preventDefault();
@@ -129,7 +140,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
         setError('');
         createNewProject(checkData.data)
           .then(() => {
-            console.log('create success')
+            console.log('create success');
             setCreateLoading(false);
             onClose();
           })
@@ -164,9 +175,9 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
           <div className="flex h-full w-full px-10 flex-row justify-center items-center overflow-y-scroll ">
             <div className="w-16 h-16 border-t-4 border-teal-400 border-solid rounded-full animate-spin"></div>
             <div className="text-center text-2xl ms-5 font-semibold text-neutral-800">
-                Creating project...
+              Creating project...
             </div>
-        </div>
+          </div>
         </div>
       ) : (
         <form

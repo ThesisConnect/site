@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, ForwardRefRenderFunction } from 'react';
 import Image from 'next/image';
 import { User } from '@/stores/User';
 import profileDownload from '@/utils/profileImage';
 import { cn } from '@/lib/utils';
-import { relative } from 'path';
 import CircularProgress from './CircleProgress';
 
-interface IProfile {
+
+interface IProfile extends React.HTMLAttributes<HTMLDivElement> {
   user: Partial<User>;
   width?: string;
   height?: string;
@@ -15,16 +15,19 @@ interface IProfile {
   progress?: number;
 }
 
-const Profile: FC<IProfile> = ({
+const Profile: ForwardRefRenderFunction<HTMLDivElement,IProfile> = ({
   user,
   width = '120',
   height,
   className,
   onClick,
   progress,
-}) => {
+  ...props
+},ref) => {
   return (
     <div
+      {...props}
+      ref={ref}
       className="relative "
       style={{
         width: `${width}px`,
@@ -60,4 +63,4 @@ const Profile: FC<IProfile> = ({
   );
 };
 
-export default Profile;
+export default React.forwardRef(Profile);

@@ -1,7 +1,7 @@
 'use client';
 import useProject from '@/hook/useProject';
 import SortByHome from '../Home/SortByHome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCallback } from 'react';
 import ModalCreateProject from '../Home/ModalCreateProject';
 
@@ -27,7 +27,8 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
         <SortByHome  />
       </div>
       <div className="flex flex-col h-[90%]">
-        <div className="flex bg-teal-800 text-white justify-center items-center rounded-t-sm h-[53px] text-center font-semibold">
+        <div className="flex bg-teal-800 text-white justify-center items-center 
+        rounded-t-sm h-[53px] text-center font-semibold">
           <div className="w-1/5">Project</div>
           <div className="w-1/5">Progress</div>
           <div className="w-1/5 ps-20">Status</div>

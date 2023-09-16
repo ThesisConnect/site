@@ -137,7 +137,7 @@ const CreatePopup: React.FC<ModalProps> = (
                   Start Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_startDate && (
-                    <div className='absolute w-[300px] h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
                       <CalendarPick DateSelect={selectedDate} updateDate={updateDate} />
                     </div>
                   )}
@@ -159,7 +159,7 @@ const CreatePopup: React.FC<ModalProps> = (
                   End Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_endDate && (
-                    <div className='absolute w-[300px] h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
                       <CalendarPick DateSelect={selectedEndDate} updateDate={updateEndDate} />
                     </div>
                   )}
