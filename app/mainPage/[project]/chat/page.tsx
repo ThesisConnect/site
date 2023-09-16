@@ -45,7 +45,7 @@ const PageChat = () => {
   return (
     <ChatLayout>
       <div className="flex flex-col w-full h-full">
-        <div className="flex-grow overflow-y-scroll max-h-[calc(100% - 14rem)]">
+        <div className="flex-grow overflow-y-scroll  max-h-[calc(100% - 14rem)]">
           <div className="p-4">
             <div ref={loadMoreRef}></div>
             {messages.slice(-displayCount).map((msg, index) => (
@@ -59,7 +59,7 @@ const PageChat = () => {
             <div ref={messageEndRef}></div>
           </div>
         </div>
-        <div className=" bg-teal-800 relative min-h-[8%] max-h-[14rem]  py-2  ">
+        <div className=" bg-teal-800 relative min-h-[8%] flex-shrink-0 max-h-[14rem]  py-2  ">
           <MessageInput />
         </div>
       </div>
@@ -72,11 +72,17 @@ const messages = [
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
+  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
+  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
@@ -85,28 +91,12 @@ const messages = [
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'end', isOwnMessage: false },
+  { username: 'Paxwell', content: 'End', isOwnMessage: false },
+  
+
   
 ];
 export default PageChat;
