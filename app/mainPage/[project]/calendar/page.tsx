@@ -18,9 +18,10 @@ import { truncate } from "lodash";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const MAX_NAME_LENGTH = 15;
+const MAX_PLANS_PER_DAY = 2; 
 
 function PageCalendar({ params: { project } }: { params: { project: string } }) {
-  const [dataItem, setData] = useState<any[]>([]); // Change DataModelInterface to 'any'
+  const [dataItem, setData] = useState<any[]>([]);
   const [currMonth, setCurrMonth] = useState(() => format(startOfToday(), "MMM-yyyy"));
   let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
@@ -36,9 +37,9 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
           withCredentials: true
         });
         if (Array.isArray(res?.data)) {
-          let arrData = (res.data || []).map((o: any) => { // Change type to 'any'
+          let arrData = (res.data || []).map((o: any) => {
             let dd = {
-              _id: o._id, // Update to use "_id" instead of "id"
+              _id: o._id,
               project_id: o.project_id,
               name: o.name,
               description: o.description,
@@ -58,7 +59,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
         console.error('Error fetching data:', error);
       }
     })()
-  }, [project]); // Add project as a dependency
+  }, [project]);
 
   const today = startOfToday();
   const days = [
@@ -83,7 +84,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-  const [selectedData, setSelectedData] = useState<any[]>([]); // Change type to 'any'
+  const [selectedData, setSelectedData] = useState<any[]>([]);
 
   const openPopup = (day: Date) => {
     setSelectedDay(day);
@@ -184,7 +185,8 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
             {daysInMonth.map((day, idx) => {
               let calEvents = isDDay(day);
               let evItems = [];
-              for (let ev of calEvents) {
+              for (let i = 0; i < Math.min(calEvents.length, MAX_PLANS_PER_DAY); i++) {
+                const ev = calEvents[i];
                 const truncatedName = truncate(ev.name, { length: MAX_NAME_LENGTH });
 
                 evItems.push(
