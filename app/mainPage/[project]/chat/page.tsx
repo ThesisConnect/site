@@ -74,6 +74,22 @@ const PageChat = () => {
                 isOwnMessage={msg.isOwnMessage}
               />
             ))}
+            <Message
+              username="Paxwell"
+              content={{
+                  type:"file",
+                  name:"test.txt",
+                  fileID:"1234",
+                  size:1234,
+                  type_file:"text/plain",
+                  lastModified:"2021-10-10",
+                  link:"https://www.google.com",
+                  memo:"memo"
+              }
+              }
+              isOwnMessage={false}
+              type='file'
+            />
             <div ref={messageEndRef}></div>
           </div>
         </div>
