@@ -42,6 +42,9 @@ const Register: React.FC = () => {
     } else if (searchParams.get('mode') === 'verifyEmail') {
       setMode('verifyEmail');
     }
+    else if (searchParams.get('mode') === 'resetPassword') {
+      setMode('resetPassword');
+    }
   }, [route, searchParams]);
   if (mode === 'verifyEmail') {
     return (
