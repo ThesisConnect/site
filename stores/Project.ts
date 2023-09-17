@@ -3,6 +3,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import axiosBaseurl from '../config/baseUrl';
 import {createJSONStorage, persist} from 'zustand/middleware'
+import { set } from 'lodash';
 export interface IStatus {
     id: number
     name: string
@@ -45,6 +46,8 @@ export type editSchema = {
   }
 export interface ProjectStore {
     project:IProject[]
+    filterProject: IProject[]
+    setFilterProject: (filterProject: IProject[]) => void
     setProject: (project: IProject[]) => void
     createProject: (data: createSchema) => Promise<IProject[]>
     updateProject: (updateData: editSchema,projectID:string) => IProject|undefined
@@ -54,6 +57,8 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
   persist(
     (set, get) => ({
         project: [],
+        filterProject: [],
+        setFilterProject: (filterProject) => set({ filterProject }),
         setProject: (project) => set({ project }),
         createProject: async (data: createSchema) => {
           const newProject = await axiosBaseurl.post("/project/create", data);

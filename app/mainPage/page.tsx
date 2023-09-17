@@ -6,12 +6,14 @@ import LoadingNormal from '@/components/loading/LoadingNormal';
 import useProjectStore from '@/stores/Project';
 import { motion } from 'framer-motion';
 const PageHomeRole = () => {
-  const { project } = useProjectStore((state) => ({
+  const { project, filterProject } = useProjectStore((state) => ({
     project: state.project,
+    filterProject: state.filterProject,
   }));
+  const projectList = filterProject.length > 0 ? filterProject : project;
   return (
     <>
-      {project?.map((item,index) => (
+      {projectList?.map((item,index) => (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

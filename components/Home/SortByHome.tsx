@@ -17,7 +17,7 @@ interface SortByHomeProps {
 const SortByHome:FC<SortByHomeProps> = ({className}) => {
   return (
     <Select>
-      <SelectTrigger className={cn("w-40 rounded-full",className)}>
+      <SelectTrigger className={cn("w-40 rounded-full border-neutral-300",className)}>
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
