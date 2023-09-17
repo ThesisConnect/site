@@ -6,17 +6,33 @@ import Sidebar from "@/components/Sidebar";
 import userStore from "@/stores/User";
 import axiosBaseurl from '@/config/baseUrl';
 import { useEffect, useState } from "react";
-import { uniqueId } from "lodash";
-import { v4 } from "uuid";
+import SortBySummary from "@/components/summary/SortBy";
 
-interface DataModelInterface {
+interface IPlan {
+  _id: string
+  project_id: string
+  name: string
+  description: string
+  progress: number
+  start_date: Date
+  end_date: Date
+  task: boolean
+  chat_id?: string
+  folder_id?: string
+  archived: boolean
+}
+
+export interface ISummary {
   _id: string;
   project_id: string;
-  name: string;
-  desc: string;
+  plan_id: IPlan;
+  reciever_id: string;
+  sender_id: string;
+  comment: string;
   progress: number;
-  startDate: Date;
-  endDate: Date;
+  files: string[];
+  chat_id: string;
+  createdAt: string;
   [x: string]: any;
 };
 
@@ -26,12 +42,7 @@ const PageDetail = ({ params: { project: projectID } }: {
   }
 }) => {
   console.log(projectID)
-
-  // const [summary, setData] = useState<DataModelInterface[]>([]);
-
-
-
-  const [summary, setSummary] = useState([])
+  const [summary, setSummary] = useState<ISummary[]>([])
   useEffect(() => {
     const res = axiosBaseurl.get(`page/summary/${projectID}`, {
       withCredentials: true,
@@ -52,7 +63,7 @@ const PageDetail = ({ params: { project: projectID } }: {
           <div className="flex w-full h-[50px] p-2 items-center text-lg font-semibold">
             Project name
           </div>
-          <div className="w-full h-[50px] p-2">Sort By</div>
+          <div className="w-full p-2"><SortBySummary/></div>
           <div className="flex w-full h-full px-2">
             <div className="relative w-full h-full bg-neutral-100 overflow-scroll snap-y">
 
@@ -66,18 +77,8 @@ const PageDetail = ({ params: { project: projectID } }: {
                 <div className="flex justify-center items-center h-full w-full">
                   <div className="w-[30px] h-[30px] bg-neutral-400 rounded-full"></div>
                 </div>
-                {summary.map(({
-                  project_id,
-                  plan_id,
-                  reciever_id,
-                  sender_id,
-                  comment,
-                  progress,
-                  files,
-                  chat_id,
-                  createdAt
-                }) => (
-                  <UpdateTask  project_id={project_id} plan_id={"ABD"} reciever_id={reciever_id} sender_id={sender_id} comment={comment} progress={progress} files={files} chat_id={chat_id} createdAt={createdAt} key={v4()}/>
+                {summary.map((obj) => (
+                  <UpdateTask project_id={projectID} plan_name={obj.plan_id.name} reciever_id={obj.reciever_id} sender_id={obj.sender_id} comment={obj.comment} progress={obj.progress} files={obj.files} chat_id={obj.chat_id} createdAt={obj.createdAt} />
                 ))}
 
               </div>
@@ -94,7 +95,6 @@ const PageDetail = ({ params: { project: projectID } }: {
                 <div className="truncate overflow-hidden col-span-3">Filename</div>
                 <div>Date</div>
               </div>
-
             </div>
           </div>
         </div>

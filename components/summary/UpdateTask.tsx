@@ -15,16 +15,18 @@ import { v4 as uuid4 } from 'uuid';
 import useAuth from "@/hook/useAuth";
 import { getAuth } from "firebase/auth";
 import SummaryPopup from "./SummaryPopup";
+
+
 interface DataSummary {
   project_id: string
-  plan_id: string
+  plan_name: string
   reciever_id: string
   sender_id: string
   comment: string
   progress: number
   files: string[]
   chat_id: string
-  createdAt: Date
+  createdAt: string
 }
 
 interface DataModelInterface {
@@ -35,7 +37,7 @@ interface DataModelInterface {
 const UpdateTask: React.FC<DataSummary> = (
   {
     project_id,
-    plan_id,
+    plan_name,
     reciever_id,
     sender_id,
     comment,
@@ -53,7 +55,6 @@ const UpdateTask: React.FC<DataSummary> = (
   const C_Date = createdAt.toString().slice(0, 10).split("-")
   const CreateDate = C_Date[2] + "/" + C_Date[1] + "/" + C_Date[0]
   const CreateTime = new Date(createdAt.toString()).getHours() + ":" + ("0" + new Date(createdAt.toString()).getMinutes()).slice(-2)
-  // console.log("Time ", CreateTime, CreateDate)
   const [state, setState] = React.useState<boolean>(false);
 
   function showSummaryPopup() {
@@ -63,11 +64,10 @@ const UpdateTask: React.FC<DataSummary> = (
   return (
     <div
       className="relative flex flex-col items-center rounded-lg 
-        bg-white border border-neutral-800 w-[700px] h-[160px] justify-evenly overflow-hidden hover:bg-neutral-100 hover:transition hover:ease-in-out"
+        bg-white border border-neutral-800 w-[700px] h-[160px] justify-evenly overflow-hidden "
     >
-      <SummaryPopup show={state} onClose={showSummaryPopup} comment={comment} />
-      <div className="w-full h-full cursor-pointer p-6" onClick={showSummaryPopup}>
-
+      {state && <SummaryPopup show={state} onClose={showSummaryPopup} plan_name={plan_name} comment={comment} progress={progress} />}
+      <div className="w-full h-full cursor-pointer hover:bg-neutral-100 hover:transition hover:ease-in-out p-6" onClick={showSummaryPopup}>
         <div className="w-full h-full " >
           <div className="w-full h-full grid grid-cols-7 gap-1 ">
             <div className="col-span-2 flex items-center w-full">
@@ -106,7 +106,11 @@ const UpdateTask: React.FC<DataSummary> = (
             <div className="col-span-5 flex space-x-4" onClick={showSummaryPopup}>
               <div className="h-[100%] w-[0.5px] bg-teal-800"></div>
               <div className="w-[90%] overflow-hidden">
-                <div className="font-semibold">{plan_id}</div>
+                <div className="font-semibold">
+                  {
+                    plan_name
+                  }
+                </div>
                 <div className="flex">
                   <div className="truncate">
                     Detail : {comment}

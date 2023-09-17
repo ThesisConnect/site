@@ -183,7 +183,7 @@ const EditPopup: React.FC<DataPlan> = (
                   <div className="h-[16px]"></div>
                 </label>
               </div>
-              <hr className='w-[12%] h-[15px] border-b-2 border-t-0 border-dashed border-teal-800' />
+              <hr className='w-[12%] h-[0px] border-b-2 border-t-0 border-dashed border-teal-800' />
               <div className='flex flex-col w-[40%] '>
                 <label className="text-xs relative block">
                   End Date
@@ -238,7 +238,6 @@ const EditPopup: React.FC<DataPlan> = (
                   ) : (
                     <div className="h-[16px]"></div>
                   )}
-
                 </label>
               </div>
             </div>

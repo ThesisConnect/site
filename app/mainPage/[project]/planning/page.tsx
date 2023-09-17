@@ -17,17 +17,30 @@ import React, {
 import SortByPlan from '@/components/plan/SortBy';
 import { v4 } from 'uuid';
 
-const PagePlanning = ({
-  params: { project: projectID },
-}: {
+export interface DataModelInterface {
+  _id: string;
+  project_id: string;
+  name: string;
+  description: string;
+  progress: number;
+  start_date: string;
+  end_date: string;
+  task: boolean;
+  [x: string]: any;
+};
+
+
+const PagePlanning = ({ params: { project: projectID } }: {
   params: {
     project: string;
   };
 }) => {
-  const [Plans, setPlans] = useState([]);
-  const [searchplans, setSearchPlans] = useState(Plans);
+  const [Plans, setPlans] = useState<DataModelInterface[]>([])
+  const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans)
+  const [searchplans, setSearchPlans] = useState(Plans)
   const [state, setState] = React.useState<boolean>(false);
   const [create, setCreate] = React.useState<boolean>(false);
+  const [sort, setSort] = React.useState<boolean>(false);
 
   function showCreatePopup() {
     setState(!state);
@@ -41,6 +54,23 @@ const PagePlanning = ({
     setCreate(!create);
   };
   // console.log(Plans)
+  // console.log(projectID)
+
+  const [selectedValue, setSelectedValue] = useState<string>("ALL");
+  const handleValueChange = (newValue: string) => {
+    setSelectedValue(newValue);
+    if (newValue == "ALL") {
+      setSortPlans(Plans);
+    }
+    else if (newValue == "Gantt") {
+      const SortPlan = Plans.filter((obj) => obj.task === true)
+      setSortPlans(SortPlan)
+    }
+    else if (newValue === "notGantt") {
+      const SortPlan = Plans.filter((obj) => obj.task === false)
+      setSortPlans(SortPlan)      
+    }
+  };
 
   useEffect(() => {
     console.log(create);
@@ -50,10 +80,10 @@ const PagePlanning = ({
       })
       .then((response) => {
         setPlans(response.data);
-      })
-      .catch((err) => {
+        setSortPlans(response.data);
+      }).catch(err => {
         console.log(err);
-      });
+      })
   }, [create]);
 
   // function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
@@ -63,7 +93,7 @@ const PagePlanning = ({
   //     console.log("obj", obj.name.toLowerCase() === event.target.value.toLowerCase())
   //   }))
   // }
-  console.log(searchplans);
+
   function getDayDiff(StartPlan: string, EndPlan: string): number {
     const msInDay = 24 * 60 * 60 * 1000;
     return Math.round(
@@ -71,16 +101,7 @@ const PagePlanning = ({
     );
   }
 
-  const SortPlan = Plans.sort((p1, p2) =>
-    getDayDiff(p1['start_date'], p1['end_date']) >
-    getDayDiff(p2['start_date'], p2['end_date'])
-      ? 1
-      : getDayDiff(p1['start_date'], p1['end_date']) <
-        getDayDiff(p2['start_date'], p2['end_date'])
-      ? -1
-      : 0
-  );
-
+  console.log(SortPlans)
   return (
     <div className="flex relative flex-row h-full  overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">
@@ -96,8 +117,7 @@ const PagePlanning = ({
             <div className="text-white">Create Plan</div>
           </Button>
           <div className="flex gap-2 items-center">
-            <SortByPlan />
-
+            <SortByPlan pageType={selectedValue} setPage={handleValueChange} />
             <input
               className={
                 'rounded-full border focus:border-teal-800 border-solid border-neutral-300 w-80 py-2 px-3 text-base'
@@ -111,29 +131,8 @@ const PagePlanning = ({
           <div className="flex w-full p-2 h-full">
             <div className="w-full h-full overflow-scroll scroll-x-none">
               <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
-                {SortPlan.map(
-                  ({
-                    _id,
-                    name,
-                    description,
-                    start_date,
-                    end_date,
-                    progress,
-                    task,
-                  }) => (
-                    <PlanCard
-                      projectID={projectID}
-                      id={_id}
-                      name={name}
-                      description={description}
-                      start_date={start_date}
-                      end_date={end_date}
-                      progress={progress}
-                      task={task}
-                      onSucces={handleOnSuccess}
-                      key={v4()}
-                    />
-                  )
+                {SortPlans.map((obj) =>
+                  <PlanCard projectID={projectID} id={obj._id} name={obj.name} description={obj.description} start_date={obj.start_date} end_date={obj.end_date} progress={obj.progress} task={obj.task} onSucces={handleOnSuccess} />
                 )}
               </div>
             </div>

@@ -20,7 +20,7 @@ interface DataPlan {
 
 
 const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_date, progress, task, projectID, onSucces }) => {
-  // console.log(start_date)
+  console.log(start_date)
 
   const Start = start_date.slice(0, 10).split("-");
   const StartDate = Start[2] + "/" + Start[1] + "/" + Start[0];
