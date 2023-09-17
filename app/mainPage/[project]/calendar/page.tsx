@@ -17,6 +17,8 @@ import {
 import { truncate } from "lodash";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import DetailPopup from "@/components/plan/PlanDetailPopup";
+import { data } from "autoprefixer";
+import { v4 } from "uuid";
 
 const MAX_NAME_LENGTH = 15;
 const MAX_PLANS_PER_DAY = 2;
@@ -73,7 +75,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
         console.error('Error fetching data:', error);
       }
     })()
-  }, [project]);
+  }, [project, dataItem]);
 
   const today = startOfToday();
   const days = [
@@ -147,7 +149,12 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
     <div className="flex flex-col w-full h-full overflow-hidden">
       {state && (
         selectItem.map((obj) => (
-          <DetailPopup show={state} id={obj._id} name={obj.name} description={obj.description} start_date={GetFormatDate(obj.start_date)} end_date={GetFormatDate(obj.end_date)} progress={obj.progress} task={obj.task} duration={getDayDiff(obj.start_date, obj.end_date)} onClose={showPlanDetail} />
+          <DetailPopup show={state} id={obj._id} name={obj.name} 
+          description={obj.description} start_date={GetFormatDate(obj.start_date)} 
+          end_date={GetFormatDate(obj.end_date)} progress={obj.progress} task={obj.task}
+           duration={getDayDiff(obj.start_date, obj.end_date)} onClose={showPlanDetail} 
+           key={v4()}
+           />
         ))
       )}
       <div className="flex w-full h-[50px] p-2 items-center text-lg font-semibold">
@@ -182,7 +189,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
                 onClick={getNextMonth}
               />
               <button
-                className="text-black cursor-pointer rounded-full bg-white text-teal-800 margin-right-20px"
+                className=" cursor-pointer rounded-full bg-white text-teal-800 margin-right-20px"
                 onClick={() => setCurrMonth(format(startOfToday(), "MMM-yyyy"))}
                 style={{ marginRight: "20px", width: "80px" }}
               >

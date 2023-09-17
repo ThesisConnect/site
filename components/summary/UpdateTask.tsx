@@ -66,7 +66,8 @@ const UpdateTask: React.FC<DataSummary> = (
       className="relative flex flex-col items-center rounded-lg 
         bg-white border border-neutral-800 w-[700px] h-[160px] justify-evenly overflow-hidden "
     >
-      {state && <SummaryPopup show={state} onClose={showSummaryPopup} plan_name={plan_name} comment={comment} progress={progress} />}
+      {state && <SummaryPopup show={state} onClose={showSummaryPopup} plan_name={plan_name} 
+      comment={comment} progress={progress} />}
       <div className="w-full h-full cursor-pointer hover:bg-neutral-100 hover:transition hover:ease-in-out p-6" onClick={showSummaryPopup}>
         <div className="w-full h-full " >
           <div className="w-full h-full grid grid-cols-7 gap-1 ">
@@ -89,7 +90,7 @@ const UpdateTask: React.FC<DataSummary> = (
                       className="border border-neutral-300"
                       width="41" />
                   </div>
-                  <div className="grid grid-cols-7 flex items-center">
+                  <div className="grid grid-cols-7 ">
                     <div className="col-span-5 w-[30px] h-[2px] bg-teal-800"></div>
                     <div className="col-span-2 w-[10px] h-[10px] bg-teal-800 rounded-full"></div>
                   </div>

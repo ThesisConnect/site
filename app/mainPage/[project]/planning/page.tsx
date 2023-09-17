@@ -84,7 +84,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
       }).catch(err => {
         console.log(err);
       })
-  }, [create]);
+  }, [create, projectID]);
 
   // function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
   //   console.log(event.target.value)
@@ -132,7 +132,12 @@ const PagePlanning = ({ params: { project: projectID } }: {
             <div className="w-full h-full overflow-scroll scroll-x-none">
               <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
                 {SortPlans.map((obj) =>
-                  <PlanCard projectID={projectID} id={obj._id} name={obj.name} description={obj.description} start_date={obj.start_date} end_date={obj.end_date} progress={obj.progress} task={obj.task} onSucces={handleOnSuccess} />
+                  <PlanCard projectID={projectID} id={obj._id}
+                   name={obj.name} description={obj.description}
+                    start_date={obj.start_date} end_date={obj.end_date} 
+                    progress={obj.progress} task={obj.task} onSucces={handleOnSuccess} 
+                    key={v4()}
+                    />
                 )}
               </div>
             </div>

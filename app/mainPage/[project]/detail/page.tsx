@@ -7,6 +7,7 @@ import userStore from "@/stores/User";
 import axiosBaseurl from '@/config/baseUrl';
 import { useEffect, useState } from "react";
 import SortBySummary from "@/components/summary/SortBy";
+import { v4 } from "uuid";
 
 interface IPlan {
   _id: string
@@ -78,7 +79,12 @@ const PageDetail = ({ params: { project: projectID } }: {
                   <div className="w-[30px] h-[30px] bg-neutral-400 rounded-full"></div>
                 </div>
                 {summary.map((obj) => (
-                  <UpdateTask project_id={projectID} plan_name={obj.plan_id.name} reciever_id={obj.reciever_id} sender_id={obj.sender_id} comment={obj.comment} progress={obj.progress} files={obj.files} chat_id={obj.chat_id} createdAt={obj.createdAt} />
+                  <UpdateTask project_id={projectID} plan_name={obj.plan_id.name} 
+                  reciever_id={obj.reciever_id} sender_id={obj.sender_id} comment={obj.comment} 
+                  progress={obj.progress} files={obj.files} chat_id={obj.chat_id}
+                   createdAt={obj.createdAt}
+                   key={v4()}
+                    />
                 ))}
 
               </div>
@@ -91,7 +97,7 @@ const PageDetail = ({ params: { project: projectID } }: {
             <div className="grid grid-flow-row auto-rows-max md:auto-rows-min">
 
               {/* map */}
-              <div className="grid grid-cols-5 gap-1 h-[35px] px-2 flex items-center">
+              <div className="grid grid-cols-5 gap-1 h-[35px] px-2 ">
                 <div className="truncate overflow-hidden col-span-3">Filename</div>
                 <div>Date</div>
               </div>

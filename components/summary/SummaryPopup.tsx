@@ -72,7 +72,8 @@ const SummaryPopup: React.FC<DataPlan> = (
             <div className='flex justify-end items-center w-full'>
               {selectedValue === "Reject" ? (
 
-                <label htmlFor="fileUpload" className="cursor-pointer w-10/12 mt-2 h-10 rounded-full flex bg-teal-800 items-center hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2">
+                <label htmlFor="fileUpload" className="cursor-pointer  mt-2 h-10 rounded-full flex bg-teal-800 items-center
+                 hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2">
                   <div className='text-white items-center justify-center px-2 '>
                     Attach file
                   </div>
@@ -80,7 +81,7 @@ const SummaryPopup: React.FC<DataPlan> = (
                 </label>
               ) : (
                 <div
-                  className='w-10/12 mt-2 h-10 rounded-full flex bg-neutral-200 items-center justify-center w-[20%] px-2'
+                  className=' mt-2 h-10 rounded-full flex bg-neutral-200 items-center justify-center w-[20%] px-2'
                 >
                   Attach file
                 </div>

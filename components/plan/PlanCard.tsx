@@ -107,9 +107,9 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
           </div>
         )}
         <div className="z-0 relative flex flex-col h-full w-full gap-2 ">
-          <div className="flex grid w-full h-full content-between">
+          <div className=" grid w-full h-full content-between">
             <div className="flex flex-row justify-between gap-2">
-              <div className="flex w-full grid grid-rows-2  items-center gap-2">
+              <div className=" w-full grid grid-rows-2  items-center gap-2">
                 <div className="row-span-1 text-base font-semibold truncate">{name}</div>
                 {task ? (
                   <div className="flex items-center">
