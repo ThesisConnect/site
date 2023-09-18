@@ -1,6 +1,6 @@
 'use client';
 import useProject from '@/hook/useProject';
-import SortByHome from '../Home/SortByHome';
+import SelectLabels from '../Home/SortProject';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useCallback } from 'react';
 import ModalCreateProject from '../Home/ModalCreateProject';
@@ -41,6 +41,20 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
     },
     [project, setFilterProject, handleSearchDebounced]
   );
+  const handleSelect = (value: string) => {
+    let sortBy = '';
+    if (value === '') {
+      return setFilterProject([]);
+    }
+    else if (value === 'Progress') {
+      sortBy = 'progress';
+    }
+    else if (value === 'ProjectName') {
+      sortBy = 'name';
+    }
+    const searchResult = _.sortBy(project, [sortBy]);
+    setFilterProject(searchResult);
+  }
   useEffect(() => {
     setFilterProject([]);
   }, [setFilterProject]);
@@ -66,7 +80,9 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
           />
         )}
         <div className="flex-grow" />
-        <SortByHome className="me-4 " />
+        <SelectLabels
+          onValueChange={handleSelect}
+        />
         <Search
           data={project.map((items) => items.name)}
           onChange={handleSearch}
