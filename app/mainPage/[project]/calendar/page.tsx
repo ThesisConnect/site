@@ -70,12 +70,12 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
         } else {
           setData([]);
         }
-        console.log('resp', dataItem)
+        // console.log('resp', dataItem)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     })()
-  }, [project, dataItem]);
+  }, [project]);
 
   const today = startOfToday();
   const days = [
