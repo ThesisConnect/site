@@ -13,17 +13,29 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   const { setFilterProject } = useProjectStore((state) => ({
     setFilterProject: state.setFilterProject,
   }));
+  const [showNotFound, setShowNotFound] = useState(false);
   const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
-  const handleSearchDebounced = _.debounce((searchValue, project, setFilterProject) => {
-    if(searchValue === '') return setFilterProject([]);
-    const searchResult = _.filter(project, (item) => {
-      return item.name.toLowerCase().trim().includes(searchValue);
-    });
-    setFilterProject(searchResult);
-  }, 200);
+  const handleSearchDebounced = _.debounce(
+    (searchValue, project, setFilterProject) => {
+      if (searchValue === '') {
+        setShowNotFound(false);
+        return setFilterProject([]);
+      }
+      const searchResult = _.filter(project, (item) => {
+        return item.name.toLowerCase().trim().includes(searchValue);
+      });
+      if (searchResult.length === 0) {
+        setShowNotFound(true);
+      }
+      setFilterProject(searchResult);
+    },
+    200
+  );
   const handleSearch = useCallback(
     (e: React.SyntheticEvent, value: string, reason: string) => {
-      console.log(value)
+      // console.log(e)
+      // console.log(reason)
+      // console.log(value)
       const searchValue = value.toLowerCase().trim();
       handleSearchDebounced(searchValue, project, setFilterProject);
     },
@@ -31,7 +43,7 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   );
   useEffect(() => {
     setFilterProject([]);
-  },[setFilterProject]);
+  }, [setFilterProject]);
   const handleCreateProject = async () => {
     setOpenModalCreateProject(true);
   };
@@ -75,7 +87,17 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
           </div>
         </div>
         <div className="bg-neutral-100 h-full overflow-y-scroll">
-          {children}
+          {showNotFound ? (
+            <div
+              className="w-full h-full
+               flex text-2xl text-gray-500 font-semiboldcs
+           items-center justify-center"
+            >
+              Project not found
+            </div>
+          ) : (
+            children
+          )}
         </div>
       </div>
     </div>
