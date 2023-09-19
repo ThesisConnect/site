@@ -59,10 +59,10 @@ const CreatePopup: React.FC<ModalProps> = (
     console.log("project_id");
   }, [show])
 
-  // console.log(projectID)
+  console.log(projectID)
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
-    console.log(data);
+    console.log("data", data);
     try {
       const sendData = {
         project_id: projectID,
@@ -87,7 +87,7 @@ const CreatePopup: React.FC<ModalProps> = (
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
-      <form className=" bg-white rounded-lg w-[50%] h-3/5 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+      <form className=" bg-white rounded-lg w-[50%] h-auto flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Create Plan</h2>
           <div className="flex flex-col px-4 py-3  gap-1">
@@ -168,31 +168,32 @@ const CreatePopup: React.FC<ModalProps> = (
                     className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                     placeholder="End date"
                     onClick={showEndDatePicker}
-                    value={("0" + selectedEndDate.getDate()).slice(-2) + "/" +( "0"+(Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
+                    value={("0" + selectedEndDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
                     // {...register('end_date', { required: true })}
                     onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]"></div>
                 </label>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className='px-4 flex flex-row justify-end items-center gap-2 h-full'>
-          <Button
-            className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
-            onClick={onClose}
-            type="button"
-          >
-            <div className="text-neutral-800">Cancel</div>
-          </Button>
 
-          <Button
-            type="submit"
-            className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-          >
-            <div className="text-white">Create</div>
-          </Button>
+            </div>              
+            <div className='py-2 flex flex-row justify-end items-center gap-2 h-full'>
+                <Button
+                  className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+                  onClick={onClose}
+                  type="button"
+                >
+                  <div className="text-neutral-800">Cancel</div>
+                </Button>
+
+                <Button
+                  type="submit"
+                  className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+                >
+                  <div className="text-white">Create</div>
+                </Button>
+              </div>
+          </div>
         </div>
       </form>
     </div>

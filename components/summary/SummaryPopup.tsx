@@ -10,6 +10,8 @@ import axiosBaseurl from '@/config/baseUrl';
 import { DateTime } from 'luxon';
 import Button from '../login/Button';
 import DropdownApprove from './Approve';
+import userStore from '@/stores/User';
+import { createSummarySchema } from '@/models/Auth/Summary';
 
 
 interface DataPlan {
@@ -35,17 +37,43 @@ const SummaryPopup: React.FC<DataPlan> = (
     setValue,
     control,
     formState: { errors },
-  } = useForm<PlanEditSchemaType>({
-    resolver: zodResolver(PlanEditSchema),
+  } = useForm<createSummarySchema>({
+    resolver: zodResolver(createSummarySchema),
   });
 
+  const user = userStore((state) => state.user);
+  console.log(user.role)
 
   const [selectedValue, setSelectedValue] = useState<string>("Approve");
   const handleValueChange = (newValue: string) => {
     setSelectedValue(newValue);
   };
 
-
+  const role = "advisee";
+  const onSubmit: SubmitHandler<createSummarySchema> = async (data) => {
+    console.log(data);
+    try {
+      const sendData = {
+        project_id: "",
+        plan_id: "",
+        reciever_id: "",
+        sender_id: "",
+        comment: "",
+        file_id: "",
+        chat_id: "",
+        progress: "",
+      };
+      console.log(sendData)
+      const resData = await axiosBaseurl.post('/summary/create', sendData)
+      // onSucces()
+      reset();
+    }
+    catch (err: any) {
+      console.log(err);
+      onClose()
+      reset()
+    }
+  };
 
 
   console.log(selectedValue)
@@ -53,25 +81,27 @@ const SummaryPopup: React.FC<DataPlan> = (
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <form className=" bg-white rounded-lg w-[50%] h-[70%] flex flex-col">
+      <form className=" bg-white rounded-lg w-[50%] h-auto flex flex-col">
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <div className='flex h-full p-4 justify-between items-center '>
             <div className='flex text-lg font-semibold'>{plan_name}</div>
-            <div>
-              <DropdownApprove
-                label=""
-                placeholder="select"
-                width="w-6/12"
-                control={control}
-                pageType={selectedValue}
-                setPage={handleValueChange}
-              />
-            </div>
+            {user.role === "advisor" && (
+              <div>
+                <DropdownApprove
+                  label=""
+                  placeholder="select"
+                  width="w-6/12"
+                  control={control}
+                  pageType={selectedValue}
+                  setPage={handleValueChange}
+                />
+              </div>
+            )}
+
           </div>
           <div className='flex flex-col py-3 px-4 gap-1'>
             <div className='flex justify-end items-center w-full'>
-              {selectedValue === "Reject" ? (
-
+              {selectedValue === "Reject" && user.role === "advisor" && (
                 <label htmlFor="fileUpload" className="cursor-pointer  mt-2 h-10 rounded-full flex bg-teal-800 items-center
                  hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2">
                   <div className='text-white items-center justify-center px-2 '>
@@ -79,7 +109,8 @@ const SummaryPopup: React.FC<DataPlan> = (
                   </div>
                   <input type="file" id="fileUpload" className="hidden" accept="image/*" />
                 </label>
-              ) : (
+              )}
+              {selectedValue === "Approve" && user.role === "advisor" && (
                 <div
                   className=' mt-2 h-10 rounded-full flex bg-neutral-200 items-center justify-center w-[20%] px-2'
                 >
@@ -151,15 +182,15 @@ const SummaryPopup: React.FC<DataPlan> = (
                 </label>
               </div>
             )}
-            <div className='px-2 flex flex-row justify-end items-center gap-2 h-auto w-full'>
+            <div className='p-2 flex flex-row justify-end items-center gap-2 h-auto w-full'>
               <Button
                 className="w-[20%] bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
                 onClick={onClose}
-                type="submit"
+              // type="submit"
               >
                 <div className="text-neutral-800">Cancel</div>
               </Button>
-              {selectedValue === "Approve" ? (
+              {(selectedValue === "Approve" && user.role === "advisor") && (
                 <Button
                   className="w-[20%] bg-teal-800 hover:bg-teal-700 hover:transition hover:ease-in-out "
                   onClick={onClose}
@@ -167,7 +198,8 @@ const SummaryPopup: React.FC<DataPlan> = (
                 >
                   <div className="text-white">Approve</div>
                 </Button>
-              ) : (
+              )}
+              {selectedValue === "Reject" && user.role === "advisor" && (
                 <Button
                   className="w-[20%] bg-teal-800 hover:bg-teal-700 hover:transition hover:ease-in-out "
                   onClick={onClose}

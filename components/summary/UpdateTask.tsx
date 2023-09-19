@@ -90,7 +90,7 @@ const UpdateTask: React.FC<DataSummary> = (
                       className="border border-neutral-300"
                       width="41" />
                   </div>
-                  <div className="grid grid-cols-7 ">
+                  <div className="grid grid-cols-7 items-center">
                     <div className="col-span-5 w-[30px] h-[2px] bg-teal-800"></div>
                     <div className="col-span-2 w-[10px] h-[10px] bg-teal-800 rounded-full"></div>
                   </div>

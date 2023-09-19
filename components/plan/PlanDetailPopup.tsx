@@ -72,7 +72,7 @@ const DetailPopup: React.FC<DataPlan> = (
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[50%] h-3/5 flex flex-col">
+      <div className=" bg-white rounded-lg w-[50%] h-auto flex flex-col">
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Plan Detail</h2>
           <div className="flex flex-col py-3 px-4 gap-1">
@@ -164,17 +164,17 @@ const DetailPopup: React.FC<DataPlan> = (
               </div>
             </div>
           </div>
-        </div>
+        </div>          
         <div className='px-4 py-3 flex flex-row justify-end items-center gap-2 h-full'>
-          <Button
+            <Button
+              className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+              onClick={onClose}
+              type="submit"
+            >
+              <div className="text-neutral-800">Cancel</div>
+            </Button>
+          </div>
 
-            className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
-            onClick={onClose}
-            type="submit"
-          >
-            <div className="text-neutral-800">Cancel</div>
-          </Button>
-        </div>
       </div>
     </div>
   );

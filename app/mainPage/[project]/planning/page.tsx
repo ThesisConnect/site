@@ -16,6 +16,7 @@ import React, {
 } from 'react';
 import SortByPlan from '@/components/plan/SortBy';
 import { v4 } from 'uuid';
+import SearchInput from '@/components/Search';
 
 export interface DataModelInterface {
   _id: string;
@@ -118,13 +119,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
           </Button>
           <div className="flex gap-2 items-center">
             <SortByPlan pageType={selectedValue} setPage={handleValueChange} />
-            <input
-              className={
-                'rounded-full border focus:border-teal-800 border-solid border-neutral-300 w-80 py-2 px-3 text-base'
-              }
-              placeholder="Search"
-              // onChange={handleQueryChange}
-            />
+            <SearchInput data={SortPlans.map((obj)=>obj.name)}   />
           </div>
         </div>
         <div className="relative h-full w-full overflow-hidden ">

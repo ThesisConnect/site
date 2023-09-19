@@ -34,7 +34,7 @@ const DropdownApprove: FC<SelectProps> = (
         <label>
 
               <Select value={pageType} onValueChange={setPage}>
-                <SelectTrigger className="rounded-full border border-solid border-neutral-800 w-full p-4">
+                <SelectTrigger className="rounded-full border border-solid w-full p-4">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

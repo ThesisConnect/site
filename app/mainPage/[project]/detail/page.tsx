@@ -42,7 +42,9 @@ const PageDetail = ({ params: { project: projectID } }: {
     project: string
   }
 }) => {
-  console.log(projectID)
+  // const user = userStore((state) => state.user);
+  // console.log(user.role)
+  
   const [summary, setSummary] = useState<ISummary[]>([])
   useEffect(() => {
     const res = axiosBaseurl.get(`page/summary/${projectID}`, {
