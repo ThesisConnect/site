@@ -32,6 +32,7 @@ const SearchInput:FC<SearchInputProps> = ({width,height,onChange,className,data}
   return (
     <div className={cn("h-10",width,height,className)}>
       <Autocomplete
+        noOptionsText="Project not found"
         open={open}
         onOpen={() => setOpen(true)}
         disablePortal
