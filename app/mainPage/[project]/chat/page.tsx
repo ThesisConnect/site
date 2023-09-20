@@ -27,6 +27,7 @@ const PageChat = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !initialRender) {
+          
           setDisplayCount((prevCount) => prevCount + 30);
         }
         initialRender = false;
@@ -49,20 +50,21 @@ const PageChat = () => {
     }
   }, [chat]);
 
-  useEffect(() => {
-    const currentDevRef = devRef.current;
-    const observer = new ResizeObserver((entries) => {
-      handleInputHeightChange(entries[0].contentRect.height);
-    });
-    if (currentDevRef) {
-      observer.observe(currentDevRef);
-    }
-    return () => {
-      if (currentDevRef) {
-        observer.unobserve(currentDevRef);
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   const currentDevRef = devRef.current;
+  //   const observer = new ResizeObserver((entries) => {
+  //     console.log('test')
+  //     handleInputHeightChange(entries[0].contentRect.height);
+  //   });
+  //   if (currentDevRef) {
+  //     observer.observe(currentDevRef);
+  //   }
+  //   return () => {
+  //     if (currentDevRef) {
+  //       observer.unobserve(currentDevRef);
+  //     }
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (chatID) {
