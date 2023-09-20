@@ -4,6 +4,7 @@ import DetailPopup from "./PlanDetailPopup";
 import { CgDetailsMore } from "react-icons/cg";
 import EditPopup from "./PlanEditPopup";
 import DeletePopup from "./DeletePopup";
+import { v4 } from "uuid";
 
 
 interface DataPlan {
@@ -84,9 +85,9 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
       className="flex w-full aspect-square bg-neutral-100 py-5 px-4 rounded-lg overflow-hidden"
     >
 
-      <DetailPopup show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanDetail} />
-      <EditPopup show={edit} id={id} name={name} description={description} start_date={start_date} end_date={end_date} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} onSucces={onSucces}/>
-      <DeletePopup show={Delete} onClose={showDeletePlan} name={name} id={id} onSuccess={onSucces}/>
+      <DetailPopup key={v4()} show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanDetail} />
+      <EditPopup  key={v4()} show={edit} id={id} name={name} description={description} start_date={start_date} end_date={end_date} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} onSucces={onSucces}/>
+      <DeletePopup key={v4()} show={Delete} onClose={showDeletePlan} name={name} id={id} onSuccess={onSucces}/>
       <div className="relative w-full">
         {select && (
           <div ref={ref} className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
