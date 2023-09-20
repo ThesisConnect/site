@@ -2,11 +2,15 @@
 import { MdAttachFile } from 'react-icons/md';
 import AutoResizingTextArea from '../AutoResizingTextArea';
 import { FC,  useEffect,  useLayoutEffect, useRef, useState } from 'react';
+
 interface MessageInputProps {
   handleInputHeightChange?: (newHeight: number) => void;
+  onClickSend?: (data:string) => void;
 }
+
 const MessageInput:FC<MessageInputProps> = ({
   handleInputHeightChange = () => {},
+  onClickSend=()=>{}
 }) => {
   // const [inputHeight, setInputHeight] = useState(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -29,7 +33,12 @@ const MessageInput:FC<MessageInputProps> = ({
   }, [
     inputRef,handleInputHeightChange
   ]);
-
+  const handleClickSend = () => {
+    if(inputRef.current?.value){
+      const inputValue = inputRef.current.value
+      onClickSend(inputValue)
+    }
+  }
   return (
     <div  className="flex w-full h-full justify-evenly items-center">
       <label htmlFor="fileUpload" className="cursor-pointer mb-2 h-10 self-end">
@@ -46,7 +55,10 @@ const MessageInput:FC<MessageInputProps> = ({
           maxHeight={192}
         />
       </div>
-      <button className="px-3 h-10 mb-2 w-2/12 text-neutral-800 bg-neutral-200 self-end rounded-full">
+      <button className="px-3 h-10 mb-2 w-2/12 text-neutral-800
+       bg-neutral-200 self-end rounded-full"
+       onClick={handleClickSend}
+       >
         Send
       </button>
     </div>

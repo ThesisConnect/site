@@ -6,9 +6,11 @@ import Message from '@/components/chat/Message';
 import { use, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
+import socket from '@/config/socket';
 
 const PageChat = () => {
   const searchParams = useSearchParams();
+  const chatID = searchParams.get('chatID');
   const [chat, setChat] = useState(messages);
   const [displayCount, setDisplayCount] = useState(30);
   const devRef = useRef<HTMLDivElement>(null);
@@ -16,7 +18,7 @@ const PageChat = () => {
   const loadMoreRef = useRef(null);
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ });
+      messageEndRef.current.scrollIntoView({});
     }
   };
   useEffect(() => {
@@ -60,8 +62,41 @@ const PageChat = () => {
         observer.unobserve(currentDevRef);
       }
     };
-  }
-  , []);
+  }, []);
+
+  useEffect(() => {
+    if (chatID) {
+      socket.emit('join room', chatID);
+
+      socket.on('room messages', (newMessages) => {
+        console.log(`${chatID}-RoomNewMessages`, newMessages);
+      });
+      socket.on('receive message', (newMessages) => {
+        console.log(`${chatID}-ReceiveNewMessages`, newMessages);
+      });
+      socket.on('error', (error) => {
+        console.error('Socket error:', error);
+      });
+    }
+
+    return () => {
+      if (chatID) {
+        socket.off('room messages');
+        socket.off('receive message');
+        socket.off('error');
+        socket.emit('leave room', chatID);
+      }
+    };
+  }, [chatID]);
+
+  const handleSendData = (message: string) => {
+    const chatIDFromURL = searchParams.get('chatID');
+    if (chatIDFromURL) {
+      socket.emit('send message', chatIDFromURL, message);
+    } else {
+      console.error('Chat ID not found in URL');
+    }
+  };
   return (
     <ChatLayout>
       <div className="flex flex-col w-full h-full">
@@ -79,25 +114,25 @@ const PageChat = () => {
             <Message
               username="Paxwell"
               content={{
-                  type:"file",
-                  name:"test.txt",
-                  fileID:"1234",
-                  size:1234,
-                  type_file:"text/plain",
-                  lastModified:"2021-10-10",
-                  link:"https://www.google.com",
-                  memo:"memo"
-              }
-              }
+                type: 'file',
+                name: 'test.txt',
+                fileID: '1234',
+                size: 1234,
+                type_file: 'text/plain',
+                lastModified: '2021-10-10',
+                link: 'https://www.google.com',
+                memo: 'memo',
+              }}
               isOwnMessage={false}
-              type='file'
+              type="file"
             />
             <div ref={messageEndRef}></div>
           </div>
         </div>
         <div className=" bg-teal-800 relative min-h-[8%] flex-shrink-0 max-h-[14rem]  py-2  ">
-          <MessageInput 
+          <MessageInput
             handleInputHeightChange={handleInputHeightChange}
+            onClickSend={handleSendData}
           />
         </div>
       </div>
@@ -107,9 +142,7 @@ const PageChat = () => {
 
 const DynamicHome = dynamic(() => Promise.resolve(PageChat), {
   ssr: false,
-  loading: () => (
-    <LoadingNormal/>
-  ),
+  loading: () => <LoadingNormal />,
 });
 const messages = [
   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
@@ -122,6 +155,5 @@ const messages = [
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-
 ];
 export default DynamicHome;
