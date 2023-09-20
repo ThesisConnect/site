@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5050/chat',{
+const socket = io('https://socketserver-production-67f4.up.railway.app/chat',{
   withCredentials: true,
 });
 
