@@ -72,87 +72,66 @@ const DetailPopup: React.FC<DataPlan> = (
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[45%] h-auto flex flex-col">
-        <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
-          <h2 className="flex h-full p-4 items-center text-lg font-semibold">Plan Detail</h2>
-          <div className="flex flex-col py-3 px-4 gap-1">
-            <div className='w-full flex flex-col gap-3'>
-              <div className='w-full flex flex-row gap-4'>
-                <div className='font-semibold w-[100px]'>Plan name</div>
-                {/* <div className='col-span-6'>ประโยคจะสมบูรณ์ก็ต่อเมื่อมีทั้งภาคประธานและภาคแสดง ประโยคยังแบ่งเป็น 3 ประเภทคือ ประโยคความเดียว ที่มีประธานเดียวและภาคแสดงเดียว, ประโยคความรวม ที่รวมประโยคความเดียวตั้งแต่ 2 ประโยคเข้าด้วยกัน และ ประโยคความซ้อน ที่มีประโยคความเดียว 1 ประโยคเป็นประโยคหลัก แล้วมีประโยคความเดียวอื่นมาเสริม</div> */}
-                <div className=''>{name}</div>
-              </div>
-              <div className='w-full flex flex-row gap-4'>
-                <div className='font-semibold w-[100px]'>Type</div>
-                <div className=''>
-                  {task ? (
-                    <div className='flex px-4 justify-center items-center rounded-full bg-teal-100 text-teal-800 font-semibold'>
-                      Gantt
-                    </div>
+      <div className=" bg-white rounded-lg w-[550px] h-auto flex flex-col">
+        <div className="grid grid-cols-1 h-full p-4">
+          {/* <h2 className="flex h-full p-5 items-center text-lg font-semibold">Plan Detail</h2> */}
+          <div className="flex flex-col py-3 px-5 gap-1">
+            <div className='w-full flex justify-end'>
+              <div className='flex justify-center items-center gap-2'>
+                {
+                  task ? (
+                    <div className='w-[75px] flex items-center justify-center rounded-full bg-[#B3D1D0] font-semibold text-teal-800 p-1 text-sm'>Gantt</div>
                   ) : (
-                    <div className='flex px-4 justify-center items-center rounded-full bg-teal-100 text-teal-800 font-semibold'>
-                      Not gantt
-                    </div>
-                  )}
+                    <div className='w-[90px] flex items-center justify-center rounded-full bg-[#B3D1D0] font-semibold text-teal-800 p-1 text-sm'>Not gantt</div>
+                  )
+                }
+              </div>
+            </div>
+            <div className='text-xl p-1'>
+              {name}
+            </div>
+            <div className='p-1'>
+              <div>{description}</div>
+              {/* <div>And let’s end all this nonsense about how long sentences = run-on sentences. You can have a six-word run-on sentence (“I went shopping I ate donuts.”), while most of the sentences below are much, much longer than that and are not run-ons (except for a few examples like Jose Saramago).  But whether the sentence is grammatically correct isn’t nearly as important as whether the sentence is fun or beautiful.</div> */}
+            </div>
+
+            <hr></hr>
+            <div className='flex'>
+              <div className='flex w-[50%] gap-2 items-center'>
+                <div className='grid grid-cols-3 items-center'>
+                  <div className='text-teal-800 font-semibold p-1'>Start date</div>
+                  <div className='span-col-2'>{start_date}</div>
                 </div>
               </div>
-              <div className='w-full flex flex-row gap-4'>
-                <div className='font-semibold w-[100px]'>Timeline</div>
-                <div className=''>{start_date} - {end_date}</div>
-              </div>
-
-              <div className='w-full flex flex-row gap-4'>
-                <div className='font-semibold w-[100px]'>Duration</div>
-                <div className=''>{duration.toString() + " Days"}</div>
-              </div>
-
-              <div className='w-full flex flex-row gap-4 items-center'>
-                <div className='font-semibold w-[100px]'>Progress</div>
-                <div className="h-[30%] w-[80%] flex items-center gap-2">
-                  <div className="w-[80%] rounded-lg h-2 bg-neutral-400">
-                    <div
-                      className={`bg-teal-800 h-2 rounded-full`}
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="">{progress} %</div>
-                </div>
-              </div>
-
-              <div className='w-full'>
-                <div className='font-semibold'>Description</div>
-                <div className='w-full min-h-[200px] max-h-[200px] p-4 rounded-lg bg-neutral-100 overflow-scroll'>
-                {description}
+              <div className='flex w-[50%] gap-2 items-center'>
+                <div className='grid grid-cols-3 items-center'>
+                  <div className='text-teal-800 font-semibold p-1'>End date</div>
+                  <div className='span-col-2'>{end_date}</div>
                 </div>
               </div>
             </div>
 
-
-            {/* <div className='flex flex-row justify-between items-center gap-2 '>
-              <div className=' flex flex-col w-[40%]'>
-                <label className="text-xs relative block">
-                  Progress
-                  <div className='text-[20px] w-6 h-6 absolute bottom-[-3px] transform -translate-y-1/2 right-3'>%</div>
-                  <input
-                    id="start_date"
-                    className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
-                    placeholder="Start date"
-                    value={progress}
-                    disabled
-                  />
-                </label>
+            <div className='flex'>
+              <div className='flex w-[50%] gap-2 items-center'>
+                <div className='text-teal-800 font-semibold p-1'>Duration</div>
+                <div>{duration.toString() + " Days"}</div>
               </div>
-            </div> */}
+              <div className='p-1 gap-2 flex items-center'>
+                <div className='text-teal-800 font-semibold'>Progress</div>
+                <div>{progress} %</div>
+              </div>
+            </div>
+
           </div>
-        </div>
-        <div className='px-4 py-3 flex flex-row justify-end items-center gap-2 h-full'>
-          <Button
-            className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
-            onClick={onClose}
-            type="submit"
-          >
-            <div className="text-neutral-800">Cancel</div>
-          </Button>
+          <div className='px-4 py-3 flex flex-row justify-end items-center gap-2 h-full'>
+            <Button
+              className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+              onClick={onClose}
+              type="submit"
+            >
+              <div className="text-neutral-800">Cancel</div>
+            </Button>
+          </div>
         </div>
 
       </div>

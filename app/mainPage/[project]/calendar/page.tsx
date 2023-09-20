@@ -58,6 +58,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
               name: o.name,
               description: o.description,
               progress: o.progress,
+              task: o.task,
               start_date: new Date(o.start_date),
               end_date: new Date(o.end_date),
             };
