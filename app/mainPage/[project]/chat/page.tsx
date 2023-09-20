@@ -4,11 +4,13 @@ import { useSearchParams } from 'next/navigation';
 import MessageInput from '../../../../components/chat/MessageInput';
 import Message from '@/components/chat/Message';
 import { use, useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import LoadingNormal from '@/components/loading/LoadingNormal';
 
 const PageChat = () => {
   const searchParams = useSearchParams();
   const [chat, setChat] = useState(messages);
-  const [displayCount, setDisplayCount] = useState(20);
+  const [displayCount, setDisplayCount] = useState(30);
   const devRef = useRef<HTMLDivElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
@@ -102,6 +104,13 @@ const PageChat = () => {
     </ChatLayout>
   );
 };
+
+const DynamicHome = dynamic(() => Promise.resolve(PageChat), {
+  ssr: false,
+  loading: () => (
+    <LoadingNormal/>
+  ),
+});
 const messages = [
   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
@@ -113,23 +122,6 @@ const messages = [
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Paxwell', content: 'End', isOwnMessage: false },
+
 ];
-export default PageChat;
+export default DynamicHome;

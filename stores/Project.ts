@@ -44,13 +44,31 @@ export type editSchema = {
       status: IStatus;
       progress: number;
   }
+export interface IPlan {
+    _id: string
+    project_id: string
+    name: string
+    description: string
+    progress: number
+    start_date: Date
+    end_date: Date
+    task: boolean
+    chat_id?: string
+    folder_id?: string
+    archived: boolean
+  }
+  
 export interface ProjectStore {
     project:IProject[]
     filterProject: IProject[]
+    planEachProject: Record<string, IPlan[]>
+    setPlanEachProject:(projectID:string,plan:IPlan[])=>void
     setFilterProject: (filterProject: IProject[]) => void
     setProject: (project: IProject[]) => void
     createProject: (data: createSchema) => Promise<IProject[]>
     updateProject: (updateData: editSchema,projectID:string) => IProject|undefined
+    getPlanByProjectID: (projectID: string) => IPlan[]
+    getProjectByID: (projectID: string) => IProject|undefined
   }
 
 const useProjectStore = createWithEqualityFn<ProjectStore>()(
@@ -58,7 +76,9 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
     (set, get) => ({
         project: [],
         filterProject: [],
+        planEachProject: {},
         setFilterProject: (filterProject) => set({ filterProject }),
+        setPlanEachProject: (projectID,plan) => set({ planEachProject: {...get().planEachProject,[projectID]:plan} }),
         setProject: (project) => set({ project }),
         createProject: async (data: createSchema) => {
           const newProject = await axiosBaseurl.post("/project/create", data);
@@ -79,6 +99,12 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
           };
           return undefined;
         },
+        getPlanByProjectID: (projectID) => {
+          return get().planEachProject[projectID]||[]
+        },
+        getProjectByID: (projectID) => {
+          return get().project.find((project) => project._id === projectID);
+        },
     })
     ,{
       name: 'project-storage',
@@ -86,6 +112,6 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
     }
   )
     ,shallow
-
 )
+
 export default useProjectStore
