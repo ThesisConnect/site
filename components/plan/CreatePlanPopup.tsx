@@ -10,6 +10,7 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import axiosBaseurl from '@/config/baseUrl';
 import CalendarPick from './calendar';
 import { DateTime } from 'luxon';
+import { v4 } from 'uuid';
 
 interface ModalProps {
   show: boolean;
@@ -55,9 +56,6 @@ const CreatePopup: React.FC<ModalProps> = (
     setSelectedEndDate(selDate);
   }
 
-  useEffect(() => {
-    console.log("project_id");
-  }, [show])
 
   console.log(projectID)
 
@@ -83,6 +81,40 @@ const CreatePopup: React.FC<ModalProps> = (
       reset()
     }
   };
+
+
+  // const [select, setSelect] = useState<boolean>(false);
+  // function showEdit() {
+  //   setPickStart(!selectedDate);
+  //   // (false);
+  //   return selectedDate
+  // }
+
+  const useOutsideClick = (callback: () => void) => {
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      const handleClickOutside = (event: Event) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          callback();
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [callback]);
+    return ref;
+  };
+
+  const refStart = useOutsideClick(() => {
+    setPickStart(!pick_startDate)
+
+  });
+
+  const refEnd = useOutsideClick(() => {
+    setPickEnd(!pick_endDate)
+  });
+
   if (!show) return null;
 
   return (
@@ -137,8 +169,8 @@ const CreatePopup: React.FC<ModalProps> = (
                   Start Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_startDate && (
-                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
-                      <CalendarPick DateSelect={selectedDate} updateDate={updateDate} />
+                    <div ref={refStart} className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                      <CalendarPick key={v4()} DateSelect={selectedDate} updateDate={updateDate} />
                     </div>
                   )}
                   <input
@@ -159,8 +191,8 @@ const CreatePopup: React.FC<ModalProps> = (
                   End Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_endDate && (
-                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
-                      <CalendarPick DateSelect={selectedEndDate} updateDate={updateEndDate} />
+                    <div ref={refEnd} className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                      <CalendarPick key={v4()} DateSelect={selectedEndDate} updateDate={updateEndDate} />
                     </div>
                   )}
                   <input
@@ -176,23 +208,23 @@ const CreatePopup: React.FC<ModalProps> = (
                 </label>
               </div>
 
-            </div>              
+            </div>
             <div className='py-2 flex flex-row justify-end items-center gap-2 h-full'>
-                <Button
-                  className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
-                  onClick={onClose}
-                  type="button"
-                >
-                  <div className="text-neutral-800">Cancel</div>
-                </Button>
+              <Button
+                className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+                onClick={onClose}
+                type="button"
+              >
+                <div className="text-neutral-800">Cancel</div>
+              </Button>
 
-                <Button
-                  type="submit"
-                  className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-                >
-                  <div className="text-white">Create</div>
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+              >
+                <div className="text-white">Create</div>
+              </Button>
+            </div>
           </div>
         </div>
       </form>

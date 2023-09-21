@@ -140,6 +140,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
         </div>
       </div>
       <CreatePopup
+        key={v4()}
         show={state}
         onClose={handleCancel}
         projectID={projectID}

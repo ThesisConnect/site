@@ -11,7 +11,7 @@ import {
   uploadBytesResumable,
   deleteObject,
 } from '@firebase/storage';
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuid4, v4 } from 'uuid';
 import useAuth from "@/hook/useAuth";
 import { getAuth } from "firebase/auth";
 import SummaryPopup from "./SummaryPopup";
@@ -66,7 +66,7 @@ const UpdateTask: React.FC<DataSummary> = (
       className="relative flex flex-col items-center rounded-lg 
         bg-white border border-neutral-800 w-[700px] h-[160px] justify-evenly overflow-hidden "
     >
-      {state && <SummaryPopup show={state} onClose={showSummaryPopup} plan_name={plan_name} 
+      {state && <SummaryPopup key={v4()} show={state} onClose={showSummaryPopup} plan_name={plan_name} 
       comment={comment} progress={progress} />}
       <div className="w-full h-full cursor-pointer hover:bg-neutral-100 hover:transition hover:ease-in-out p-6" onClick={showSummaryPopup}>
         <div className="w-full h-full " >
@@ -129,7 +129,7 @@ const UpdateTask: React.FC<DataSummary> = (
                 </div>
                 <div className="h-[100%]">
                   <div className=" flex items-center gap-2 line-clamp-1 snap-x overflow-scrolled scroll-smooth">
-                    <FileSummary files={files} />
+                    <FileSummary key={v4()} files={files} />
                   </div>
                 </div>
               </div>

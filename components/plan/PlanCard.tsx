@@ -154,9 +154,10 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
                 <div className="flex h-[100%] rounded-full py-1.5 items-center justify-center cursor-pointer" onClick={showPlanDetail}>
                   <CgDetailsMore className="text-[30px]  text-neutral-400  hover:text-neutral-300 hover:transition hover:ease-in-out" />
                 </div>
-                <div className="flex w-auto w-min-[35%] h-[100%] rounded-full py-1.5 px-4 bg-teal-800 items-center justify-center ">
+                <div className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center ">
                   <div className="text-white text-sm">
-                    {getDayDiff()} Days Left
+                    {getDayDiff()}
+                    {getDayDiff() > 1 ? " Days" : "Day"}
                   </div>
                 </div>
               </div>

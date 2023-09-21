@@ -10,6 +10,7 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import axiosBaseurl from '@/config/baseUrl';
 import CalendarPick from './calendar';
 import { DateTime } from 'luxon';
+import { v4 } from 'uuid';
 
 
 interface DataPlan {
@@ -79,6 +80,31 @@ const EditPopup: React.FC<DataPlan> = (
     setSelectedEndDate(selDate);
   }
 
+  const useOutsideClick = (callback: () => void) => {
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      const handleClickOutside = (event: Event) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          callback();
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [callback]);
+    return ref;
+  };
+
+  const refStart = useOutsideClick(() => {
+    setPickStart(!pick_startDate)
+
+  });
+
+  const refEnd = useOutsideClick(() => {
+    setPickEnd(!pick_endDate)
+  });
+
   const onSubmit: SubmitHandler<PlanEditSchemaType> = async (data) => {
     console.log("Begin Edit")
     console.log(data);
@@ -91,7 +117,7 @@ const EditPopup: React.FC<DataPlan> = (
         // start_date: selectedDate.toISOString(),
         start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
         end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
-        progress: data.progress,
+        progress: data.progress || progress,
       };
       console.log(sendData)
       const resData = await axiosBaseurl.put('/plan/edit', sendData)
@@ -164,8 +190,8 @@ const EditPopup: React.FC<DataPlan> = (
                   Start Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_startDate && (
-                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
-                      <CalendarPick DateSelect={selectedDate} updateDate={updateDate} />
+                    <div ref={refStart} className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                      <CalendarPick key={v4()} DateSelect={selectedDate} updateDate={updateDate} />
                     </div>
                   )}
                   <input
@@ -184,13 +210,13 @@ const EditPopup: React.FC<DataPlan> = (
                 </label>
               </div>
               <hr className='w-[12%] h-[0px] border-b-2 border-t-0 border-dashed border-teal-800' />
-              <div className='flex flex-col w-[40%] '>
+              <div  className='flex flex-col w-[40%] '>
                 <label className="text-xs relative block">
                   End Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
                   {pick_endDate && (
-                    <div className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
-                      <CalendarPick DateSelect={selectedEndDate} updateDate={updateEndDate} />
+                    <div ref={refEnd} className='absolute  h-auto bg-white shadow p-2 m-0 rounded-lg w-[17rem] top-[-350px]'>
+                      <CalendarPick key={v4()} DateSelect={selectedEndDate} updateDate={updateEndDate} />
                     </div>
                   )}
                   <input
@@ -220,11 +246,12 @@ const EditPopup: React.FC<DataPlan> = (
                       placeholder="Progress"
                       defaultValue={progress}
                       // type='number'
-                      {...register('progress', { valueAsNumber: true })}
+                      value={progress}
                       disabled
+                      {...register('progress', { valueAsNumber: true })}
                     />
                   ) : (
-                    <input
+                    <input 
                       id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                       placeholder="Progress"

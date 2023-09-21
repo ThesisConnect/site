@@ -75,6 +75,41 @@ const SummaryPopup: React.FC<DataPlan> = (
     }
   };
 
+  const [file, setFile] = useState<File | null>(null);
+  const [status, setStatus] = useState<
+    "initial" | "uploading" | "success" | "fail"
+  >("initial");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setStatus("initial");
+      setFile(e.target.files[0]);
+    }
+  };
+  console.log(file);
+  const handleUpload = async () => {
+    console.log("Upload");
+    if (file) {
+      setStatus("uploading");
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log("Form Data", formData);
+      try {
+        const result = await fetch("", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await result.json();
+
+        console.log(data);
+        setStatus("success");
+      } catch (error) {
+        console.error(error);
+        setStatus("fail");
+      }
+    }
+  };
 
   console.log(selectedValue)
   if (!show) return null;
@@ -104,10 +139,10 @@ const SummaryPopup: React.FC<DataPlan> = (
               {selectedValue === "Reject" && user.role === "advisor" && (
                 <label htmlFor="fileUpload" className="cursor-pointer  mt-2 h-10 rounded-full flex bg-teal-800 items-center
                  hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2">
-                  <div className='text-white items-center justify-center px-2 '>
+                  <div className='text-white items-center justify-center px-2'>
                     Attach file
                   </div>
-                  <input type="file" id="fileUpload" className="hidden" accept="image/*" />
+                  <input type="file" id="fileUpload" className="hidden" onChange={handleFileChange} accept="image/*" />
                 </label>
               )}
               {selectedValue === "Approve" && user.role === "advisor" && (
@@ -122,17 +157,32 @@ const SummaryPopup: React.FC<DataPlan> = (
               <div className='text-sm'>Files</div>
               <div className='w-full h-36 bg-neutral-100 rounded-[3px]'>
                 <div className='w-full h-8 bg-neutral-200 rounded-t-[3px] flex px-2 items-center font-semibold'>
-                  <div className='w-3/4 flex justify-center'>
-                    File
-                  </div>
-                  <div className='w-1/4 flex justify-center'>
-                    Delete
-                  </div>
+
+                  {user.role === "advisor" && (
+                    <div className='w-3/4 flex justify-center'>
+                      File
+                    </div>
+                  )}
+                  {user.role === "advisee" && (
+                    <div className='w-full flex justify-center'>
+                      File
+                    </div>
+                  )}
+
+                  {user.role === "advisor" && (
+                    <div className='w-1/4 flex justify-center'>
+                      Delete
+                    </div>
+                  )}
+                  
                 </div>
 
+                {file && (
+                  <div>{file.name}</div>
+                )}
               </div>
             </div>
-            {selectedValue === "Approve" && (
+            {selectedValue === "Approve" && user.role === "advisor" && (
               <label className="text-xs">
                 Comment
                 <textarea
@@ -154,7 +204,13 @@ const SummaryPopup: React.FC<DataPlan> = (
                 />
               </label>
             )}
-            {selectedValue === "Approve" ? (
+            {user.role === "advisee" && (
+              <div className='flex w-full gap-2 items-center'>
+                <div className='text-teal-800 w-[80px] font-semibold p-1'>Comment</div>
+                <div>{comment}</div>
+              </div>
+            )}
+            {selectedValue === "Approve" && user.role === "advisor" && (
               <div className=' flex flex-col w-[40%]'>
                 <label className="text-xs relative block">
                   Progress
@@ -168,7 +224,9 @@ const SummaryPopup: React.FC<DataPlan> = (
                   />
                 </label>
               </div>
-            ) : (
+            )}
+
+            {selectedValue === "Reject" && user.role === "advisor" && (
               <div className=' flex flex-col w-[40%]'>
                 <label className="text-xs relative block">
                   Progress
@@ -180,6 +238,12 @@ const SummaryPopup: React.FC<DataPlan> = (
                     defaultValue={progress}
                   />
                 </label>
+              </div>
+            )}
+            {user.role === "advisee" && (
+              <div className='flex w-full gap-2 items-center'>
+                <div className='text-teal-800 w-[80px] font-semibold p-1'>Progress</div>
+                <div>{progress} %</div>
               </div>
             )}
             <div className='p-2 flex flex-row justify-end items-center gap-2 h-auto w-full'>
