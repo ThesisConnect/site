@@ -89,21 +89,14 @@ function PageGantt() {
   );
 };
 
-const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-}
-const PageGanttWithErrorBoundary = () => {
-  
-  return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <PageGantt />
-    </ErrorBoundary>
-  );
-}
-export default  PageGanttWithErrorBoundary;
+// const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
+//   return (
+//     <div role="alert">
+//       <p>Something went wrong:</p>
+//       <pre>{error.message}</pre>
+//       <button onClick={resetErrorBoundary}>Try again</button>
+//     </div>
+//   );
+// }
+
+export default PageGantt;
