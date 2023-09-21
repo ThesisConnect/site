@@ -185,7 +185,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
                 onClick={getNextMonth}
               />
               <button
-                className="text-black cursor-pointer rounded-full bg-white text-teal-800 margin-right-20px"
+                className="cursor-pointer rounded-full bg-white text-teal-800 margin-right-20px"
                 onClick={() => setCurrMonth(format(startOfToday(), "MMM-yyyy"))}
                 style={{ marginRight: "20px", width: "80px" }}
               >

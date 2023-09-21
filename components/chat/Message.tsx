@@ -1,8 +1,9 @@
 import { Avatar } from '@mui/material';
+import bytes from 'bytes';
 import React from 'react';
 import { AiOutlineFileText } from 'react-icons/ai';
 
-export interface File {
+export interface FileCom {
   type: 'file';
   name: string;
   fileID: string;
@@ -13,9 +14,9 @@ export interface File {
   memo?: string;
 }
 
-type MessageProps = {
+export type MessageProps = {
   username: string;
-  content: string | File;
+  content: string | FileCom;
   isOwnMessage: boolean;
   type?: 'file' | 'text';
 };
@@ -28,7 +29,7 @@ const Message: React.FC<MessageProps> = ({
 }) => {
   const isFile = type === 'file';
   if (isFile) {
-    const fileContent = content as File;
+    const fileContent = content as FileCom;
     return (
       <div
         className={`flex ${
@@ -38,7 +39,7 @@ const Message: React.FC<MessageProps> = ({
         {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
         <div
           className={`max-w-lg px-4 py-2 rounded-lg ${
-            isOwnMessage ? 'bg-teal-500 text-white' : 'bg-gray-200 text-black'
+            isOwnMessage ? 'bg-teal-300 text-white' : 'bg-gray-200 text-black'
           }`}
         >
           {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}
@@ -52,12 +53,16 @@ const Message: React.FC<MessageProps> = ({
                 rel="noopener noreferrer"
               >
                 {fileContent.name}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-                explicabo quasi, nihil dt, reprehenderit assumenda iure quae ab
-                fugiat? Nostrum dignissimos iure et voluptatibus!
               </a>
             </div>
           </div>
+          {
+            fileContent.size && (
+              <p className="text-xs text-gray-500">
+                {bytes(fileContent.size)}
+              </p>
+            )
+          }
           {fileContent.memo && (
             <p className="text-xs text-gray-500">{fileContent.memo}</p>
           )}
@@ -73,7 +78,7 @@ const Message: React.FC<MessageProps> = ({
        {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
       <div
         className={`max-w-lg px-4 py-2 rounded-lg ${
-          isOwnMessage ? 'bg-teal-500 text-white' : 'bg-gray-200 text-black'
+          isOwnMessage ? 'bg-teal-300 text-white' : 'bg-gray-200 text-black'
         }`}
       >
         {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}

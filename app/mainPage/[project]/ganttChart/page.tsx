@@ -1,7 +1,90 @@
-const PageGanttChart = () => {
-    return (
-      <div>pageGanttChart</div>
-    )
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Task, ViewMode, Gantt } from "gantt-task-react";
+import axiosBaseurl from "@/config/baseUrl";
+import { ViewSwitcher } from "./components/view-switcher";
+import { initTasks } from "./components/helper";
+import "gantt-task-react/dist/index.css";
+
+function PageGantt({ params: { project } }: { params: { project: string } }) {
+  const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
+  const [dataItem, setData] = useState<any[]>([]);
+  const [tasks, setTasks] = React.useState<Task[]>(initTasks());
+  const [isChecked, setIsChecked] = React.useState(true);
+  let columnWidth = 65;
+  if (view === ViewMode.Year) {
+    columnWidth = 350;
+  } else if (view === ViewMode.Month) {
+    columnWidth = 300;
+  } else if (view === ViewMode.Week) {
+    columnWidth = 250;
   }
-  
-  export default PageGanttChart
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axiosBaseurl.get(`/page/plan/${project}`, {
+          withCredentials: true
+        });
+        // Inside the useEffect hook, after setting the dataItem state variable
+if (Array.isArray(res?.data)) {
+  let arrData = (res.data || []).map((o: any) => {
+    let dd = {
+      _id: o._id,
+      project_id: o.project_id,
+      name: o.name,
+      description: o.description,
+      progress: o.progress,
+      task: o.task,
+      start_date: new Date(o.start_date),
+      end_date: new Date(o.end_date),
+    };
+    return dd;
+  });
+  setData(arrData);
+  console.log('arrData', arrData);
+
+  // Update the tasks state variable with the fetched data
+  setTasks(arrData.map((item) => ({
+    id: item._id, // Use a unique identifier for each task
+    name: item.name,
+    start: item.start_date,
+    end: item.end_date,
+    progress: item.progress,
+    type: "task",
+  })));
+} else {
+  setData([]);
+}
+
+        // console.log('resp', dataItem)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    })()
+  }, [project]);
+
+  const handleSelect = (task: Task, isSelected: boolean) => {
+    console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+  };
+
+  return (
+    <div className="Wrapper">
+      <ViewSwitcher
+        onViewModeChange={viewMode => setView(viewMode)}
+        onViewListChange={setIsChecked}
+        isChecked={isChecked}
+      />
+      <Gantt
+        tasks={tasks}
+        viewMode={view}
+        onSelect={handleSelect}
+        listCellWidth={isChecked ? "155px" : ""}
+        columnWidth={columnWidth}
+      />
+    </div>
+  );
+};
+
+export default PageGantt;

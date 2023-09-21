@@ -72,7 +72,6 @@ const PagePlanning = ({ params: { project: projectID } }: {
       setSortPlans(SortPlan)      
     }
   };
-
   useEffect(() => {
     console.log(create);
     const res = axiosBaseurl

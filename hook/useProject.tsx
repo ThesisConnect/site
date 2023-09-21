@@ -25,7 +25,7 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
     createProject: state.createProject,
     updateProject: state.updateProject,
   }));
-  const { data, error, mutate,isLoading } = useSWR<IProject[],Error>("/test/page/main",fetcher);
+  const { data, error, mutate,isLoading } = useSWR<IProject[],Error>("/test/page/main",fetcher,{ revalidateOnFocus: true });
   const updateProject = useCallback(async (updateData: editSchema,projectID:string) => {
     try {
       updateProjectStore(updateData,projectID)

@@ -173,7 +173,7 @@ const EditProfile = () => {
                 defaultValue={user.name}
                 readOnly={!edit}
                 disabled={!edit}
-                className="disabled:opacity-50 focus:outline-none"
+                className="read-only:border-none   focus:outline-none"
                 {...register('name')}
               />
               <Input
@@ -184,7 +184,7 @@ const EditProfile = () => {
                 defaultValue={user.surname}
                 readOnly={!edit}
                 disabled={!edit}
-                className="disabled:opacity-50 focus:outline-none"
+                className="read-only:border-none  focus:outline-none"
                 {...register('surname')}
               />
             </div>
@@ -195,7 +195,7 @@ const EditProfile = () => {
                 placeholder="Username"
                 type="text"
                 width="w-6/12"
-                className="disabled:opacity-50 focus:outline-none"
+                className="read-only:border-none  focus:outline-none"
                 readOnly={!edit}
                 disabled={!edit}
                 defaultValue={user.username}
@@ -207,7 +207,7 @@ const EditProfile = () => {
                 type="text"
                 width="w-6/12"
                 value={user.role}
-                className="disabled:opacity-50 focus:outline-none"
+                className="read-only:border-none  focus:outline-none"
                 readOnly
                 disabled
               />
@@ -217,24 +217,27 @@ const EditProfile = () => {
               placeholder="Email"
               type="text"
               value={user.email}
-              className="disabled:opacity-50 focus:outline-none"
+              className="read-only:border-none  focus:outline-none"
               readOnly
               disabled
             />
-            <div className="flex flex-row w-10/12 items-center">
-              <div className="w-3/12">Change password</div>
-              <div className="border-b-[1px] border-solid border-black w-9/12" />
-            </div>
-
-            <Input
-              label="newPassword"
-              className="disabled:opacity-50 focus:outline-none"
-              disabled={!edit}
-              readOnly={!edit}
-              eye
-              placeholder="newPassword"
-              {...register('newPassword')}
-            />
+            {edit && (
+              <>
+                <div className="flex flex-row w-10/12 items-center">
+                  <div className="w-3/12">Change password</div>
+                  <div className="border-b-[1px] border-solid border-black w-9/12" />
+                </div>
+                <Input
+                  label="newPassword"
+                  className="disabled:opacity-50 focus:outline-none"
+                  disabled={!edit}
+                  readOnly={!edit}
+                  eye
+                  placeholder="newPassword"
+                  {...register('newPassword')}
+                />
+              </>
+            )}
             {errors.newPassword && (
               <div className="text-red-500 text-sm">
                 {errors.newPassword?.message}
