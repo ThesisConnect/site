@@ -16,7 +16,8 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
     params.project as string
   );
   const getProjectByID = useProjectStore((state) => state.getProjectByID);
-  const generalChatId = getProjectByID(params.project as string)?.chat_id;
+  const projectData = getProjectByID(params.project as string);
+  const generalChatId = projectData?.chat_id;
   const route = useRouter();
   const handleClickChat = (id: string | undefined) => {
     if (!id) return null;

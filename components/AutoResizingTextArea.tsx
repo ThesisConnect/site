@@ -28,8 +28,10 @@ const AutoResizingTextArea: ForwardRefRenderFunction<HTMLTextAreaElement | null,
   minHeight = 70,
   value,
   onChange,
+  defaultValue,
   ...props
 },forwardedRef) => {
+  const [baseValue, setBaseValue] = useState<string>(defaultValue as string||'');
   const textAreaRef = useRef<HTMLTextAreaElement|null>(null);
   useImperativeHandle(forwardedRef, () => textAreaRef.current!, [textAreaRef]);
   useEffect(() => {
@@ -40,20 +42,24 @@ const AutoResizingTextArea: ForwardRefRenderFunction<HTMLTextAreaElement | null,
         maxHeight,
       ])}px`;
     }
-  }, [value, maxHeight, minHeight]);
+  }, [value,baseValue, maxHeight, minHeight]);
+  const handleChange =(e:ChangeEvent<HTMLTextAreaElement>)=>{
+    setBaseValue(e.target.value)
+    onChange?.(e)
+  }
   return (
     <>
       <div className={classNameLabel}>{label}</div>
       <textarea
         {...props}
         ref={textAreaRef}
-        value={value}
+        value={value !== undefined ? value : baseValue}
         rows={1}
         style={{
           maxHeight,
           minHeight,
         }}
-        onChange={onChange}
+        onChange={handleChange}
         className={cn('resize-none p-1 mb-0', className)}
         
       />

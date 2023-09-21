@@ -4,18 +4,24 @@ import useProjectStore, { IProject, createSchema, editSchema } from "@/stores/Pr
 import { useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { checkSchemaCreateProject, createNewProjectType } from '../models/Project/createNewProject';
+import { extend, omit } from "lodash";
 
 const fetcher = async (url: string) => {
     const res = await axiosBaseurl.get(url);
     return res.data
 }
-
+interface updateProjectType extends Omit<editSchema, 'advisors' | 'co_advisors' | 'advisee'> {
+  advisors: string[];
+  co_advisors: string[];
+  advisee: string[];
+}
 interface IProjectHookReturn {
   project: IProject[];
   isLoading:boolean;
   mutate: any;
-  updateProject: (updateData: editSchema,projectID:string) => Promise<void>;
+  updateProject: (updateData: updateProjectType,projectID:string) => Promise<void>;
   createNewProject: (createData: createNewProjectType) => Promise<void>;
+  deleteProject: (projectID:string) => Promise<void>;
   error:Error|undefined
 }
 const useProject = (suspense:boolean=false):IProjectHookReturn => {
@@ -26,13 +32,14 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
     updateProject: state.updateProject,
   }));
   const { data, error, mutate,isLoading } = useSWR<IProject[],Error>("/test/page/main",fetcher,{ revalidateOnFocus: true });
-  const updateProject = useCallback(async (updateData: editSchema,projectID:string) => {
+  const updateProject = useCallback(async (updateData: updateProjectType,projectID:string) => {
     try {
-      updateProjectStore(updateData,projectID)
-      const  {data} = await axiosBaseurl.put("/page/main", updateData);
+      const  {data} = await axiosBaseurl.put("/page/edit", omit(updateProject,["progress","status"])) ;
+      updateProjectStore(data as editSchema,projectID)
       mutate([...project,data]);
     } catch (err) {
       console.log(err);
+      throw err;
     }
   },[ mutate, updateProjectStore,project])
   const createNewProject = useCallback(async (createData: createNewProjectType) => {
@@ -61,13 +68,21 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
     }
   }
   , [ mutate,createProject]);
+  const deleteProject = useCallback(async (projectID:string) => {
+    try {
+      const newDataWithDelete = project.filter((item)=>item._id!==projectID)
+      mutate(newDataWithDelete);
+    } catch (err) {
+      console.log(err);
+    }
+  },[ mutate,project])
   useEffect(() => {
     if (data) {
       setProject(data);
     }
   }
   , [data, setProject]);
-  return {project,isLoading,mutate, updateProject,createNewProject,error};
+  return {project,isLoading,mutate, updateProject,createNewProject,deleteProject,error};
 };
 
 export default useProject;
