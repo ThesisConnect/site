@@ -65,8 +65,9 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
             };
             return dd;
           });
-          setData(arrData);
-          console.log('arrData', arrData);
+          const FilterDate = arrData.filter((obj) => obj.task === false);
+          setData(FilterDate);
+          console.log('arrData', FilterDate);
         } else {
           setData([]);
         }
