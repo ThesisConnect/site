@@ -39,7 +39,7 @@ const Message: React.FC<MessageProps> = ({
         {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
         <div
           className={`max-w-lg px-4 py-2 rounded-lg ${
-            isOwnMessage ? 'bg-teal-300 text-white' : 'bg-gray-200 text-black'
+            isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
           }`}
         >
           {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}
@@ -78,7 +78,7 @@ const Message: React.FC<MessageProps> = ({
        {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
       <div
         className={`max-w-lg px-4 py-2 rounded-lg ${
-          isOwnMessage ? 'bg-teal-300 text-white' : 'bg-gray-200 text-black'
+          isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
         }`}
       >
         {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}

@@ -31,22 +31,33 @@ const PageChat = () => {
   const [chat, setChat] = useState<RecieveMessenger[]>([]);
   const [displayCount, setDisplayCount] = useState(30);
   const [loading, setLoadingChat] = useState(false);
-  const devRef = useRef<HTMLDivElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
+  // const chatLengthRef = useRef(chat.length);
+  // const chatIDRef = useRef(chatID);
+  // const displayCountRef = useRef(displayCount);
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({});
-      ``;
     }
   };
   //download more content
+  // useEffect(() => {
+  //   chatLengthRef.current = chat.length;
+  //   chatIDRef.current = chatID;
+  //   displayCountRef.current = displayCount;
+  // }, [chat.length, chatID, displayCount]);
+
   useEffect(() => {
     const currentLoadMoreRef = loadMoreRef.current;
     let initialRender = true;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !initialRender) {
+          // if(displayCountRef.current>=chatLengthRef.current) 
+          //   {
+          //     socket.emit('request messages',chatIDRef.current,chatLengthRef.current)
+          //   }
           setDisplayCount((prevCount) => prevCount + 30);
         }
         initialRender = false;
@@ -75,7 +86,7 @@ const PageChat = () => {
 
       socket.on('room messages', (newMessages: RecieveMessenger[]) => {
         console.log(newMessages);
-        setChat(newMessages);
+        setChat((prev) => [ ...newMessages,...prev,]);
       });
       socket.on('receive message', (newMessages) => {
         setChat((prev) => [...prev, newMessages]);
@@ -88,8 +99,9 @@ const PageChat = () => {
     return () => {
       if (chatID) {
         socket.off('room messages');
-        socket.off('receive message');
+        // socket.off('receive message');
         socket.off('error');
+        socket.off('request messages');
         socket.emit('leave room', chatID);
       }
     };
