@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Task, ViewMode, Gantt } from "gantt-task-react";
 import axiosBaseurl from "@/config/baseUrl";
 import { ViewSwitcher } from "./components/view-switcher";
 import { initTasks } from "./components/helper";
-import "gantt-task-react/dist/index.css";
+import { ErrorBoundary } from "react-error-boundary";
+import { useParams } from "next/navigation";
 
-function PageGantt({ params: { project } }: { params: { project: string } }) {
+function PageGantt() {
+  const {project} = useParams();
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
   const [dataItem, setData] = useState<any[]>([]);
   const [tasks, setTasks] = React.useState<Task[]>(initTasks());
@@ -87,4 +89,21 @@ function PageGantt({ params: { project } }: { params: { project: string } }) {
   );
 };
 
-export default PageGantt;
+const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
+const PageGanttWithErrorBoundary = () => {
+  
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <PageGantt />
+    </ErrorBoundary>
+  );
+}
+export default  PageGanttWithErrorBoundary;

@@ -88,13 +88,14 @@ const MessageInput:FC<MessageInputProps> = ({
         <MdAttachFile size={38} className="text-neutral-300" />
       </label>
       <input type="file" id="fileUpload" className="hidden" onChange={handleFileUpload} />
-      <div  className="w-8/12 flex items-center ">
+      <div  className="w-8/12 flex items-center self-end mb-2 ">
         <AutoResizingTextArea
           ref={inputRef}
           placeholder="Message..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="w-full  bg-neutral-200  p-2 text-sm rounded-lg focus:outline-none placeholder:Text-neutral-400"
+          className="w-full  bg-neutral-200  p-2 text-sm rounded-lg 
+          focus:outline-none placeholder:Text-neutral-400"
           minHeight={30}
           maxHeight={192}
           onKeyDown={(e) => {
