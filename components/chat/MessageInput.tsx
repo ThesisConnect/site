@@ -14,6 +14,7 @@ const MessageInput:FC<MessageInputProps> = ({
 }) => {
   // const [inputHeight, setInputHeight] = useState(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [inputValue, setInputValue] = useState('');
   useEffect(() => {
     const currentInputRef = inputRef.current;
     const handleInput = () => {
@@ -34,9 +35,13 @@ const MessageInput:FC<MessageInputProps> = ({
     inputRef,handleInputHeightChange
   ]);
   const handleClickSend = () => {
-    if(inputRef.current?.value){
-      const inputValue = inputRef.current.value
-      onClickSend(inputValue)
+    // console.log(inputValue)
+    if (inputValue) {
+      onClickSend(inputValue);
+      setInputValue('');
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
     }
   }
   return (
@@ -50,9 +55,17 @@ const MessageInput:FC<MessageInputProps> = ({
         <AutoResizingTextArea
           ref={inputRef}
           placeholder="Message..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           className="w-full  bg-neutral-200  p-2 text-sm rounded-lg focus:outline-none placeholder:Text-neutral-400"
           minHeight={30}
           maxHeight={192}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleClickSend();
+            }
+          }}
         />
       </div>
       <button className="px-3 h-10 mb-2 w-2/12 text-neutral-800

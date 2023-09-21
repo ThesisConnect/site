@@ -2,25 +2,37 @@
 import ChatLayout from '@/components/layout/ChatLayout';
 import { useSearchParams } from 'next/navigation';
 import MessageInput from '../../../../components/chat/MessageInput';
-import Message from '@/components/chat/Message';
+import Message, { MessageProps } from '@/components/chat/Message';
 import { use, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
 import socket from '@/config/socket';
+import userStore from '@/stores/User';
+import { auth } from '@/config/firebase';
 
+interface RecieveMessenger {
+  _id: string
+  uid: string
+  username: string
+  content: string | File
+  type: 'file' | 'text'
+}
 const PageChat = () => {
   const searchParams = useSearchParams();
+  const user = userStore((state) => state.user);
   const chatID = searchParams.get('chatID');
-  const [chat, setChat] = useState(messages);
+  const [chat, setChat] = useState<RecieveMessenger[]>([]);
   const [displayCount, setDisplayCount] = useState(30);
+  const [loading ,setLoadingChat] =useState(false);
   const devRef = useRef<HTMLDivElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({});
+      messageEndRef.current.scrollIntoView({});``
     }
   };
+  //download more content
   useEffect(() => {
     const currentLoadMoreRef = loadMoreRef.current;
     let initialRender = true;
@@ -50,31 +62,15 @@ const PageChat = () => {
     }
   }, [chat]);
 
-  // useEffect(() => {
-  //   const currentDevRef = devRef.current;
-  //   const observer = new ResizeObserver((entries) => {
-  //     console.log('test')
-  //     handleInputHeightChange(entries[0].contentRect.height);
-  //   });
-  //   if (currentDevRef) {
-  //     observer.observe(currentDevRef);
-  //   }
-  //   return () => {
-  //     if (currentDevRef) {
-  //       observer.unobserve(currentDevRef);
-  //     }
-  //   };
-  // }, []);
-
   useEffect(() => {
     if (chatID) {
       socket.emit('join room', chatID);
 
-      socket.on('room messages', (newMessages) => {
-        console.log(`${chatID}-RoomNewMessages`, newMessages);
+      socket.on('room messages', (newMessages:RecieveMessenger[]) => {
+        setChat(newMessages)
       });
       socket.on('receive message', (newMessages) => {
-        console.log(`${chatID}-ReceiveNewMessages`, newMessages);
+        setChat((prev)=>([...prev,newMessages]))
       });
       socket.on('error', (error) => {
         console.error('Socket error:', error);
@@ -95,6 +91,7 @@ const PageChat = () => {
     const chatIDFromURL = searchParams.get('chatID');
     if (chatIDFromURL) {
       socket.emit('send message', chatIDFromURL, message);
+      
     } else {
       console.error('Chat ID not found in URL');
     }
@@ -105,15 +102,15 @@ const PageChat = () => {
         <div className="flex-grow overflow-y-scroll  max-h-[calc(100% - 14rem)]">
           <div className="p-4">
             <div ref={loadMoreRef}></div>
-            {messages.slice(-displayCount).map((msg, index) => (
+            {chat?.slice(-displayCount).map((msg, index) => (
               <Message
                 key={index}
                 username={msg.username}
-                content={msg.content}
-                isOwnMessage={msg.isOwnMessage}
+                content={msg.content as string}
+                isOwnMessage={auth.currentUser?.uid === msg.uid}
               />
             ))}
-            <Message
+            {/* <Message
               username="Paxwell"
               content={{
                 type: 'file',
@@ -127,7 +124,7 @@ const PageChat = () => {
               }}
               isOwnMessage={false}
               type="file"
-            />
+            /> */}
             <div ref={messageEndRef}></div>
           </div>
         </div>
@@ -135,6 +132,7 @@ const PageChat = () => {
           <MessageInput
             handleInputHeightChange={handleInputHeightChange}
             onClickSend={handleSendData}
+
           />
         </div>
       </div>

@@ -13,7 +13,7 @@ export interface File {
   memo?: string;
 }
 
-type MessageProps = {
+export type MessageProps = {
   username: string;
   content: string | File;
   isOwnMessage: boolean;
