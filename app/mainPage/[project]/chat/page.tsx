@@ -84,9 +84,9 @@ const PageChat = () => {
     if (chatID) {
       socket.emit('join room', chatID);
 
-      socket.on('room messages', (newMessages: RecieveMessenger[]) => {
-        console.log(newMessages);
-        setChat((prev) => [ ...newMessages,...prev,]);
+      socket.on('room messages', (initMessages: RecieveMessenger[]) => {
+        console.log(initMessages);
+        setChat(initMessages);
       });
       socket.on('receive message', (newMessages) => {
         setChat((prev) => [...prev, newMessages]);
@@ -99,9 +99,9 @@ const PageChat = () => {
     return () => {
       if (chatID) {
         socket.off('room messages');
-        // socket.off('receive message');
+        socket.off('receive message');
         socket.off('error');
-        socket.off('request messages');
+        // socket.off('request messages');
         socket.emit('leave room', chatID);
       }
     };

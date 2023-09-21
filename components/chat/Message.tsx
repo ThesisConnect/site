@@ -36,7 +36,7 @@ const Message: React.FC<MessageProps> = ({
           isOwnMessage ? 'justify-end' : 'justify-start'
         } mb-2 space-x-2`}
       >
-        {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
+        {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />}
         <div
           className={`max-w-lg px-4 py-2 rounded-lg ${
             isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
@@ -75,7 +75,7 @@ const Message: React.FC<MessageProps> = ({
     <div
       className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-2 space-x-2`}
     >
-       {/* {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />} */}
+       {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />}
       <div
         className={`max-w-lg px-4 py-2 rounded-lg ${
           isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
