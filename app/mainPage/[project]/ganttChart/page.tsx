@@ -27,38 +27,38 @@ function PageGantt({ params: { project } }: { params: { project: string } }) {
         const res = await axiosBaseurl.get(`/page/plan/${project}`, {
           withCredentials: true
         });
-        // Inside the useEffect hook, after setting the dataItem state variable
-if (Array.isArray(res?.data)) {
-  let arrData = (res.data || []).map((o: any) => {
-    let dd = {
-      _id: o._id,
-      project_id: o.project_id,
-      name: o.name,
-      description: o.description,
-      progress: o.progress,
-      task: o.task,
-      start_date: new Date(o.start_date),
-      end_date: new Date(o.end_date),
-    };
-    return dd;
-  });
-  setData(arrData);
-  console.log('arrData', arrData);
 
-  // Update the tasks state variable with the fetched data
-  setTasks(arrData.map((item) => ({
-    id: item._id, // Use a unique identifier for each task
-    name: item.name,
-    start: item.start_date,
-    end: item.end_date,
-    progress: item.progress,
-    type: "task",
-  })));
-} else {
-  setData([]);
-}
+        if (Array.isArray(res?.data)) {
+          let arrData = (res.data || []).map((o: any) => {
+            let dd = {
+              _id: o._id,
+              project_id: o.project_id,
+              name: o.name,
+              description: o.description,
+              progress: o.progress,
+              task: o.task,
+              start_date: new Date(o.start_date),
+              end_date: new Date(o.end_date),
+            };
+            return dd;
+          });
 
-        // console.log('resp', dataItem)
+          const filteredData = arrData.filter((obj) => obj.task === true);
+
+          setData(filteredData);
+
+          setTasks(filteredData.map((item) => ({
+            id: item._id,
+            name: item.name,
+            start: item.start_date,
+            end: item.end_date,
+            progress: item.progress,
+            type: "task",
+          })));
+        } else {
+          setData([]);
+          setTasks([]);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
