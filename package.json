@@ -36,6 +36,7 @@
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "framer-motion": "^10.16.4",
+    "gantt-task-react": "^0.3.9",
     "jotai": "^2.4.0",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
