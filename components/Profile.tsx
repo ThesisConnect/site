@@ -45,11 +45,11 @@ const Profile: ForwardRefRenderFunction<HTMLDivElement,IProfile> = ({
       )}
       <div className="z-10">
         <Image
-          src={user.avatar || '/profilebase.png'}
+          src={user?.avatar || '/profilebase.png'}
           alt="profile picture"
           width={+width}
           height={height ? +height : +width}
-          loader={user.avatar ? profileDownload : undefined}
+          loader={user?.avatar ? profileDownload : undefined}
           placeholder="empty"
           onClick={onClick}
           style={{

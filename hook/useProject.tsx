@@ -5,15 +5,18 @@ import { useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { checkSchemaCreateProject, createNewProjectType } from '../models/Project/createNewProject';
 import { extend, omit } from "lodash";
+import { IStatus } from '../stores/Project';
 
 const fetcher = async (url: string) => {
     const res = await axiosBaseurl.get(url);
     return res.data
 }
-interface updateProjectType extends Omit<editSchema, 'advisors' | 'co_advisors' | 'advisee'> {
+interface updateProjectType extends Omit<editSchema, 'status'|'progress'|'advisors' | 'co_advisors' | 'advisee'> {
   advisors: string[];
   co_advisors: string[];
   advisee: string[];
+  progress?: number;
+  status?: IStatus;
 }
 interface IProjectHookReturn {
   project: IProject[];
@@ -35,9 +38,9 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
   const updateProject = useCallback(async (updateData: updateProjectType,projectID:string) => {
     try {
       const  {data} = await axiosBaseurl.put("/project/edit", updateData) ;
-      updateProjectStore(data as editSchema,projectID)
-      const newData = [...project,data]
-      mutate(newData);
+      updateProjectStore(data,projectID)
+      // console.log(newproject)
+      mutate(project);
     } catch (err) {
       console.log(err);
       throw err;

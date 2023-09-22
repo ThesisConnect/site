@@ -66,7 +66,7 @@ export interface ProjectStore {
     setFilterProject: (filterProject: IProject[]) => void
     setProject: (project: IProject[]) => void
     createProject: (data: createSchema) => Promise<IProject[]>
-    updateProject: (updateData: editSchema,projectID:string) => IProject|undefined
+    updateProject: (updateData: IProject,projectID:string) => IProject|undefined
     getPlanByProjectID: (projectID: string) => IPlan[]
     getProjectByID: (projectID: string) => IProject|undefined
   }

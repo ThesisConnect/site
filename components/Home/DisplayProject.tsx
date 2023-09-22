@@ -118,7 +118,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 <div className="flex flex-col">
                   {advisee?.map((user) => (
                     <div className="text-base" key={uuid4()}>
-                      {user.email}
+                      {user?.email}
                     </div>
                   ))}
                 </div>
