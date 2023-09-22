@@ -34,7 +34,7 @@ const useProject = (suspense:boolean=false):IProjectHookReturn => {
   const { data, error, mutate,isLoading } = useSWR<IProject[],Error>("/test/page/main",fetcher,{ revalidateOnFocus: true });
   const updateProject = useCallback(async (updateData: updateProjectType,projectID:string) => {
     try {
-      const  {data} = await axiosBaseurl.put("/page/edit", omit(updateProject,["progress","status"])) ;
+      const  {data} = await axiosBaseurl.put("/project/edit", omit(updateProject,["progress","status"])) ;
       updateProjectStore(data as editSchema,projectID)
       mutate([...project,data]);
     } catch (err) {
