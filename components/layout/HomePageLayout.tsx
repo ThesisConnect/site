@@ -84,7 +84,7 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
           onValueChange={handleSelect}
         />
         <Search
-          data={project.map((items) => items.name)}
+          data={project?.map((items) => items.name)}
           onChange={handleSearch}
         />
       </div>

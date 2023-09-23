@@ -1,5 +1,6 @@
 'use client';
 import fileStore from '@/stores/Files';
+import useProjectStore from '@/stores/Project';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { useStore } from 'zustand';
@@ -11,12 +12,12 @@ const FolderPathInput = () => {
     if (!param.folderID) return '';
     return getPathName(param.folderID as string[]);
   }, [param.folderID, getPathName]);
-
+  const currentProject = useProjectStore((state) => state.currentProject);
   return (
     <input
       type="text"
       readOnly
-      value={` > ${param.project} ${
+      value={` > ${currentProject?.name} ${
         pathFromId ? '>' : ''
       } ${pathFromId?.replace(/\//g, ' > ')}`}
       className="bg-neutral-100 w-[40%] h-[27px] text-sm rounded-sm focus:bg-white ms-4

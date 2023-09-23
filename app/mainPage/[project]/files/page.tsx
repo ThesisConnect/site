@@ -6,40 +6,27 @@ import { usePathname, useRouter } from 'next/navigation';
 import { object } from 'zod';
 import FolderDisplay from '../../../../components/files/FolderDIsplay';
 import FileMemo from '../../../../components/files/FileMemo';
-const PageRootfiles = () => {
-  const defaultFiles = fileStore((state) => state.defaultFiles);
+import useProject from '@/hook/useProject';
+import LoadingNormal from '@/components/loading/LoadingNormal';
+import useProjectStore from '@/stores/Project';
+import dynamic from 'next/dynamic';
+const PageRootFiles = () => {
   const pathName = usePathname();
-  const route = useRouter();
-
+  const {currentProject} = useProjectStore((state) => ({
+    currentProject:state.currentProject
+  }))
   return (
-    <div className="w-full">
-      {Object.values(defaultFiles)
-        .filter((item) => {
-          if (item.type === 'folder') {
-            return item.folderID[0] === '1';
-          } else {
-            return false;
-          }
-        })
-        .map((item) => {
-          if (item.type === 'folder')
-            return (
-              <div key={item.folderID} className="my-4">
-                <DisplayFolder
-                  name={item.name}
-                  key={item.folderID}
-                  onClick={() => {
-                    route.push(`${pathName}/${item.name.replace(' ', '_')}`);
-                  }}
-                />
-              </div>
-            );
-          else return <></>;
-        })}
-      <FolderDisplay />
+    <div>
+      {
+        currentProject && <FolderDisplay  showFolderID={currentProject.folder_id} />
+      }
       {/* <FileMemo/> */}
     </div>
   );
 };
+// const PageRootFilesDynamic = dynamic(() => Promise.resolve(PageRootFiles), {
+//   ssr: false,
+//   loading: () => <LoadingNormal />,
+// });
 
-export default PageRootfiles;
+export default PageRootFiles;

@@ -61,6 +61,7 @@ export interface IPlan {
 export interface ProjectStore {
     project:IProject[]
     filterProject: IProject[]
+    currentProject: IProject | undefined
     planEachProject: Record<string, IPlan[]>
     setPlanEachProject:(projectID:string,plan:IPlan[])=>void
     setFilterProject: (filterProject: IProject[]) => void
@@ -77,6 +78,7 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
         project: [],
         filterProject: [],
         planEachProject: {},
+        currentProject: undefined,
         setFilterProject: (filterProject) => set({ filterProject }),
         setPlanEachProject: (projectID,plan) => set({ planEachProject: {...get().planEachProject,[projectID]:plan} }),
         setProject: (project) => set({ project }),
@@ -103,6 +105,7 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
           return get().planEachProject[projectID]||[]
         },
         getProjectByID: (projectID) => {
+          set({currentProject:get().project.find((project) => project._id === projectID)})
           return get().project.find((project) => project._id === projectID);
         },
     })

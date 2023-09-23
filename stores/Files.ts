@@ -3,13 +3,12 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import axiosBaseurl from '../config/baseUrl';
 import { createJSONStorage, persist } from 'zustand/middleware';
-
 export interface File {
   type: 'file';
   name: string;
-  fileID: string;
+  _id: string;
   size: number;
-  type_file: string;
+  file_type: string;
   lastModified: string;
   link: string;
   memo?: string;
@@ -18,87 +17,70 @@ export interface File {
 export interface Folder {
   type: 'folder';
   name: string;
-  folderID: string;
-  last_modifiled?: string;
+  _id: string;
+  lastModifiled?: string;
   parentID?: string;
   children?: string[];
-  share?: string[];
+  shared?: string[];
 }
 
 export type Item = Folder | File;
-export const baseData: Record<string, Item> = {
-  '1_Folder_1': {
-    type: 'folder',
-    name: 'All tasks',
-    folderID: '1_Folder_1',
-    children: ['2_Folder_1', '2_Folder_2'],
-  },
-  '2_Folder_1': {
-    type: 'folder',
-    name: 'All tasks',
-    folderID: '2_Folder_1',
-    children: [],
-  },
-  '2_Folder_2': {
-    type: 'folder',
-    name: 'All tasks',
-    folderID: '2_Folder_2',
-    children: [],
-  },
-  '1_Folder_2': {
-    type: 'folder',
-    name: 'General',
-    folderID: '1_Folder_2',
-    children: [],
-  },
-  '1_Folder_3': {
-    type: 'folder',
-    name: 'Literature review',
-    folderID: '1_Folder_3',
-    children: [],
-  },
-  '1_Folder_4': {
-    type: 'folder',
-    name: 'Private ',
-    folderID: '1_Folder_4',
-    children: [],
-  },
-};
+
+
 
 export interface FileStore {
   defaultFiles: Record<string, Item>;
-  getcontent: (folderID: string) => Item[];
+  getcontent: (folderID: string) => Item[]|undefined;
   setChildren: (children: Item[]) => void;
   getPathName: (folderID: string[]) => string;
+  setFiles: (files: Item[]) => void;
+  getCurrentFolder: (folderID: string) => Folder;
 }
 
-export const FecherFile = async (childrenID: string[]) => {
-  const response = await axiosBaseurl.post('/api/file/download', childrenID);
-  const data = (await response.data) as Item[];
-  return data;
-};
+
+
 
 const fileStore = createWithEqualityFn<FileStore>()(persist(
   (set, get) => ({
-    defaultFiles: baseData,
-
+    defaultFiles: {},
+    getCurrentFolder: (folderID) => {
+      return get().defaultFiles[folderID] as Folder;
+    },
+    setFiles: (files) => {
+      const filesWithKey: Record<string, Item> = {};
+      files.forEach((file) => {
+        if (file.type === 'file') {
+          filesWithKey[file._id] = file;
+        } else {
+          filesWithKey[file._id] = file;
+        }
+      });
+      set({
+        defaultFiles: {
+          ...get().defaultFiles,
+          ...filesWithKey,
+        },
+      });
+    },
     getcontent: (folderID) => {
       const folder = get().defaultFiles[folderID] as Folder;
       return (
         folder?.children
           ?.map((child) => get().defaultFiles[child])
-          .filter(Boolean) || []
+          .filter(Boolean) || undefined
       );
     },
     setChildren: (children: Item[]) => {
       const childrenWithKey: Record<string, Item> = {};
+      console.log("children",children)
       children.forEach((child) => {
         if (child.type === 'file') {
-          childrenWithKey[child.fileID] = child;
+          childrenWithKey[child._id] = child;
         } else {
-          childrenWithKey[child.folderID] = child;
+          childrenWithKey[child._id] = child;
         }
       });
+      // console.log("childrenWithKey",childrenWithKey)
       set({
         defaultFiles: {
           ...get().defaultFiles,

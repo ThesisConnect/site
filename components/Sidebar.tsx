@@ -103,14 +103,14 @@ const Sidebar = () => {
         </div>
         <div
           className={`flex flex-col justify-center items-center cursor-pointer pt-2 ${
-            pathname === `/mainPage/${projectID}/files` ? 'bg-neutral-300' : ''
+            pathname.includes(`/mainPage/${projectID}/files`)? 'bg-neutral-300' : ''
           }`}
           onClick={() => router.push(`/mainPage/${projectID}/files`)}
           onMouseOver={handleHover}
         >
           <FileIcon
             className={
-              pathname === `/mainPage/${projectID}/files`
+              pathname.includes(`/mainPage/${projectID}/files`)
                 ? 'fill-teal-800'
                 : 'fill-neutral-400'
             }

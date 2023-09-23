@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
 import useProjectStore from '@/stores/Project';
 import { motion } from 'framer-motion';
+import ProtectedPage from '@/components/ProtectedPage';
 const PageHomeRole = () => {
   const { project, filterProject } = useProjectStore((state) => ({
     project: state.project,
@@ -32,9 +33,11 @@ const PageHomeRoleDynamic = dynamic(() => Promise.resolve(PageHomeRole), {
 });
 const MainPage = () => {
   return (
-    <HomePageLayout>
-      <PageHomeRoleDynamic />
-    </HomePageLayout>
+    <ProtectedPage>
+      <HomePageLayout>
+        <PageHomeRoleDynamic />
+      </HomePageLayout>
+    </ProtectedPage>
   );
 };
 export default dynamic(() => Promise.resolve(MainPage), {
