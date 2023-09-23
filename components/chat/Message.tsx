@@ -1,6 +1,7 @@
+import useProjectStore, { IUserInProject } from '@/stores/Project';
 import { Avatar } from '@mui/material';
 import bytes from 'bytes';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AiOutlineFileText } from 'react-icons/ai';
 
 export interface FileCom {
@@ -19,6 +20,7 @@ export type MessageProps = {
   content: string | FileCom;
   isOwnMessage: boolean;
   type?: 'file' | 'text';
+  uid?: string;
 };
 
 const Message: React.FC<MessageProps> = ({
@@ -26,8 +28,21 @@ const Message: React.FC<MessageProps> = ({
   content,
   isOwnMessage,
   type = 'text',
+  uid,
 }) => {
   const isFile = type === 'file';
+  const [userEachMessage, setUserEachMessage] = React.useState<IUserInProject>();
+  const currentProject = useProjectStore((state) => state.currentProject);
+  useEffect(()=>{
+    console.log(currentProject , uid)
+    if (currentProject && uid) {
+      const allUser = [...currentProject.advisee, ...currentProject.advisors,... currentProject.co_advisors]as IUserInProject[];
+      console.log("allUser",allUser)
+      const user = allUser.find((user:IUserInProject) => user._id === uid);
+      console.log("user",user)
+      setUserEachMessage(user);
+    }
+  },[uid,currentProject])
   if (isFile) {
     const fileContent = content as FileCom;
     return (
@@ -36,7 +51,7 @@ const Message: React.FC<MessageProps> = ({
           isOwnMessage ? 'justify-end' : 'justify-start'
         } mb-2 space-x-2`}
       >
-        {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />}
+         {!isOwnMessage&&<Avatar src={userEachMessage?.avatar} alt={userEachMessage?.userName}  sx={{ width: 40, height: 40}} />}
         <div
           className={`max-w-lg px-4 py-2 rounded-lg ${
             isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
@@ -75,7 +90,7 @@ const Message: React.FC<MessageProps> = ({
     <div
       className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-2 space-x-2`}
     >
-       {!isOwnMessage &&<Avatar sx={{ width: 40, height: 40}} />}
+       {!isOwnMessage&&<Avatar src={userEachMessage?.avatar} alt={userEachMessage?.userName}  sx={{ width: 40, height: 40}} />}
       <div
         className={`max-w-lg px-4 py-2 rounded-lg ${
           isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'

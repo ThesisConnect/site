@@ -144,6 +144,7 @@ const PageChat = () => {
                       ? (msg.content as FileCom)
                       : (msg.content as string)
                   }
+                  uid={msg.uid}
                   type={typeof msg.content === 'object' ? 'file' : 'text'}
                   isOwnMessage={auth.currentUser?.uid === msg.uid}
                 />
