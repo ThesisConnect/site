@@ -20,15 +20,16 @@ interface IFileFetch extends Omit<IFolder,'child'|'files'>{
   updatedAt:string
 }
 const useFile = (folderID:string) => {
-  const {setChildren,getcontent} = fileStore((state) => ({
+  const {setChildren,getcontent,defaultFiles} = fileStore((state) => ({
     setChildren:state.setChildren,
-    getcontent:state.getcontent
+    getcontent:state.getcontent,
+    defaultFiles:state.defaultFiles,
   }))
   const ONE_HOUR_IN_MS = 60 * 60 * 1000;
   const {data,mutate,error,isLoading} = useSWR<IFileFetch,Error>(`/folder/${folderID}`,FecherFile,{
     revalidateOnFocus:true,
   })
-  const [dataFile,setData] = useState<Item[]|undefined>()
+  // const [dataFile,setData] = useState<Item[]|undefined>()
   useEffect(() => {
     if(data){
       const rootFolder = {
@@ -68,11 +69,11 @@ const useFile = (folderID:string) => {
       if(folderID)
         setChildren([rootFolder,...allFolder,...allFile])
     }
-    setData(getcontent(folderID))
+    // setData(getcontent(folderID))
 
   }, [data,folderID,setChildren,getcontent])
   return {
-    allfiles: getcontent(folderID) || [],
+    allfiles:getcontent(folderID) || [],
     isLoading,
     error,
     mutate

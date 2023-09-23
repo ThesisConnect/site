@@ -3,6 +3,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import axiosBaseurl from '../config/baseUrl';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { deleteFile } from '@/utils/managefile';
 export interface File {
   type: 'file';
   name: string;
@@ -35,6 +36,7 @@ export interface FileStore {
   getPathName: (folderID: string[]) => string;
   setFiles: (files: Item[]) => void;
   getCurrentFolder: (folderID: string) => Folder;
+  deleteFileFromStore: (fileID: string) => void;
 }
 
 
@@ -91,6 +93,15 @@ const fileStore = createWithEqualityFn<FileStore>()(persist(
     getPathName: (folderID) => {
       return folderID.map((id) => get().defaultFiles[id]?.name).join('/');
     },
+    deleteFileFromStore: (fileID) => {
+      delete get().defaultFiles[fileID];
+      set({
+        defaultFiles: {
+          ...get().defaultFiles,
+        },
+      });
+    }
+
   })
   ,{
     name: 'file-storage',
