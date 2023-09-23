@@ -13,9 +13,11 @@ interface CreateFolderProps {
 export const CreateFolder: FC<CreateFolderProps> = ({ onCreate,onClose }) => {
   const [name, setName] = useState<string>('');
   const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const params = useParams();
   const handleSubmit = useCallback(async() => {
-    if (name) {
+    if (name && !isSubmitting) {
+      setIsSubmitting(true);
        await axiosBaseurl.post('/folder/create', {
         name,
         parent: params.folderID[params.folderID.length - 1],
@@ -23,8 +25,9 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onCreate,onClose }) => {
       onCreate && onCreate(name);
       mutate(`/folder/${params.folderID[params.folderID.length - 1]}`);
       onClose?.()
+      setIsSubmitting(false);
     }
-  }, [name, onCreate,onClose,params.folderID]);
+  }, [name, onCreate,onClose,params.folderID,isSubmitting]);
   useEffect(() => {
     nameInputRef.current?.focus();
     const handleEscapePress = (event: KeyboardEvent) => {
