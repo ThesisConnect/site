@@ -16,7 +16,6 @@ const FolderDisplay: FC<FolderDisplayProps> = ({ showFolderID  }) => {
   const {
     allfiles: allfiles ,
   } = useFile(showFolderID);
- 
   return (
     <div className="h-full w-full">
       {allfiles?.map((item) => {

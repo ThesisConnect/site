@@ -10,11 +10,13 @@ import useProject from '@/hook/useProject';
 import LoadingNormal from '@/components/loading/LoadingNormal';
 import useProjectStore from '@/stores/Project';
 import dynamic from 'next/dynamic';
+
 const PageRootFiles = () => {
   const pathName = usePathname();
   const {currentProject} = useProjectStore((state) => ({
     currentProject:state.currentProject
   }))
+  
   return (
     <div>
       {

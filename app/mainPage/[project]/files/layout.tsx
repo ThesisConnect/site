@@ -3,7 +3,7 @@ import SortBy from '@/components/files/SortBy';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import FolderPathInput from '../../../../components/files/FolderPathInput';
 import { useParams } from 'next/navigation';
-import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react';
+import { ChangeEvent, MouseEvent, useCallback, useRef, useState } from 'react';
 import { deleteFile, handleFile } from '@/utils/managefile';
 import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
@@ -12,11 +12,12 @@ import { useRouter } from 'next/navigation';
 import fileStore from '@/stores/Files';
 import { mutate } from 'swr';
 import axiosBaseurl from '@/config/baseUrl';
-import { th } from 'date-fns/locale';
+import CreateFolder from '@/components/files/CreateFolder';
 const FileLayout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams();
   const Inputfile = useRef<HTMLInputElement | null>(null);
   const route = useRouter();
+  const [showCreateFolder, setShowCreateFolder] = useState<boolean>(false);
   const { currentProject } = useProjectStore((state) => ({
     currentProject: state.currentProject,
   }));
@@ -47,8 +48,7 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
           url: file.link,
           memo: file.memo,
         };
-      }
-      );
+      });
       try {
         await axiosBaseurl.post('file/create/', {
           folder_id: params.folderID[params.folderID.length - 1],
@@ -91,7 +91,12 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-end">
           {CheckCanCreateFolder() && (
             <div>
-              <button className="bg-teal-800 w-32 h-10 text-white rounded-full me-4">
+              <button className="bg-teal-800 w-32 h-10
+               text-white rounded-full me-4"
+                onClick={() => {
+                  setShowCreateFolder(true);
+                }}  
+              >
                 Create Folder
               </button>
 
@@ -144,7 +149,19 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
         <span className="w-1/5 flex justify-center items-center">Type</span>
         <span className="w-1/5 flex justify-center items-center">size</span>
       </div>
-      <div className="h-full bg-neutral-100 ">{children}</div>
+      <div className="h-full bg-neutral-100 ">
+        {showCreateFolder && (
+          <div className="my-4">
+            <CreateFolder
+              onClose={() => {
+                setShowCreateFolder(false);
+              }}
+              
+            />
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 };
