@@ -5,6 +5,11 @@ import FileSummary from "./File";
 import React, { useEffect, useState } from "react";
 import Profile from "./Profile";
 import axiosBaseurl from '@/config/baseUrl';
+import { TableFile, IUser, ISummary } from "@/app/mainPage/[project]/detail/page";
+import { HiMiniEye } from "react-icons/hi2";
+import { AiFillEdit } from "react-icons/ai";
+import userStore from '@/stores/User';
+
 import {
   getDownloadURL,
   ref,
@@ -15,18 +20,24 @@ import { v4 as uuid4, v4 } from 'uuid';
 import useAuth from "@/hook/useAuth";
 import { getAuth } from "firebase/auth";
 import SummaryPopup from "./SummaryPopup";
+import DetailSummaryPopup from "./DetailSummary";
+
 
 
 interface DataSummary {
+  id: string
   project_id: string
+  plan_id: string
   plan_name: string
-  reciever_id: string
-  sender_id: string
+  reciever_id: IUser
+  sender_id: IUser
   comment: string
   progress: number
-  files: string[]
+  files: TableFile[]
   chat_id: string
-  createdAt: string
+  updateAt: string
+  status: string;
+  onSuccess: () => void;
 }
 
 interface DataModelInterface {
@@ -36,7 +47,9 @@ interface DataModelInterface {
 
 const UpdateTask: React.FC<DataSummary> = (
   {
+    id,
     project_id,
+    plan_id,
     plan_name,
     reciever_id,
     sender_id,
@@ -44,97 +57,129 @@ const UpdateTask: React.FC<DataSummary> = (
     progress,
     files,
     chat_id,
-    createdAt
+    updateAt,
+    status,
+    onSuccess,
   }) => {
-
+  const user = userStore((state) => state.user);
   const [Taskname, setTask] = useState([]);
   const [sender, setSender] = useState<string>("");
-  const [opensummary, setopenSummary] = useState<boolean>(false);
+  const [check, setCheck] = useState<boolean>(false);
 
-  console.log(createdAt)
-  const C_Date = createdAt.toString().slice(0, 10).split("-")
+  console.log("UpdateAt", updateAt)
+  const C_Date = updateAt.toString().slice(0, 10).split("-")
   const CreateDate = C_Date[2] + "/" + C_Date[1] + "/" + C_Date[0]
-  const CreateTime = new Date(createdAt.toString()).getHours() + ":" + ("0" + new Date(createdAt.toString()).getMinutes()).slice(-2)
-  const [state, setState] = React.useState<boolean>(false);
+  const CreateTime = new Date(updateAt.toString()).getHours() + ":" + ("0" + new Date(updateAt.toString()).getMinutes()).slice(-2)
+  const [checkstate, setcheckState] = React.useState<boolean>(false);
+  const [detailstate, setdetailcheckState] = React.useState<boolean>(false);
 
-  function showSummaryPopup() {
-    setState(!state)
+  const showCheckSummaryPopup = () => {
+    setcheckState(!checkstate)
+  }
+  const showDetailSummaryPopup = () => {
+    setdetailcheckState(!detailstate)
   }
 
   return (
     <div
-      className="relative flex flex-col items-center rounded-lg 
-        bg-white border border-neutral-800 w-[700px] h-[160px] justify-evenly overflow-hidden "
+      className="relative flex flex-col items-center
+        bg-white border border-neutral-200 w-[101%] h-[75px] justify-evenly overflow-hidden "
     >
-      {state && <SummaryPopup key={v4()} show={state} onClose={showSummaryPopup} plan_name={plan_name} 
-      comment={comment} progress={progress} />}
-      <div className="w-full h-full cursor-pointer hover:bg-neutral-100 hover:transition hover:ease-in-out p-6" onClick={showSummaryPopup}>
-        <div className="w-full h-full " >
-          <div className="w-full h-full grid grid-cols-7 gap-1 ">
-            <div className="col-span-2 flex items-center w-full">
-              <div className="">
-                <div className="flex gap-1" >
-                  <div className="font-semibold">
-                    Date :
-                  </div>
-                  <div className="font-medium">
-                    {CreateDate}
-                  </div>
-                </div>
-                <div>Time : {CreateTime}</div>
-                <div className="w-full h-[60px] py-2 flex space-x-2 items-center">
-                  <div className="w-[40px] h-[40px] bg-neutral-200 rounded-full">
-                    <Profile
-                      user={{}}
-                      key={uuid4()}
-                      className="border border-neutral-300"
-                      width="41" />
-                  </div>
-                  <div className="grid grid-cols-7 items-center">
-                    <div className="col-span-5 w-[30px] h-[2px] bg-teal-800"></div>
-                    <div className="col-span-2 w-[10px] h-[10px] bg-teal-800 rounded-full"></div>
-                  </div>
-                  <div className="w-[40px] h-[40px] bg-neutral-200 rounded-full">
-                    <Profile
-                      user={{}}
-                      key={uuid4()}
-                      className="border border-neutral-300"
-                      width="41" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-span-5 flex space-x-4" onClick={showSummaryPopup}>
-              <div className="h-[100%] w-[0.5px] bg-teal-800"></div>
-              <div className="w-[90%] overflow-hidden">
-                <div className="font-semibold">
-                  {
-                    plan_name
-                  }
-                </div>
-                <div className="flex">
-                  <div className="truncate">
-                    Detail : {comment}
-                  </div>
-                </div>
+      {checkstate &&
+        <SummaryPopup
+          key={v4()}
+          show={checkstate}
+          onClose={showCheckSummaryPopup}
+          onSuccess={onSuccess}
+          id={id}
+          project_id={project_id}
+          plan_id={plan_id}
+          plan_name={plan_name}
+          reciever_id={reciever_id}
+          sender_id={sender_id}
+          comment={comment}
+          progress={progress}
+          chat_id={chat_id}
+          files={files}
+        />}
+      {detailstate &&
+        <DetailSummaryPopup
+          key={v4()}
+          id={id}
+          show={detailstate}
+          onClose={showDetailSummaryPopup}
+          project_id={project_id}
+          plan_id={plan_id}
+          plan_name={plan_name}
+          reciever_id={reciever_id}
+          sender_id={sender_id}
+          comment={comment}
+          progress={progress}
+          status={status}
+          chat_id={chat_id}
+          date={new Date(updateAt).toUTCString().split(' ').slice(0, 4).join(' ')}
+          time={CreateTime}
+          files={files}
 
-                <div className="h-[30%] w-full flex items-center gap-2">
-                  <div className="w-[85%] rounded-lg h-2 bg-neutral-400">
-                    <div
-                      className={`bg-teal-800 h-2 rounded-full`}
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="">{progress} %</div>
-                </div>
-                <div className="h-[100%]">
-                  <div className=" flex items-center gap-2 line-clamp-1 snap-x overflow-scrolled scroll-smooth">
-                    <FileSummary key={v4()} files={files} />
-                  </div>
-                </div>
+        />}
+      <div className="w-full h-full cursor-default" >
+        {/* <div className="w-full h-full cursor-pointer " onClick={showSummaryPopup}> */}
+        <div className="grid grid-cols-8 gap-2 h-full justify-items-center items-center w-full bg-neutral-100 ">
+          <div className="col-span-2 truncate">{plan_name}</div>
+          <div>{new Date(updateAt).toUTCString().split(' ').slice(0, 4).join(' ')}</div>
+          <div>{CreateTime}</div>
+          <div className="col-span-2 flex-col justify-center items-center w-full">
+            <div className="w-full flex items-center">
+              <div className="w-[100%] rounded-lg h-2 bg-neutral-400">
+                <div
+                  className={`bg-teal-800 h-2 rounded-full`}
+                  style={{ width: `${progress}%` }}
+                ></div>
               </div>
-              <BsFillChatDotsFill className="text-3xl text-teal-800 hover:text-neutral-400 duration-100" />
             </div>
+            <div className="flex justify-between items-center text-sm">
+              <div className="">progress</div>
+              <div className="">{progress} %</div>
+            </div>
+
+          </div>
+          <div>
+            {status === 'pending' && (
+              <div className="flex font-bold rounded-full items-center text-[12px] text-yellow-700 py-0 px-3 border border-yellow-700 bg-yellow-100">
+                {status.toUpperCase()}
+              </div>
+            )}
+            {status === 'reject' && (
+              <div className="flex font-bold rounded-full items-center text-[12px] text-red-700 py-0 px-3 border border-red-700 bg-red-100">
+                {status.toUpperCase()}
+              </div>
+            )}
+            {status === 'approve' && (
+              <div className="flex font-bold rounded-full items-center text-[12px] text-sky-700 py-0 px-3 border border-sky-700 bg-sky-100">
+                {status.toUpperCase()}
+              </div>
+            )}
+            {status === 'complete' && (
+              <div className="flex font-bold rounded-full items-center text-[12px] text-teal-700 py-0 px-3 border border-teal-700 bg-teal-100">
+                {status.toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="w-[35px] h-[35px] flex items-center justify-center rounded-full hover:bg-neutral-300"
+              onClick={showDetailSummaryPopup}
+            >
+              <HiMiniEye className="text-2xl text-teal-800" />
+            </button>
+            {status === "pending" && user.role === "advisor" && (
+              <button
+                className="w-[35px] h-[35px] flex items-center justify-center rounded-full hover:bg-neutral-300 hover:transition hover:ease-in-out"
+                onClick={showCheckSummaryPopup}
+              >
+                <AiFillEdit className="text-2xl text-teal-800" />
+              </button>
+            )}
           </div>
         </div>
       </div>

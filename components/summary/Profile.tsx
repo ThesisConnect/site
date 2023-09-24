@@ -5,9 +5,10 @@ import profileDownload from '@/utils/profileImage';
 import { cn } from '@/lib/utils';
 import { relative } from 'path';
 import CircularProgress from './CircleProgress';
+import { IUser } from '@/app/mainPage/[project]/detail/page';
 
 interface IProfile {
-  user: Partial<User>;
+  user: IUser;
   width?: string;
   height?: string;
   className?: string;
@@ -23,6 +24,7 @@ const Profile: FC<IProfile> = ({
   onClick,
   progress,
 }) => {
+  console.log(user)
   return (
     <div
       className="relative "
