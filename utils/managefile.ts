@@ -128,7 +128,7 @@ export const handleFile = async (
 // };
 
 export const deleteFile = async (fileName:string,uid:string) => {
-  const desertRef = ref(storage, 'uploads/'+fileName+uid);
+  const desertRef = ref(storage, 'uploads/'+uid+fileName);
   await deleteObject(desertRef);
 }
   

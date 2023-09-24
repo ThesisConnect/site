@@ -10,7 +10,7 @@ const uploadFileToFirebase = async (file:File) => {
     // Step 1: Create a reference
     const storage = getStorage();
     const uid  = v4()
-    const pathFile = 'uploads/' + file.name+uid;
+    const pathFile = 'uploads/'+ uid+ file.name;
     const storageRef = ref(storage, pathFile);
 
     // Step 2: Start the upload
