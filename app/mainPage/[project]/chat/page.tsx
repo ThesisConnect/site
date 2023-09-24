@@ -92,6 +92,9 @@ const PageChat = () => {
       socket.on('receive message', (newMessages) => {
         setChat((prev) => [...prev, newMessages]);
       });
+      socket.on('update folder',()=>{
+        mutate(`/file/chat/${chatID}`)
+      })
       socket.on('error', (error) => {
         console.error('Socket error:', error);
       });
@@ -102,6 +105,7 @@ const PageChat = () => {
         socket.off('room messages');
         socket.off('receive message');
         socket.off('error');
+        socket.off('update folder')
         // socket.off('request messages');
         socket.emit('leave room', chatID);
       }
@@ -125,8 +129,6 @@ const PageChat = () => {
           memo: '',
         };
         socket.emit('send message', chatIDFromURL, fileSent);
-        const fileMutate = await mutate(`/file/chat/${chatIDFromURL}`);
-        // console.log("fileMutate",fileMutate);
       }
     } else {
       console.error('Chat ID not found in URL');
