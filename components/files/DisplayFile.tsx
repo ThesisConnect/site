@@ -7,6 +7,7 @@ import bytes from 'bytes';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { IoMdMore } from 'react-icons/io';
 import DeleteFileAndFolderPopup from './DeteleFileAndFolder';
+import FileMemo from './FileMemo';
 
 interface DisplayFile {
   file: File;
@@ -61,10 +62,11 @@ export const DisplayFile: FC<DisplayFile> = ({ file, onClick }) => {
         Delete && <DeleteFileAndFolderPopup deleteType='file' 
         show={Delete}
          dataFileOrFolder={file}
-         onClose={() => {
-          setDelete(false);
-        }}
+         onClose={showDeletePlan}
          />
+      }
+      {
+        edit && <FileMemo show={edit} file={file} onClose={showPlanEdit}/>
       }
       <div className="w-1/5 flex   items-center">
         <div className="w-2/5 flex justify-end me-4  ">
