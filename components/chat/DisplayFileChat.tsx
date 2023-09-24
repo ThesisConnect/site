@@ -58,7 +58,7 @@ const DisplayFileChat = () => {
               </div>
             </Tooltip>
             <div className="ps-3">
-              {DateTime.fromISO(file?.lastModified).toFormat('dd/mm/yyyy')}
+              {DateTime.fromISO(file?.lastModified).toFormat('dd/MM/yyyy')}
             </div>
           </div>
         );
