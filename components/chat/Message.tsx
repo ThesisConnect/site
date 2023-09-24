@@ -1,4 +1,5 @@
 import useProjectStore, { IUserInProject } from '@/stores/Project';
+import { handleFilePreview } from '@/utils/PreviewFile';
 import { Avatar } from '@mui/material';
 import bytes from 'bytes';
 import React, { useEffect } from 'react';
@@ -34,12 +35,12 @@ const Message: React.FC<MessageProps> = ({
   const [userEachMessage, setUserEachMessage] = React.useState<IUserInProject>();
   const currentProject = useProjectStore((state) => state.currentProject);
   useEffect(()=>{
-    console.log(currentProject , uid)
+    
     if (currentProject && uid) {
       const allUser = [...currentProject.advisee, ...currentProject.advisors,... currentProject.co_advisors]as IUserInProject[];
-      console.log("allUser",allUser)
+      // console.log("allUser",allUser)
       const user = allUser.find((user:IUserInProject) => user._id === uid);
-      console.log("user",user)
+      // console.log("user",user)
       setUserEachMessage(user);
     }
   },[uid,currentProject])
@@ -60,15 +61,8 @@ const Message: React.FC<MessageProps> = ({
           {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}
           <div className="flex items-center my-2 space-x-2">
             <AiOutlineFileText size={35} className="text-neutral-600" />
-            <div className='flex-1 min-w-0'>
-              <a
-                href={fileContent.link}
-                className="break-words"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <div className='flex-1 min-w-0 cursor-pointer' onClick={()=>handleFilePreview(fileContent.link,fileContent.type_file)}>
                 {fileContent.name}
-              </a>
             </div>
           </div>
           {
@@ -78,9 +72,9 @@ const Message: React.FC<MessageProps> = ({
               </p>
             )
           }
-          {fileContent.memo && (
+          {/* {fileContent.memo && (
             <p className="text-xs text-gray-500">{fileContent.memo}</p>
-          )}
+          )} */}
         </div>
       </div>
     );

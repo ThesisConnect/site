@@ -3,6 +3,8 @@ import { MdAttachFile } from 'react-icons/md';
 import AutoResizingTextArea from '../AutoResizingTextArea';
 import { ChangeEvent, FC,  useEffect,  useLayoutEffect, useRef, useState } from 'react';
 import uploadFileToFirebase from '@/utils/uploadfile';
+import { mutate } from 'swr';
+import { useSearchParams } from 'next/navigation';
 interface contents {
   file:File,
   url:string,
@@ -23,6 +25,7 @@ const MessageInput:FC<MessageInputProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [File, setFile] = useState<File|null>(null);
   const [isloading, setIsloading] = useState(false);
+  const searchParams = useSearchParams();
   useEffect(() => {
     const currentInputRef = inputRef.current;
     const handleInput = () => {
@@ -78,6 +81,7 @@ const MessageInput:FC<MessageInputProps> = ({
       const [url ,path,uid] = await uploadFileToFirebase(e.target.files[0]);
       setInputValue(e.target.files[0].name)
       return {url,path,uid}
+
     }
   }
   

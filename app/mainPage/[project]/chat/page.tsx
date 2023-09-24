@@ -11,6 +11,7 @@ import userStore from '@/stores/User';
 import { auth } from '@/config/firebase';
 import { ErrorBoundary } from 'react-error-boundary';
 import { divide } from 'lodash';
+import { mutate } from 'swr';
 interface fileContents {
   file: File;
   url: string;
@@ -85,7 +86,7 @@ const PageChat = () => {
       socket.emit('join room', chatID);
 
       socket.on('room messages', (initMessages: RecieveMessenger[]) => {
-        console.log(initMessages);
+        // console.log(initMessages);
         setChat(initMessages);
       });
       socket.on('receive message', (newMessages) => {
@@ -107,7 +108,7 @@ const PageChat = () => {
     };
   }, [chatID]);
 
-  const handleSendData = (message: string | fileContents) => {
+  const handleSendData = async(message: string | fileContents) => {
     const chatIDFromURL = searchParams.get('chatID');
     if (chatIDFromURL) {
       if (typeof message === 'string')
@@ -124,6 +125,8 @@ const PageChat = () => {
           memo: '',
         };
         socket.emit('send message', chatIDFromURL, fileSent);
+        const fileMutate = await mutate(`/file/chat/${chatIDFromURL}`);
+        // console.log("fileMutate",fileMutate);
       }
     } else {
       console.error('Chat ID not found in URL');
@@ -146,7 +149,7 @@ const PageChat = () => {
                   }
                   uid={msg.uid}
                   type={typeof msg.content === 'object' ? 'file' : 'text'}
-                  isOwnMessage={auth.currentUser?.uid === msg.uid}
+                  isOwnMessage={auth.currentUser?.uid === msg.uid||user.username===msg.username}
                 />
               </ErrorBoundary>
             ))}

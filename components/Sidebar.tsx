@@ -10,6 +10,7 @@ import PlaningIcon from './icon/PlaningIcon';
 import GanttIcon from './icon/GanttIcon';
 import ChatIcon from './icon/ChatIcon';
 import { MouseEvent } from 'react';
+import useProjectStore from '@/stores/Project';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -18,6 +19,10 @@ const Sidebar = () => {
   const back = () => {
     router.back();
   };
+  const currentProject = useProjectStore(
+    (state) => state.currentProject
+  );
+  
   if (pathname === '/editprofile')
     return (
       <>
@@ -197,9 +202,9 @@ const Sidebar = () => {
         </div>
         <div
           className={`flex flex-col justify-center items-center cursor-pointer pt-2 ${
-            pathname === `/mainPage/${projectID}/chat` ? 'bg-neutral-300' : ''
+            pathname.includes( `/mainPage/${projectID}/chat`) ? 'bg-neutral-300' : ''
           } `}
-          onClick={() => router.push(`/mainPage/${projectID}/chat`)}
+          onClick={() => router.push(`/mainPage/${projectID}/chat?chatID=${currentProject?.chat_id}`)}
           onMouseOver={handleHover}
         >
           <ChatIcon
