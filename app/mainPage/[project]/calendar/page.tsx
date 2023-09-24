@@ -45,6 +45,45 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
     end: endOfWeek(endOfMonth(firstDayOfMonth)),
   });
 
+  const days = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
+
+  const colStartClasses = [
+    "",
+    "col-start-2",
+    "col-start-3",
+    "col-start-4",
+    "col-start-5",
+    "col-start-6",
+    "col-start-7",
+  ];
+
+  const [state, setState] = React.useState<boolean>(false);
+  const [projectName, setProjectName] = useState<string>('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const projectRes = await axiosBaseurl.get(`/project/${project}`,{
+        withCredentials: true 
+      });
+        console.log('projectRes', projectRes);
+        if (projectRes?.data?.name) {
+          setProjectName(projectRes.data.name); 
+        }
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     (async () => {
       try {
@@ -79,27 +118,6 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
   }, [project]);
 
   const today = startOfToday();
-  const days = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-  ];
-
-  const colStartClasses = [
-    "",
-    "col-start-2",
-    "col-start-3",
-    "col-start-4",
-    "col-start-5",
-    "col-start-6",
-    "col-start-7",
-  ];
-
-  const [state, setState] = React.useState<boolean>(false);
 
   function showPlanDetail() {
     setState(!state)
@@ -155,13 +173,12 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
       )}
 
       <div className="flex w-full h-[50px] p-2 items-center text-lg font-semibold">
-        Project name
+        {projectName}
       </div>
       <div className="flex w-full items-center h-[50px] px-2">
         <div
           className="hover:bg-teal-700 hover:transition hover:ease-in-out "
         >
-          <div className="text-white">Create Plan</div>
         </div>
       </div>
       <div className="h-[calc(100vh-165px)] flex flex-col justify-center overflow-hidden px-2">
