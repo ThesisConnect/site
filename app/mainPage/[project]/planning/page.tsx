@@ -121,11 +121,14 @@ const PagePlanning = ({ params: { project: projectID } }: {
         </div>
 
         <div className="px-2 flex w-full justify-between items-center h-[50px]">
-          <div
-            className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-          >
-            <div className="text-white"></div>
-          </div>
+          {user.role === "advisor" && (
+            <div
+              className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+            >
+              <div className="text-white"></div>
+            </div>
+          )}
+
           {user.role === "advisee" && (
             <Button
               type="submit"
