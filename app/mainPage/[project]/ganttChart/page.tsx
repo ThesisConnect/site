@@ -79,6 +79,7 @@ function PageGantt() {
         isChecked={isChecked}
       />
       <Gantt
+        barProgressColor="#115e59"
         tasks={tasks}
         viewMode={view}
         onSelect={handleSelect}
