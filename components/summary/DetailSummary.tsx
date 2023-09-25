@@ -14,6 +14,7 @@ import { createSummarySchema } from '@/models/Auth/Summary';
 import uploadFileToFirebase from '@/utils/uploadfile';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
+import { handleFilePreview } from '@/utils/PreviewFile';
 
 
 interface DataPlan {
@@ -44,8 +45,10 @@ interface contents {
 interface TableFile {
   name: string,
   url: string,
-  path: string,
+  // path: string,
   _id: string
+  size: number,
+  file_type: string,  
 }
 
 interface TableComponentProps {
@@ -62,6 +65,11 @@ const TableFileModal: FC<TableComponentProps> = ({ table = [], pageType, onChang
     },
     [table, onChange]
   );
+  
+  const handleClick = (url: string, fileType: string) => {
+    if (!handleFilePreview) return;
+    handleFilePreview(url, fileType);
+  };
   return (
     <>
       <div className="w-full">
@@ -84,7 +92,9 @@ const TableFileModal: FC<TableComponentProps> = ({ table = [], pageType, onChang
                     key={index}
                   >
                     <div className='col-span-4 py-2 px-4'>
-                      {item.name}
+                      <div className='hover:underline truncate' onClick={() => handleClick(item.url, item.file_type)}>
+                        {item.name}
+                      </div>
                     </div>
                     <div
                       className="flex justify-center flex items-center h-[40px]"
@@ -155,13 +165,12 @@ const DetailSummaryPopup: React.FC<DataPlan> = (
     if (e.target.files) {
       setFile(e.target.files[0]);
       const [url, path, uid] = await uploadFileToFirebase(e.target.files[0]);
-      setTable([...table, { name: e.target.files[0].name, url, path, _id: uid }]);
+      setTable([...table, { name: e.target.files[0].name, url,  _id: uid, size:e.target.files[0].size, file_type:e.target.files[0].type}]);
       return { url, path, uid }
     }
   }
 
   if (!show) return null;
-
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
       <div className=" bg-white rounded-lg w-[650px] h-auto flex flex-col">

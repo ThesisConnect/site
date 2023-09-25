@@ -14,6 +14,7 @@ import { createSummarySchema } from '@/models/Auth/Summary';
 import uploadFileToFirebase from '@/utils/uploadfile';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
+import { handleFilePreview } from '@/utils/PreviewFile';
 
 
 interface DataPlan {
@@ -61,6 +62,11 @@ const TableFileModal: FC<TableComponentProps> = ({ table = [], pageType, onChang
     },
     [table, onChange]
   );
+    
+  const handleClick = (url: string, fileType: string) => {
+    if (!handleFilePreview) return;
+    handleFilePreview(url, fileType);
+  };
   return (
     <>
       <div className="w-full">
@@ -82,7 +88,7 @@ const TableFileModal: FC<TableComponentProps> = ({ table = [], pageType, onChang
                     className={`grid grid-cols-5 items-center bg-neutral-100 w-full h-[40px]`}
                     key={index}
                   >
-                    <div className='col-span-4 py-2 px-4'>
+                    <div className='col-span-4 py-2 px-4 hover:underline' onClick={() => handleClick(item.url, item.file_type)}>
                       {item.name}
                     </div>
                     <div
