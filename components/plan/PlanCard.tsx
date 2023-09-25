@@ -119,7 +119,11 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center"></div>
+                  <div className="flex items-center">
+                    <div className="flex justify-center w-[85px] rounded-full bg-neutral-200 border border-teal-800 text-teal-800 text-sm font-semibold">
+                      Not gantt
+                    </div>
+                  </div>
                 )}
               </div>
               <div className="grid relative z-100">
