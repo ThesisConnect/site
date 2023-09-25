@@ -44,6 +44,16 @@ const Message: React.FC<MessageProps> = ({
       setUserEachMessage(user);
     }
   },[uid,currentProject])
+  // const renderWithNewlines = (text:string) => {
+  //   const newText = text.split('\n').map((str, index, array) => 
+  //     index === array.length - 1 ? str : <>
+  //       {str}
+  //       <br />
+  //     </>
+  //   );
+  //   return newText;
+  // }
+  
   if (isFile) {
     const fileContent = content as FileCom;
     return (
@@ -86,12 +96,12 @@ const Message: React.FC<MessageProps> = ({
     >
        {!isOwnMessage&&<Avatar src={userEachMessage?.avatar} alt={userEachMessage?.userName}  sx={{ width: 40, height: 40}} />}
       <div
-        className={`max-w-lg px-4 py-2 rounded-lg ${
+        className={`max-w-lg px-4 py-2 rounded-lg  break-words  ${
           isOwnMessage ? 'bg-teal-600 text-white' : 'bg-gray-200 text-black'
         }`}
       >
         {!isOwnMessage && <p className="text-sm text-gray-600">{username}</p>}
-        <p>{content as string}</p>
+        <p className="whitespace-pre-line">{content as string}</p>
       </div>
     </div>
   );
