@@ -97,15 +97,15 @@ const DetailPopup: React.FC<DataPlan> = (
             <hr></hr>
             <div className='flex'>
               <div className='flex w-[50%] gap-2 items-center'>
-                <div className='grid grid-cols-3 items-center'>
-                  <div className='text-teal-800 font-semibold p-1'>Start date</div>
-                  <div className='span-col-2'>{start_date}</div>
+                <div className='grid grid-cols-4 items-center'>
+                  <div className='col-span-2 text-teal-800 font-semibold p-1'>Start date</div>
+                  <div className='col-span-2'>{start_date}</div>
                 </div>
               </div>
               <div className='flex w-[50%] gap-2 items-center'>
-                <div className='grid grid-cols-3 items-center'>
-                  <div className='text-teal-800 font-semibold p-1'>End date</div>
-                  <div className='span-col-2'>{end_date}</div>
+                <div className='grid grid-cols-4 items-center'>
+                  <div className='col-span-2 text-teal-800 font-semibold p-1'>End date</div>
+                  <div className='col-span-2 '>{end_date}</div>
                 </div>
               </div>
             </div>

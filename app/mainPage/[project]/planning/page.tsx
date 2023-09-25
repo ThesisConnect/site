@@ -17,6 +17,8 @@ import React, {
 import SortByPlan from '@/components/plan/SortBy';
 import { v4 } from 'uuid';
 import SearchInput from '@/components/Search';
+import userStore from '@/stores/User';
+import SearchPlanInput from '@/components/plan/SearchPlan';
 
 export interface DataModelInterface {
   _id: string;
@@ -36,6 +38,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
     project: string;
   };
 }) => {
+  const user = userStore((state) => state.user);
   const [Plans, setPlans] = useState<DataModelInterface[]>([])
   const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans)
   const [searchplans, setSearchPlans] = useState(Plans)
@@ -69,9 +72,26 @@ const PagePlanning = ({ params: { project: projectID } }: {
     }
     else if (newValue === "notGantt") {
       const SortPlan = Plans.filter((obj) => obj.task === false)
-      setSortPlans(SortPlan)      
+      setSortPlans(SortPlan)
     }
   };
+  const [projectName, setProjectName] = useState<string>('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const projectRes = await axiosBaseurl.get(`/project/${projectID}`, {
+          withCredentials: true
+        });
+        if (projectRes?.data?.name) {
+          setProjectName(projectRes.data.name);
+        }
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     console.log(create);
     const res = axiosBaseurl
@@ -86,14 +106,6 @@ const PagePlanning = ({ params: { project: projectID } }: {
       })
   }, [create, projectID]);
 
-  // function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
-  //   console.log(event.target.value)
-  //   console.log(Plans)
-  //   setSearchPlans(Plans.filter((obj) => {
-  //     console.log("obj", obj.name.toLowerCase() === event.target.value.toLowerCase())
-  //   }))
-  // }
-
   function getDayDiff(StartPlan: string, EndPlan: string): number {
     const msInDay = 24 * 60 * 60 * 1000;
     return Math.round(
@@ -101,24 +113,34 @@ const PagePlanning = ({ params: { project: projectID } }: {
     );
   }
 
-  console.log(SortPlans)
   return (
     <div className="flex relative flex-row h-full  overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">
         <div className="flex w-full h-[50px] p-2 p-b-0 items-center text-lg font-semibold">
-          Project name
+          {projectName}
         </div>
+
         <div className="px-2 flex w-full justify-between items-center h-[50px]">
-          <Button
-            type="submit"
-            className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-            onClick={showCreatePopup}
-          >
-            <div className="text-white">Create Plan</div>
-          </Button>
+          {user.role === "advisor" && (
+            <div
+              className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+            >
+              <div className="text-white"></div>
+            </div>
+          )}
+
+          {user.role === "advisee" && (
+            <Button
+              type="submit"
+              className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+              onClick={showCreatePopup}
+            >
+              <div className="text-white">Create Plan</div>
+            </Button>
+          )}
           <div className="flex gap-2 items-center">
             <SortByPlan pageType={selectedValue} setPage={handleValueChange} />
-            <SearchInput data={SortPlans.map((obj)=>obj.name)}   />
+            <SearchPlanInput data={SortPlans.map((obj) => obj.name)} />
           </div>
         </div>
         <div className="relative h-full w-full overflow-hidden ">
@@ -127,11 +149,11 @@ const PagePlanning = ({ params: { project: projectID } }: {
               <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
                 {SortPlans.map((obj) =>
                   <PlanCard projectID={projectID} id={obj._id}
-                   name={obj.name} description={obj.description}
-                    start_date={obj.start_date} end_date={obj.end_date} 
-                    progress={obj.progress} task={obj.task} onSucces={handleOnSuccess} 
+                    name={obj.name} description={obj.description}
+                    start_date={obj.start_date} end_date={obj.end_date}
+                    progress={obj.progress} task={obj.task} onSucces={handleOnSuccess}
                     key={v4()}
-                    />
+                  />
                 )}
               </div>
             </div>

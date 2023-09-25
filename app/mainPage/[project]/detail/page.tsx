@@ -5,8 +5,8 @@ import UpdateTask from "@/components/summary/UpdateTask";
 import Sidebar from "@/components/Sidebar";
 import userStore from "@/stores/User";
 import axiosBaseurl from '@/config/baseUrl';
-import { useEffect, useState } from "react";
-import SortBySummary from "@/components/summary/SortBy";
+import React, { useEffect, useRef, useState } from "react";
+import DropdownSummary from "@/components/summary/SortBy";
 import { v4 } from "uuid";
 
 interface IPlan {
@@ -23,17 +23,38 @@ interface IPlan {
   archived: boolean
 }
 
+export interface IUser {
+  avatar: string | undefined
+  email: string
+  name: string
+  surname: string
+  userName: string
+  role: string
+  _id: string
+}
+
+export interface TableFile {
+  name: string,
+  url: string,
+  path: string,
+  _id: string,
+  size: number,
+  file_type: string,
+}
+
 export interface ISummary {
   _id: string;
   project_id: string;
   plan_id: IPlan;
-  reciever_id: string;
-  sender_id: string;
+  reciever_id: IUser;
+  sender_id: IUser;
   comment: string;
   progress: number;
-  files: string[];
+  files: TableFile[]
   chat_id: string;
   createdAt: string;
+  updatedAt: string;
+  status: string;
   [x: string]: any;
 };
 
@@ -42,66 +63,84 @@ const PageDetail = ({ params: { project: projectID } }: {
     project: string
   }
 }) => {
-  // const user = userStore((state) => state.user);
-  // console.log(user.role)
-  
-  const [summary, setSummary] = useState<ISummary[]>([])
+  const user = userStore((state) => state.user);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  function scrollToBottom() {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth', // Optional: Add smooth scrolling animation
+    });
+  }
+
+  const [summary, setSummary] = useState<ISummary[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string>(user.role === "advisor" ? "pending" : "all");
+  const [sortsummary, setSortSummary] = useState<ISummary[]>([]);
+  const [checkstate, setcheckState] = React.useState<boolean>(false);
+  const [projectName, setProjectName] = useState<string>('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const projectRes = await axiosBaseurl.get(`/project/${projectID}`, {
+          withCredentials: true
+        });
+        if (projectRes?.data?.name) {
+          setProjectName(projectRes.data.name);
+        }
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     const res = axiosBaseurl.get(`page/summary/${projectID}`, {
       withCredentials: true,
     })
       .then(response => {
-        console.log(res)
+        console.log("response", response.data)
         setSummary(response.data);
       }).catch(err => {
         console.log(err);
       })
-  }, [projectID]);
 
-  console.log("get summary", summary)
+  }, [projectID, checkstate]);
+
+  const handleValueChange = (newValue: string) => {
+    setSelectedValue(newValue);
+  };
+  const handleOnSuccess = () => {
+    setcheckState(!checkstate);
+  };
+
   return (
     <div className="flex relative flex-row h-full">
       <div className="flex flex-row w-full">
         <div className="flex flex-col w-[100%]">
           <div className="flex w-full h-[50px] p-2 items-center text-lg font-semibold">
-            Project name
+            {projectName}
           </div>
-          <div className="w-full p-2"><SortBySummary/></div>
-          <div className="flex w-full h-full px-2">
-            <div className="relative w-full h-full bg-neutral-100 overflow-scroll snap-y">
-
-              <div className="absolute grid grid-cols-7 h-screen w-full">
-                <div className="flex justify-center w-full ">
-                  <div className="w-[3px]  bg-neutral-400 rounded-full"></div>
-                </div>
-              </div>
-
-              <div className="snap-center w-full h-[30%] grid grid-cols-7 items-center">
-                <div className="flex justify-center items-center h-full w-full">
-                  <div className="w-[30px] h-[30px] bg-neutral-400 rounded-full"></div>
-                </div>
-                {summary.map((obj) => (
-                  <UpdateTask project_id={projectID} plan_name={obj.plan_id.name} 
-                  reciever_id={obj.reciever_id} sender_id={obj.sender_id} comment={obj.comment} 
-                  progress={obj.progress} files={obj.files} chat_id={obj.chat_id}
-                   createdAt={obj.createdAt}
-                   key={v4()}
-                    />
-                ))}
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="w-[20%] bg-neutral-100">
-          <div className="grid grid-cols-1 divide-y divide-teal-800">
-            <div className="flex items-center text-lg font-semibold p-2">All Files</div>
-            <div className="grid grid-flow-row auto-rows-max md:auto-rows-min">
-
-              {/* map */}
-              <div className="grid grid-cols-5 gap-1 h-[35px] px-2 ">
-                <div className="truncate overflow-hidden col-span-3">Filename</div>
+          <div className="w-full p-2"><DropdownSummary pageType={selectedValue} setPage={handleValueChange} /></div>
+          <div className="flex w-full h-[calc(100vh-175px)] px-2 overflow-hidden" >
+            <div className="relative w-full h-full bg-neutral-100 ">
+              <div className="grid grid-cols-8 gap-1 justify-items-center items-center w-full h-[50px] rounded-t-md font-semibold bg-teal-800 text-white">
+                <div className="col-span-2">Task name</div>
                 <div>Date</div>
+                <div>Time</div>
+                <div className="col-span-2">Progress</div>
+                <div>Status</div>
+                <div>Action</div>
+              </div>
+              <div className="h-full w-full overflow-y-scroll">
+                {summary.filter((obj) =>  selectedValue !== "all" ? obj.status === selectedValue : obj).sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()).map((obj) => (
+                  <UpdateTask id={obj._id} project_id={projectID} plan_name={obj.plan_id.name} plan_id={obj.plan_id._id}
+                    reciever_id={obj.reciever_id} sender_id={obj.sender_id} comment={obj.comment}
+                    progress={obj.progress} files={obj.files} chat_id={obj.chat_id} status={obj.status}
+                    updateAt={obj.updatedAt} onSuccess={handleOnSuccess}
+                    key={v4()}
+                  />
+                ))}
               </div>
             </div>
           </div>

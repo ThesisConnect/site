@@ -5,6 +5,7 @@ import { CgDetailsMore } from "react-icons/cg";
 import EditPopup from "./PlanEditPopup";
 import DeletePopup from "./DeletePopup";
 import { v4 } from "uuid";
+import userStore from "@/stores/User";
 
 
 interface DataPlan {
@@ -15,14 +16,14 @@ interface DataPlan {
   end_date: string,
   progress: number,
   task: boolean,
-  projectID:string
+  projectID: string
   onSucces: () => void;
 }
 
 
 const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_date, progress, task, projectID, onSucces }) => {
   console.log(start_date)
-
+  const user = userStore((state) => state.user);
   const Start = start_date.slice(0, 10).split("-");
   const StartDate = Start[2] + "/" + Start[1] + "/" + Start[0];
   const End = end_date.slice(0, 10).split("-");
@@ -84,15 +85,14 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
     <div
       className="flex w-full aspect-square bg-neutral-100 py-5 px-4 rounded-lg overflow-hidden"
     >
-
       <DetailPopup key={v4()} show={state} id={id} name={name} description={description} start_date={StartDate} end_date={EndDate} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanDetail} />
-      <EditPopup  key={v4()} show={edit} id={id} name={name} description={description} start_date={start_date} end_date={end_date} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} onSucces={onSucces}/>
-      <DeletePopup key={v4()} show={Delete} onClose={showDeletePlan} name={name} id={id} onSuccess={onSucces}/>
+      <EditPopup key={v4()} show={edit} id={id} name={name} description={description} start_date={start_date} end_date={end_date} progress={progress} task={task} duration={getDayDiff()} onClose={showPlanEdit} onSucces={onSucces} />
+      <DeletePopup key={v4()} show={Delete} onClose={showDeletePlan} name={name} id={id} onSuccess={onSucces} />
       <div className="relative w-full">
-        {select && (
+        {select && user.role === "advisee" && (
           <div ref={ref} className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
             <button
-              className ="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
+              className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
               onClick={showPlanEdit}
             >
               <AiOutlineEdit className="text-xl" />
@@ -100,7 +100,7 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
             </button>
             <button
               className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
-            onClick={showDeletePlan}  
+              onClick={showDeletePlan}
             >
               <AiOutlineDelete className="text-xl" />
               Delete
@@ -119,17 +119,23 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center"></div>
+                  <div className="flex items-center">
+                    <div className="flex justify-center w-[85px] rounded-full bg-neutral-200 border border-teal-800 text-teal-800 text-sm font-semibold">
+                      Not gantt
+                    </div>
+                  </div>
                 )}
               </div>
               <div className="grid relative z-100">
-                <button
-                  type="button"
-                  className="flex relative w-[40px] h-[40px] items-center rounded-full aspect-square hover:bg-neutral-300 hover:transition hover:ease-in-out"
-                  onClick={showEdit}
-                >
-                  <AiOutlineMore className="w-full text-[35px] text-neutral-400" />
-                </button>
+                {user.role === "advisee" && (
+                  <button
+                    type="button"
+                    className="flex relative w-[40px] h-[40px] items-center rounded-full aspect-square hover:bg-neutral-300 hover:transition hover:ease-in-out"
+                    onClick={showEdit}
+                  >
+                    <AiOutlineMore className="w-full text-[35px] text-neutral-400" />
+                  </button>
+                )}
               </div>
             </div>
 

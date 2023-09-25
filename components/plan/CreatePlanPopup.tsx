@@ -56,9 +56,6 @@ const CreatePopup: React.FC<ModalProps> = (
     setSelectedEndDate(selDate);
   }
 
-
-  console.log(projectID)
-
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
     console.log("data", data);
     try {
@@ -82,14 +79,6 @@ const CreatePopup: React.FC<ModalProps> = (
     }
   };
 
-
-  // const [select, setSelect] = useState<boolean>(false);
-  // function showEdit() {
-  //   setPickStart(!selectedDate);
-  //   // (false);
-  //   return selectedDate
-  // }
-
   const useOutsideClick = (callback: () => void) => {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -108,7 +97,6 @@ const CreatePopup: React.FC<ModalProps> = (
 
   const refStart = useOutsideClick(() => {
     setPickStart(!pick_startDate)
-
   });
 
   const refEnd = useOutsideClick(() => {
@@ -179,7 +167,6 @@ const CreatePopup: React.FC<ModalProps> = (
                     placeholder="Start date"
                     onClick={showDatePicker}
                     value={("0" + selectedDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedDate.getFullYear()}
-                    // {...register('start_date', { required: true })}
                     onChange={(event) => setSelectedDate}
                   />
                   <div className="h-[16px]"></div>
@@ -201,13 +188,11 @@ const CreatePopup: React.FC<ModalProps> = (
                     placeholder="End date"
                     onClick={showEndDatePicker}
                     value={("0" + selectedEndDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
-                    // {...register('end_date', { required: true })}
                     onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]"></div>
                 </label>
               </div>
-
             </div>
             <div className='py-2 flex flex-row justify-end items-center gap-2 h-full'>
               <Button
