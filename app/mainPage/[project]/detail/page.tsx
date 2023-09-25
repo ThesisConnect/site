@@ -37,7 +37,9 @@ export interface TableFile {
   name: string,
   url: string,
   path: string,
-  uid: string
+  _id: string,
+  size: number,
+  file_type: string,
 }
 
 export interface ISummary {
@@ -48,7 +50,7 @@ export interface ISummary {
   sender_id: IUser;
   comment: string;
   progress: number;
-  files: TableFile[];
+  files: TableFile[]
   chat_id: string;
   createdAt: string;
   updatedAt: string;

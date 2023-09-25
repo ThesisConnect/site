@@ -45,7 +45,7 @@ interface TableFile {
   name: string,
   url: string,
   path: string,
-  uid: string
+  _id: string
 }
 
 interface TableComponentProps {
@@ -155,7 +155,7 @@ const DetailSummaryPopup: React.FC<DataPlan> = (
     if (e.target.files) {
       setFile(e.target.files[0]);
       const [url, path, uid] = await uploadFileToFirebase(e.target.files[0]);
-      setTable([...table, { name: e.target.files[0].name, url, path, uid }]);
+      setTable([...table, { name: e.target.files[0].name, url, path, _id: uid }]);
       return { url, path, uid }
     }
   }

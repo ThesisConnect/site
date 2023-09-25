@@ -36,14 +36,15 @@ interface contents {
   file: File,
   url: string,
   path: string,
-  uid: string
+  uid: string,
 }
 
 interface TableFile {
   name: string,
   url: string,
-  path: string,
-  uid: string
+  _id: string,
+  size: number,
+  file_type: string,
 }
 
 interface TableComponentProps {
@@ -150,12 +151,15 @@ const SummaryPopup: React.FC<DataPlan> = (
 
   const onSubmit: SubmitHandler<createSummarySchema> = async (data) => {
     console.log("data : ", data);
+    console.log("table : ", {folder_id: chat_id, files: table});
     console.log(table.map((item) => item))
     try {
+      const fileSend = await axiosBaseurl.post('/file/create/', {folder_id: chat_id, files: table})
       const sendData = {
         id: id,
         comment: data.comment,
-        status: selectedValue.toLowerCase() === 'approve' && progress === 100 ? 'complete' : selectedValue,
+        status: selectedValue.toLowerCase() === 'approve' && progress === 100 ? 'complete' : selectedValue.toLowerCase(),
+        files: table.map((obj) => obj._id),
         progress: data.progress || progress,
       };
       console.log("send data", sendData)
@@ -174,7 +178,7 @@ const SummaryPopup: React.FC<DataPlan> = (
     if (e.target.files) {
       setFile(e.target.files[0]);
       const [url, path, uid] = await uploadFileToFirebase(e.target.files[0]);
-      setTable([...table, { name: e.target.files[0].name, url, path, uid }]);
+      setTable([...table, { name: e.target.files[0].name, url, _id:uid, size: e.target.files[0].size, file_type:e.target.files[0].type}]);
       return { url, path, uid }
     }
   }
