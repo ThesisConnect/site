@@ -135,7 +135,6 @@ const PageChat = () => {
     }
   };
   return (
-    <ChatLayout>
       <div className="flex flex-col w-full h-full">
         <div className="flex-grow overflow-y-scroll  max-h-[calc(100% - 14rem)]">
           <div className="p-4">
@@ -180,24 +179,32 @@ const PageChat = () => {
           />
         </div>
       </div>
-    </ChatLayout>
   );
 };
 
-const DynamicHome = dynamic(() => Promise.resolve(PageChat), {
+const DynamicChatLayout = dynamic(()=>import("@/components/layout/ChatLayout"), {
   ssr: false,
   loading: () => <LoadingNormal />,
 });
-const messages = [
-  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-  { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-  { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-];
-export default DynamicHome;
+const RapLayoutChat = () => {
+  return (
+    <DynamicChatLayout>
+      <PageChat />
+    </DynamicChatLayout>
+  );
+}
+
+export default RapLayoutChat;
+
+// const messages = [
+//   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
+//   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+//   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
+//   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
+// ];

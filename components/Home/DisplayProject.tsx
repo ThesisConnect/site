@@ -60,8 +60,12 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     setSelect(!select);
     return select;
   }
+  const preloadPage = () => {
+    // console.log("pre")
+    router.prefetch(`mainPage/${projectID}/chat?chatID=${chatID}`);
+  }
   return (
-    <div className="flex justify-center items-center h-[78px]  border-b-[1px] border-neutral-400">
+    <div onMouseEnter={preloadPage} className="flex justify-center items-center h-[78px]  border-b-[1px] border-neutral-400" >
       {Delete && (
         <DeletePopup
           show={Delete}
