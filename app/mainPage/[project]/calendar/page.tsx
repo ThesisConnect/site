@@ -141,14 +141,20 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
       Math.abs(+(new Date(start_date)) - +(new Date(end_date))) / msInDay
     );
   }
-
+  const newDate = (date: Date) => new Date(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
   const isDDay = (day: Date) => {
+    let curr = newDate(day);
     let isday = dataItem.filter((o) => {
       return (
-        day.getTime() >= o.start_date.getTime() &&
-        day.getTime() <= o.end_date.getTime()
+        curr.getTime() >= newDate(o.start_date).getTime() &&
+        curr.getTime() <= newDate(o.end_date).getTime()
       );
     });
+    if (isday.length){
+      console.log('curr', day);
+      console.log(isday)
+    }
+    
     return isday;
   };
 
@@ -183,6 +189,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
       </div>
       <div className="h-[calc(100vh-165px)] flex flex-col justify-center overflow-hidden px-2">
         <div className="w-[98%] h-[600px] overflow-hidden">
+          {/* Header */}
           <div className="flex items-center justify-between h-[35px] rounded-t-[3px] bg-teal-800">
             <p
               className="font-semibold text-xl"
@@ -211,6 +218,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
               </button>
             </div>
           </div>
+          {/* Content */}
           <div
             className="grid grid-cols-7 gap-6 sm:gap-12 place-items-start"
           >
