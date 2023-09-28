@@ -28,9 +28,9 @@ const Login = () => {
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
   });
-  console.log('isAuthenticated:', isAuthenticated);
+  // console.log('isAuthenticated:', isAuthenticated);
   if (!isLoading&&isAuthenticated) {
-    router.push('/');
+    router.push('/mainPage');
     return;
   }
   const clickRegister = (event: MouseEvent<HTMLButtonElement>) => {

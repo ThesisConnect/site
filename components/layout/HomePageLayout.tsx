@@ -7,11 +7,15 @@ import ModalCreateProject from '../Home/ModalCreateProject';
 import Search from '../Search';
 import useProjectStore from '@/stores/Project';
 import * as _ from 'lodash';
+import userStore from '@/stores/User';
 const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   const { project, isLoading, mutate, updateProject, createNewProject, error } =
     useProject();
   const { setFilterProject } = useProjectStore((state) => ({
     setFilterProject: state.setFilterProject,
+  }));
+  const { user } = userStore((state) => ({
+    user: state.user,
   }));
   const [showNotFound, setShowNotFound] = useState(false);
   const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
@@ -45,16 +49,14 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
     let sortBy = '';
     if (value === '') {
       return setFilterProject([]);
-    }
-    else if (value === 'Progress') {
+    } else if (value === 'Progress') {
       sortBy = 'progress';
-    }
-    else if (value === 'ProjectName') {
+    } else if (value === 'ProjectName') {
       sortBy = 'name';
     }
     const searchResult = _.sortBy(project, [sortBy]);
     setFilterProject(searchResult);
-  }
+  };
   useEffect(() => {
     setFilterProject([]);
   }, [setFilterProject]);
@@ -64,15 +66,17 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="h-[calc(100vh-62px)]  w-full px-8">
       <div className="h-[10%] flex items-center  ">
-        <button
-          className="font-semibold px-5 rounded-full h-10
+        {user.role === 'advisor' && (
+          <button
+            className="font-semibold px-5 rounded-full h-10
          text-white text-base  bg-teal-800
          cursor-pointer hover:bg-teal-900
          "
-          onClick={handleCreateProject}
-        >
-          New Project
-        </button>
+            onClick={handleCreateProject}
+          >
+            New Project
+          </button>
+        )}
         {openModalCreateProject && (
           <ModalCreateProject
             isOpen={openModalCreateProject}
@@ -80,9 +84,7 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
           />
         )}
         <div className="flex-grow" />
-        <SelectLabels
-          onValueChange={handleSelect}
-        />
+        <SelectLabels onValueChange={handleSelect} />
         <Search
           data={project?.map((items) => items.name)}
           onChange={handleSearch}
