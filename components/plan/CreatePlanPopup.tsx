@@ -16,7 +16,7 @@ interface ModalProps {
   show: boolean;
   onClose: () => void;
   onSucces: () => void;
-  projectID: string;
+  projectID: string | undefined;
 }
 const CreatePopup: React.FC<ModalProps> = (
   {
@@ -37,7 +37,11 @@ const CreatePopup: React.FC<ModalProps> = (
   });
 
   const [pick_startDate, setPickStart] = React.useState<boolean>(false);
-  function showDatePicker() {
+
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+
+  const showDatePicker = () => {
     setPickStart(!pick_startDate)
     return pick_startDate
   }
@@ -51,31 +55,33 @@ const CreatePopup: React.FC<ModalProps> = (
   const updateDate = (selDate: Date) => {
     setSelectedDate(selDate);
   }
-  const [selectedEndDate, setSelectedEndDate] = React.useState<Date>(new Date)
+  const [selectedEndDate, setSelectedEndDate] = React.useState<Date>(currentDate)
   const updateEndDate = (selDate: Date) => {
     setSelectedEndDate(selDate);
   }
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
-    console.log("data", data);
-    try {
-      const sendData = {
-        project_id: projectID,
-        name: data.name,
-        description: data.description,
-        start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
-        end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
-        task: data.task,
-      };
-      console.log(sendData)
-      const resData = await axiosBaseurl.post('/plan/create', sendData)
-      onSucces()
-      reset();
-    }
-    catch (err: any) {
-      console.log(err);
-      onClose()
-      reset()
+    if (selectedDate < selectedEndDate) {
+      console.log("data", data);
+      try {
+        const sendData = {
+          project_id: projectID,
+          name: data.name,
+          description: data.description,
+          start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+          end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+          task: data.task,
+        };
+        console.log(sendData)
+        const resData = await axiosBaseurl.post('/plan/create', sendData)
+        onSucces()
+        reset();
+      }
+      catch (err: any) {
+        console.log(err);
+        onClose()
+        reset()
+      }
     }
   };
 
@@ -103,6 +109,10 @@ const CreatePopup: React.FC<ModalProps> = (
     setPickEnd(!pick_endDate)
   });
 
+  const nonvalidateDateRange = (start_date: Date, end_date: Date) => {
+    return start_date > end_date;
+  }
+
   if (!show) return null;
 
   return (
@@ -110,7 +120,7 @@ const CreatePopup: React.FC<ModalProps> = (
       <form className=" bg-white rounded-lg w-[50%] h-auto flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <h2 className="flex h-full p-4 items-center text-lg font-semibold">Create Plan</h2>
-          <div className="flex flex-col px-4 py-3  gap-1">
+          <div className="flex flex-col px-4 py-3  gap-4">
             <div className='flex items-center gap-2'>
               <label className="flex items-center gap-3">
                 <input
@@ -190,25 +200,31 @@ const CreatePopup: React.FC<ModalProps> = (
                     value={("0" + selectedEndDate.getDate()).slice(-2) + "/" + ("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + selectedEndDate.getFullYear()}
                     onChange={(event) => setSelectedEndDate}
                   />
-                  <div className="h-[16px]"></div>
+                  <div className="h-[16px]">
+                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
+                      <div className='text-red-500'>End date must be greater than start date.</div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </label>
               </div>
             </div>
             <div className='py-2 flex flex-row justify-end items-center gap-2 h-full'>
-              <Button
-                className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+              <button
+                className="bg-neutral-200 w-[120px] h-10 rounded-full hover:bg-neutral-100 hover:transition hover:ease-in-out "
                 onClick={onClose}
                 type="button"
               >
-                <div className="text-neutral-800">Cancel</div>
-              </Button>
+                Cancel
+              </button>
 
-              <Button
+              <button
                 type="submit"
-                className="hover:bg-teal-700 hover:transition hover:ease-in-out "
+                className="bg-teal-800 text-white w-[120px] h-10 rounded-full hover:bg-teal-700 hover:transition hover:ease-in-out "
               >
-                <div className="text-white">Create</div>
-              </Button>
+                Create
+              </button>
             </div>
           </div>
         </div>

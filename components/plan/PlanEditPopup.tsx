@@ -106,30 +106,34 @@ const EditPopup: React.FC<DataPlan> = (
   });
 
   const onSubmit: SubmitHandler<PlanEditSchemaType> = async (data) => {
-    console.log("Begin Edit")
-    console.log(data);
-    try {
+    if (selectedDate < selectedEndDate) {
+      console.log(data);
+      try {
 
-      const sendData = {
-        id: id,
-        name: data.name,
-        description: data.description,
-        // start_date: selectedDate.toISOString(),
-        start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
-        end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
-        progress: data.progress || progress,
-      };
-      console.log(sendData)
-      const resData = await axiosBaseurl.put('/plan/edit', sendData)
-      onSucces()
-      onClose();
-    }
-    catch (err: any) {
-      console.log(err);
-      onClose()
-      reset()
+        const sendData = {
+          id: id,
+          name: data.name,
+          description: data.description,
+          start_date: DateTime.fromFormat(("0" + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedDate.getDate()).slice(-2) + "/" + selectedDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+          end_date: DateTime.fromFormat(("0" + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(-2) + "/" + ("0" + selectedEndDate.getDate()).slice(-2) + "/" + selectedEndDate.getFullYear(), 'M/d/yyyy', { zone: 'America/New_York' }).toISO({ includeOffset: true }),
+          progress: data.progress || progress,
+        };
+        console.log(sendData)
+        const resData = await axiosBaseurl.put('/plan/edit', sendData)
+        onSucces()
+        onClose();
+      }
+      catch (err: any) {
+        console.log(err);
+        onClose()
+        reset()
+      }
     }
   };
+
+  const nonvalidateDateRange = (start_date: Date, end_date: Date) => {
+    return start_date > end_date;
+  }
 
   if (!show) return null;
 
@@ -210,7 +214,7 @@ const EditPopup: React.FC<DataPlan> = (
                 </label>
               </div>
               <hr className='w-[12%] h-[0px] border-b-2 border-t-0 border-dashed border-teal-800' />
-              <div  className='flex flex-col w-[40%] '>
+              <div className='flex flex-col w-[40%] '>
                 <label className="text-xs relative block">
                   End Date
                   <BsCalendarEvent className='text-teal-800 w-6 h-6 absolute bottom-[15px] transform -translate-y-1/2 right-3' />
@@ -230,7 +234,13 @@ const EditPopup: React.FC<DataPlan> = (
                     // {...register('end_date')}
                     onChange={(event) => setSelectedEndDate}
                   />
-                  <div className="h-[16px]"></div>
+                  <div className="h-[16px]">
+                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
+                      <div className='text-red-500'>End date must be greater than start date.</div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </label>
               </div>
             </div>
@@ -251,7 +261,7 @@ const EditPopup: React.FC<DataPlan> = (
                       {...register('progress', { valueAsNumber: true })}
                     />
                   ) : (
-                    <input 
+                    <input
                       id="progress"
                       className={"rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base"}
                       placeholder="Progress"
@@ -269,25 +279,22 @@ const EditPopup: React.FC<DataPlan> = (
               </div>
             </div>
             <div className='py-2 flex flex-row justify-end items-center gap-2 h-full'>
-              <Button
-                className="bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
+              <button
+                className="w-[120px] h-10 rounded-full bg-neutral-200 hover:bg-neutral-100 hover:transition hover:ease-in-out "
                 onClick={onClose}
                 type="button"
               >
-                <div className="text-neutral-800">Cancel</div>
-              </Button>
-              <Button
-                className=" hover:bg-teal-700 hover:transition hover:ease-in-out "
-                // onClick={onClose}
+                Cancel
+              </button>
+              <button
+                className="bg-teal-800 text-white w-[120px] h-10 rounded-full hover:bg-teal-700 hover:transition hover:ease-in-out"
                 type="submit"
               >
-                <div className="text-white">Save</div>
-              </Button>
+                Save
+              </button>
             </div>
           </div>
-
         </div>
-
       </form>
     </div>
   );

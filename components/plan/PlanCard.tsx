@@ -16,7 +16,7 @@ interface DataPlan {
   end_date: string,
   progress: number,
   task: boolean,
-  projectID: string
+  projectID: string | undefined,
   onSucces: () => void;
 }
 
@@ -30,10 +30,11 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
   const EndDate = End[2] + "/" + End[1] + "/" + End[0];
 
   function getDayDiff(): number {
-    const msInDay = 24 * 60 * 60 * 1000;
-    return Math.round(
-      Math.abs(+(new Date(start_date)) - +(new Date(end_date))) / msInDay
-    );
+    const now = new Date();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+    const duration = new Date(end_date).getTime() - now.getTime(); // Difference in milliseconds
+    const days = Math.floor(duration / millisecondsPerDay);
+    return days + 1;
   }
 
   const [select, setSelect] = useState<boolean>(false);
@@ -67,16 +68,16 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
   const [edit, setEdit] = React.useState<boolean>(false);
   const [Delete, setDelete] = React.useState<boolean>(false);
 
-  function showPlanDetail() {
+  const showPlanDetail = () => {
     setState(!state)
   }
 
-  function showPlanEdit() {
+  const showPlanEdit = () => {
     setEdit(!edit)
     setSelect(false)
   }
 
-  function showDeletePlan() {
+  const showDeletePlan = () => {
     setDelete(!Delete)
     setSelect(false)
   }
@@ -163,7 +164,7 @@ const PlanCard: React.FC<DataPlan> = ({ id, name, description, start_date, end_d
                 <div className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center ">
                   <div className="text-white text-sm">
                     {getDayDiff()}
-                    {getDayDiff() > 1 ? " Days" : "Day"}
+                    {getDayDiff() > 1 ? " Days Left" : " Day Left"}
                   </div>
                 </div>
               </div>

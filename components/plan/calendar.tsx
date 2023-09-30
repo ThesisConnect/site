@@ -85,8 +85,8 @@ const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
             return (
               <div key={idx} className={colStartClasses[getDay(day)]} onClick={() => updateDate(day)} >
                 <p
-                  className={`cursor-pointer flex items-center justify-center hover:bg-neutral-100 font-semibold h-8 w-8 rounded-full ${isSameMonth(day, today) ? "text-gray-900" : "text-gray-400"
-                    } ${!DateSelect && "hover:bg-neutral-100"} ${day.toDateString()===DateSelect?.toDateString() && "bg-teal-800 text-neutral-100"
+                  className={`cursor-pointer flex items-center justify-center font-semibold h-8 w-8 rounded-full ${isSameMonth(day, today) ? "text-gray-900" : "text-gray-400"
+                    } ${day.toDateString() !== DateSelect?.toDateString() && "hover:bg-neutral-200"}  ${day.toDateString() === DateSelect?.toDateString() && "bg-teal-800 text-neutral-100"
                     }`}
                 >
                   {format(day, "d")}
