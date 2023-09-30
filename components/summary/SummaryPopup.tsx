@@ -161,6 +161,7 @@ const SummaryPopup: React.FC<DataPlan> = (
     console.log(table.map((item) => item))
     try {
       const fileSend = await axiosBaseurl.post('/file/create/', {folder_id: chat_id, files: table})
+      const editProgress = await axiosBaseurl.put('/plan/edit/', {id: plan_id, progress: data.progress || progress})
       const sendData = {
         id: id,
         comment: data.comment,
@@ -168,10 +169,12 @@ const SummaryPopup: React.FC<DataPlan> = (
         files: table.map((obj) => obj._id),
         progress: data.progress || progress,
       };
+
       console.log("send data", sendData)
       const resData = await axiosBaseurl.put('/summary/edit/', sendData)
       onSuccess()
       reset();
+
     }
     catch (err: any) {
       console.log(err);

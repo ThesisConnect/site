@@ -18,17 +18,21 @@ const DeletePopup: React.FC<ModalProps> = ({
   onSuccess,
 }) => {
   if (!show) return null;
-  
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const onDelete = async () => {
+    setIsLoading(true);
     console.log("Begin Delete")
     try {
       const resData = await axiosBaseurl.delete(`/plan/delete/${id}`)
       console.log("delete success")
+      setIsLoading(false);
       onSuccess()
       onClose()
     }
     catch (err: any) {
       console.log(err);
+      setIsLoading(false);
       onClose()
     }
   }
@@ -39,11 +43,24 @@ const DeletePopup: React.FC<ModalProps> = ({
         <h2 className='font-bold'>
           Delete Plan
         </h2>
-        <div className='flex gap-1'>
-          <p className="text-center text-sm ">Are you sure you want to delete</p>
-          <p className="text-center text-sm font-semibold">{name}</p>
-          <p className="text-center text-sm ">?</p>
-        </div>
+        {isLoading ? (
+          <div className='flex gap-1'>
+            <div
+              className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-teal-800 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+              role="status">
+            </div>
+            <p className="text-center text-sm ">Deleting</p>
+            <p className="text-center text-sm font-semibold">{name}</p>
+            <p className="text-center text-sm "></p>
+          </div>
+        ) : (
+          <div className='flex gap-1'>
+            <p className="text-center text-sm ">Are you sure you want to delete</p>
+            <p className="text-center text-sm font-semibold">{name}</p>
+            <p className="text-center text-sm ">?</p>
+          </div>
+        )}
+
       </div>
       <div className='flex flex-row w-96'>
         <button
@@ -59,7 +76,6 @@ const DeletePopup: React.FC<ModalProps> = ({
           Delete
         </button>
       </div>
-
     </div>
   );
 };
