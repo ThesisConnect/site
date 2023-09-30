@@ -1,6 +1,6 @@
 // components/Modal.tsx
-import React from 'react';
 import axiosBaseurl from '@/config/baseUrl';
+import { useState } from 'react';
 
 interface ModalProps {
   show: boolean;
@@ -17,9 +17,8 @@ const DeletePopup: React.FC<ModalProps> = ({
   id,
   onSuccess,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   if (!show) return null;
-
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const onDelete = async () => {
     setIsLoading(true);
     console.log("Begin Delete")

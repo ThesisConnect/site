@@ -92,7 +92,7 @@ const PageDetail = ({ params: { project: projectID } }: {
         console.error('Error fetching project data:', error);
       }
     })();
-  }, []);
+  }, [projectID]);
 
   useEffect(() => {
     const res = axiosBaseurl.get(`page/summary/${projectID}`, {

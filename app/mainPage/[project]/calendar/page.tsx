@@ -82,7 +82,7 @@ function PageCalendar({ params: { project } }: { params: { project: string } }) 
         console.error('Error fetching project data:', error);
       }
     })();
-  }, []);
+  }, [project]);
 
   useEffect(() => {
     (async () => {
