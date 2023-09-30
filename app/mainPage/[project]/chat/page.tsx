@@ -72,7 +72,6 @@ const PageChat = () => {
           console.log("checkEntry condition",displayCountRef.current <= chatLengthRef.current);
           console.log("checkEntry condition",displayCountRef.current,chatLengthRef.current);
           if (displayCountRef.current <= chatLengthRef.current) {
-            
             // console.log("lastMessage",lastMessageRef.current);
             // console.log("timestamp",DateTime.fromISO(lastMessageRef.current.createdAt).toMillis());
             console.log("lastMessageRef",lastMessageRef.current);
@@ -82,7 +81,7 @@ const PageChat = () => {
               socket.emit(
                 'request messages',
                 chatIDRef.current,
-                DateTime.fromISO(lastMessageRef.current.createdAt).toMillis()
+                lastMessageRef.current.createdAt
               );
             }
             setDisplayCount((prevCount) => prevCount + 30);
