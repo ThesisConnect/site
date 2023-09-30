@@ -10,8 +10,10 @@ import socket from '@/config/socket';
 import userStore from '@/stores/User';
 import { auth } from '@/config/firebase';
 import { ErrorBoundary } from 'react-error-boundary';
-import { divide } from 'lodash';
+import { divide, set } from 'lodash';
 import { mutate } from 'swr';
+import { DateTime } from 'luxon';
+
 interface fileContents {
   file: File;
   url: string;
@@ -23,6 +25,7 @@ interface RecieveMessenger {
   uid: string;
   username: string;
   content: string | FileCom;
+  createdAt: string;
   type: 'file' | 'text';
 }
 const PageChat = () => {
@@ -34,32 +37,56 @@ const PageChat = () => {
   const [loading, setLoadingChat] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
-  // const chatLengthRef = useRef(chat.length);
-  // const chatIDRef = useRef(chatID);
-  // const displayCountRef = useRef(displayCount);
+  const chatLengthRef = useRef(chat.length);
+  const chatIDRef = useRef(chatID);
+  const displayCountRef = useRef(displayCount);
+  const lastMessageRef = useRef<RecieveMessenger|null>(null);
+  const canFetchMore = useRef(true);
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({});
     }
   };
   //download more content
-  // useEffect(() => {
-  //   chatLengthRef.current = chat.length;
-  //   chatIDRef.current = chatID;
-  //   displayCountRef.current = displayCount;
-  // }, [chat.length, chatID, displayCount]);
+  useEffect(() => {
+    chatLengthRef.current = chat.length;
+    chatIDRef.current = chatID;
+    displayCountRef.current = displayCount;
+    canFetchMore.current = true;
+  }, [chat.length, chatID, displayCount]);
 
+  useEffect(() => {
+    lastMessageRef.current = chat[0];
+  }, [chat]);
+
+  useEffect(() => {
+    setDisplayCount(30);
+  }
+  , [chatID]);
   useEffect(() => {
     const currentLoadMoreRef = loadMoreRef.current;
     let initialRender = true;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !initialRender) {
-          // if(displayCountRef.current>=chatLengthRef.current) 
-          //   {
-          //     socket.emit('request messages',chatIDRef.current,chatLengthRef.current)
-          //   }
-          setDisplayCount((prevCount) => prevCount + 30);
+          console.log("checkEntry condition",displayCountRef.current <= chatLengthRef.current);
+          console.log("checkEntry condition",displayCountRef.current,chatLengthRef.current);
+          if (displayCountRef.current <= chatLengthRef.current) {
+            
+            // console.log("lastMessage",lastMessageRef.current);
+            // console.log("timestamp",DateTime.fromISO(lastMessageRef.current.createdAt).toMillis());
+            console.log("lastMessageRef",lastMessageRef.current);
+            console.log("check",canFetchMore.current ,lastMessageRef.current);
+            if (canFetchMore.current && lastMessageRef.current) {
+              setLoadingChat(true);
+              socket.emit(
+                'request messages',
+                chatIDRef.current,
+                DateTime.fromISO(lastMessageRef.current.createdAt).toMillis()
+              );
+            }
+            setDisplayCount((prevCount) => prevCount + 30);
+          }
         }
         initialRender = false;
       },
@@ -92,11 +119,22 @@ const PageChat = () => {
       socket.on('receive message', (newMessages) => {
         setChat((prev) => [...prev, newMessages]);
       });
-      socket.on('update folder',()=>{
-        mutate(`/file/chat/${chatID}`)
-      })
+      socket.on('update folder', () => {
+        mutate(`/file/chat/${chatID}`);
+      });
       socket.on('error', (error) => {
         console.error('Socket error:', error);
+      });
+      socket.on('more messages', (messages: RecieveMessenger[]) => {
+        console.log('more', messages);
+        if (messages.length === 0) {
+          canFetchMore.current = false;
+          setLoadingChat(false);
+          socket.off('more messages');
+          return;
+        }
+        setChat((prev) => [...messages, ...prev]);
+        setLoadingChat(false);
       });
     }
 
@@ -105,14 +143,14 @@ const PageChat = () => {
         socket.off('room messages');
         socket.off('receive message');
         socket.off('error');
-        socket.off('update folder')
-        // socket.off('request messages');
+        socket.off('update folder');
+        socket.off('more messages');
         socket.emit('leave room', chatID);
       }
     };
   }, [chatID]);
 
-  const handleSendData = async(message: string | fileContents) => {
+  const handleSendData = async (message: string | fileContents) => {
     const chatIDFromURL = searchParams.get('chatID');
     if (chatIDFromURL) {
       if (typeof message === 'string')
@@ -135,26 +173,34 @@ const PageChat = () => {
     }
   };
   return (
-      <div className="flex flex-col w-full h-full">
-        <div className="flex-grow overflow-y-scroll  max-h-[calc(100% - 14rem)]">
-          <div className="p-4">
-            <div ref={loadMoreRef}></div>
-            {chat?.slice(-displayCount).map((msg, index) => (
-              <ErrorBoundary key={index} fallback={<div>error</div>}>
-                <Message
-                  username={msg.username}
-                  content={
-                    typeof msg.content === 'object'
-                      ? (msg.content as FileCom)
-                      : (msg.content as string)
-                  }
-                  uid={msg.uid}
-                  type={typeof msg.content === 'object' ? 'file' : 'text'}
-                  isOwnMessage={auth.currentUser?.uid === msg.uid||user.username===msg.username}
-                />
-              </ErrorBoundary>
-            ))}
-            {/* <Message
+    <div className="flex flex-col w-full h-full">
+      <div className="flex-grow overflow-y-scroll  max-h-[calc(100% - 14rem)]">
+        <div className="p-4">
+          <div ref={loadMoreRef}></div>
+          {loading && (
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+            </div>
+          )}
+          {chat?.slice(-displayCount).map((msg, index) => (
+            <ErrorBoundary key={index} fallback={<div>error</div>}>
+              <Message
+                username={msg.username}
+                content={
+                  typeof msg.content === 'object'
+                    ? (msg.content as FileCom)
+                    : (msg.content as string)
+                }
+                uid={msg.uid}
+                type={typeof msg.content === 'object' ? 'file' : 'text'}
+                isOwnMessage={
+                  auth.currentUser?.uid === msg.uid ||
+                  user.username === msg.username
+                }
+              />
+            </ErrorBoundary>
+          ))}
+          {/* <Message
               username="Paxwell"
               content={{
                 type: 'file',
@@ -169,42 +215,32 @@ const PageChat = () => {
               isOwnMessage={false}
               type="file"
             /> */}
-            <div ref={messageEndRef}></div>
-          </div>
-        </div>
-        <div className=" bg-teal-800 relative min-h-[8%] flex-shrink-0 max-h-[14rem]  py-2  ">
-          <MessageInput
-            handleInputHeightChange={handleInputHeightChange}
-            onClickSend={handleSendData}
-          />
+          <div ref={messageEndRef}></div>
         </div>
       </div>
+      <div className=" bg-teal-800 relative min-h-[8%] flex-shrink-0 max-h-[14rem]  py-2  ">
+        <MessageInput
+          handleInputHeightChange={handleInputHeightChange}
+          onClickSend={handleSendData}
+        />
+      </div>
+    </div>
   );
 };
 
-const DynamicChatLayout = dynamic(()=>import("@/components/layout/ChatLayout"), {
-  ssr: false,
-  loading: () => <LoadingNormal />,
-});
+const DynamicChatLayout = dynamic(
+  () => import('@/components/layout/ChatLayout'),
+  {
+    ssr: false,
+    loading: () => <LoadingNormal />,
+  }
+);
 const RapLayoutChat = () => {
   return (
     <DynamicChatLayout>
       <PageChat />
     </DynamicChatLayout>
   );
-}
+};
 
 export default RapLayoutChat;
-
-// const messages = [
-//   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-//   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-//   { username: 'Alice', content: 'Hello! start', isOwnMessage: false },
-//   { username: 'You', content: 'Hi Alice!', isOwnMessage: true },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-//   { username: 'Alice', content: 'How are you?', isOwnMessage: false },
-// ];
