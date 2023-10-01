@@ -4,15 +4,14 @@ import React, { use, useEffect, useState } from "react";
 import { Task, ViewMode, Gantt } from "gantt-task-react";
 import axiosBaseurl from "@/config/baseUrl";
 import { ViewSwitcher } from "./components/view-switcher";
-import { initTasks } from "./components/helper";
 import { ErrorBoundary } from "react-error-boundary";
 import { useParams } from "next/navigation";
 
 function PageGantt() {
-  const {project} = useParams();
+  const { project } = useParams();
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
   const [dataItem, setData] = useState<any[]>([]);
-  const [tasks, setTasks] = React.useState<Task[]>(initTasks());
+  const [tasks, setTasks] = React.useState<Task[]>([]);
   const [isChecked, setIsChecked] = React.useState(true);
   let columnWidth = 65;
   if (view === ViewMode.Year) {
@@ -48,15 +47,16 @@ function PageGantt() {
           const filteredData = arrData.filter((obj) => obj.task === true);
 
           setData(filteredData);
-
-          setTasks(filteredData.map((item) => ({
+          console.log(filteredData);
+          let tasks: Task[] = filteredData.map((item) => ({
             id: item._id,
             name: item.name,
-            start: item.start_date,
-            end: item.end_date,
-            progress: item.progress,
+            start: new Date(item.start_date),
+            end: new Date(item.end_date),
+            progress: item.progress || 0,
             type: "task",
-          })));
+          }));
+          setTasks(tasks);
         } else {
           setData([]);
           setTasks([]);
@@ -78,14 +78,16 @@ function PageGantt() {
         onViewListChange={setIsChecked}
         isChecked={isChecked}
       />
-      <Gantt
-        barProgressColor="#115e59"
-        tasks={tasks}
-        viewMode={view}
-        onSelect={handleSelect}
-        listCellWidth={isChecked ? "155px" : ""}
-        columnWidth={columnWidth}
-      />
+      {tasks?.length > 0 && (
+        <Gantt
+          barProgressColor="#115e59"
+          tasks={tasks}
+          viewMode={view}
+          onSelect={handleSelect}
+          listCellWidth={isChecked ? "155px" : ""}
+          columnWidth={columnWidth}
+        />
+      )}
     </div>
   );
 };
