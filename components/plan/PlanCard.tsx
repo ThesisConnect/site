@@ -95,7 +95,7 @@ const PlanCard: React.FC<DataPlan> = ({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{opacity: 0}}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
       className="flex w-full aspect-square bg-neutral-100 py-5 px-4 rounded-lg overflow-hidden"
     >

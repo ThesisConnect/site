@@ -24,7 +24,7 @@ const Profile: FC<IProfile> = ({
   onClick,
   progress,
 }) => {
-  console.log(user)
+  console.log(user);
   return (
     <div
       className="relative "
@@ -55,7 +55,9 @@ const Profile: FC<IProfile> = ({
             width: `${width}px`,
             height: `${height || width}px`,
           }}
-          className={cn(`rounded-full cursor-pointer object-cover drop-shadow-none`)}
+          className={cn(
+            `rounded-full cursor-pointer object-cover drop-shadow-none`
+          )}
         />
       </div>
     </div>

@@ -8,7 +8,7 @@ import LoadingNormal from '../loading/LoadingNormal';
 import { File } from '@/stores/Files';
 import Tooltip from '@mui/material/Tooltip';
 import { handleFilePreview } from '@/utils/PreviewFile';
-import {motion} from "framer-motion"
+import { motion } from 'framer-motion';
 const FecherChatFile = async (url: string) => {
   const res = await axiosBaseurl.get(url);
   return res.data;
@@ -27,16 +27,18 @@ const DisplayFileChat = () => {
         <div>loading...</div>
       </div>
     );
-  console.log(data)
+  console.log(data);
   return (
     <div className="w-full flex flex-col">
       {data?.filter(Boolean).map((file) => {
         return (
-          <motion.div 
-          initial={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-          className="flex" key={file._id}>
+            className="flex"
+            key={file._id}
+          >
             <Tooltip
               title={
                 <div className="flex flex-col">

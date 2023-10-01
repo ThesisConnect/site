@@ -9,11 +9,11 @@ import useSWR from 'swr';
 interface Auth {
   user: User;
   clearUser: () => void;
-  isAuthenticated: boolean|undefined;
+  isAuthenticated: boolean | undefined;
   updateUser: (user: Partial<User>) => void;
   setUserNew: (user: User) => void;
   mutate: () => void;
-  isLoading:boolean
+  isLoading: boolean;
 }
 
 const fetcher = async (url: string) => {
@@ -42,9 +42,9 @@ export const useAuth = (): Auth => {
     async (updateData: Partial<User>) => {
       try {
         console.log('updateData', updateData);
-        const updateNew= { ...user, ...updateData }
+        const updateNew = { ...user, ...updateData };
         setUser(updateNew);
-        await axiosBaseurl.post('/auth/update/profile', (updateNew), {
+        await axiosBaseurl.post('/auth/update/profile', updateNew, {
           withCredentials: true,
         });
         mutate(updateNew);
@@ -61,7 +61,7 @@ export const useAuth = (): Auth => {
     },
     [setUser, mutate]
   );
-  
+
   useEffect(() => {
     if (!data && !error) {
       // If there's no data and no error, it means the SWR fetching is still ongoing
@@ -83,11 +83,11 @@ export const useAuth = (): Auth => {
   return {
     user,
     clearUser,
-    isAuthenticated :user.isAuthenticated,
+    isAuthenticated: user.isAuthenticated,
     updateUser,
     setUserNew,
     mutate,
-    isLoading:!data&&!error,
+    isLoading: !data && !error,
   };
 };
 

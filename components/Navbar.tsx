@@ -4,7 +4,7 @@ import { VscSignOut } from 'react-icons/vsc';
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import axiosBaseurl from '@/config/baseUrl';
-import { auth} from '@/config/firebase';
+import { auth } from '@/config/firebase';
 import { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
 import userStore from '@/stores/User';
@@ -89,7 +89,10 @@ const Navbar: FC = () => {
                 arrow
                 title={
                   <div className="flex flex-col ">
-                    <div className="flex py-2 gap-x-1 cursor-pointer" onClick={logout}>
+                    <div
+                      className="flex py-2 gap-x-1 cursor-pointer"
+                      onClick={logout}
+                    >
                       <FiLogOut size={20} />
                       <div className="flex items-center text-se">Logout</div>
                     </div>

@@ -1,13 +1,13 @@
 'use client';
 import { DateTime } from 'luxon';
 import { useParams, useRouter } from 'next/navigation';
-import { FC,useState } from 'react';
+import { FC, useState } from 'react';
 import usePlanByProjectID from '@/hook/usePlanByProjectID';
 import { v4 } from 'uuid';
 import useProjectStore from '@/stores/Project';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 import DisplayFileChat from '../chat/DisplayFileChat';
-import {motion} from "framer-motion"
+import { motion } from 'framer-motion';
 
 interface ChatLayoutProps {
   children?: React.ReactNode;
@@ -15,7 +15,7 @@ interface ChatLayoutProps {
 
 const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
   const params = useParams();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const { plan, isLoading, mutate, error } = usePlanByProjectID(
     params.project as string
   );
@@ -23,7 +23,7 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
   const projectData = getProjectByID(params.project as string);
   const generalChatId = projectData?.chat_id;
   const route = useRouter();
-  const [currentChatName, setCurrentChatName] = useState<string>("General")
+  const [currentChatName, setCurrentChatName] = useState<string>('General');
   const handleClickChat = (id: string | undefined) => {
     if (!id) return null;
     route.push(`/mainPage/${params.project}/chat?chatID=${id}`);
@@ -40,14 +40,18 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
               if (plan.task && !plan.archived) {
                 return (
                   <motion.div
-                  initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-                    className={"mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer"
-                    +(searchParams.get('chatID')===plan.chat_id?" bg-neutral-200":"")}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className={
+                      'mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer' +
+                      (searchParams.get('chatID') === plan.chat_id
+                        ? ' bg-neutral-200'
+                        : '')
+                    }
                     onClick={() => {
                       handleClickChat(plan.chat_id!);
-                      setCurrentChatName(plan.name)
+                      setCurrentChatName(plan.name);
                     }}
                     key={plan._id}
                   >
@@ -69,13 +73,18 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
               if (plan.task && plan.archived) {
                 return (
                   <motion.div
-                  initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-                    className={"mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer"+(searchParams.get('chatID')===plan.chat_id?" bg-neutral-200":"")}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className={
+                      'mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer' +
+                      (searchParams.get('chatID') === plan.chat_id
+                        ? ' bg-neutral-200'
+                        : '')
+                    }
                     onClick={() => {
-                      handleClickChat(plan.chat_id!)
-                      setCurrentChatName(plan.name)
+                      handleClickChat(plan.chat_id!);
+                      setCurrentChatName(plan.name);
                     }}
                     key={plan._id}
                   >
@@ -92,10 +101,15 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
           <div className="overflow-y-scroll ">
             {/* Text*/}
             <div
-              className={"mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer"+(searchParams.get('chatID')===generalChatId?" bg-neutral-200":"")}
+              className={
+                'mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer' +
+                (searchParams.get('chatID') === generalChatId
+                  ? ' bg-neutral-200'
+                  : '')
+              }
               onClick={() => {
                 handleClickChat(generalChatId);
-                setCurrentChatName("General")
+                setCurrentChatName('General');
               }}
             >
               General
@@ -115,7 +129,7 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
             </div>
             <div className="overflow-y-scroll h-full ">
               {/* file */}
-              <DisplayFileChat/>
+              <DisplayFileChat />
               <div />
             </div>
           </div>

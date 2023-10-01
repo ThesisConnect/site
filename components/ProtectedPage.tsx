@@ -11,7 +11,7 @@ interface ProtectedPageProps {
 }
 
 const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
-  const { isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   const [firstLoad, setFirstLoad] = userStore((state) => [
     state.firstLoad,
     state.setFirstLoad,
@@ -44,8 +44,7 @@ const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
         </div>
       </div>
     );
-  }
-  else if (firstLoad) {
+  } else if (firstLoad) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-62px)] bg-gray-200">
         <div className="p-6 max-w-md w-full h-52 bg-white shadow-md rounded-lg">
@@ -57,7 +56,7 @@ const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
       </div>
     );
   }
-  return null
+  return null;
 };
 
 export default ProtectedPage;

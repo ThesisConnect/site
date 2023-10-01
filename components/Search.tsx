@@ -6,47 +6,50 @@ import match from 'autosuggest-highlight/match';
 import { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-
-
-const testData=[
-  "The Shawshank Redemption",
-  "The Godfather",
-  "The Godfather: Part II",
-  "Pulp Fiction",
-  "The Good, the Bad and the Ugly",
-]
+const testData = [
+  'The Shawshank Redemption',
+  'The Godfather',
+  'The Godfather: Part II',
+  'Pulp Fiction',
+  'The Good, the Bad and the Ugly',
+];
 interface SearchInputProps {
-  width?:string;
-  height?:string;
-  data?:string[];
+  width?: string;
+  height?: string;
+  data?: string[];
   onChange?: (
-    event: React.SyntheticEvent, value: string, reason: string
+    event: React.SyntheticEvent,
+    value: string,
+    reason: string
   ) => void;
-  className?:string;
+  className?: string;
 }
-const SearchInput:FC<SearchInputProps> = ({width,height,onChange,className,data}) => {
+const SearchInput: FC<SearchInputProps> = ({
+  width,
+  height,
+  onChange,
+  className,
+  data,
+}) => {
   // const showInput = (e:ChangeEvent<HTMLInputElement>) => {
   //   console.log(e.target.value);
   // }
   const [open, setOpen] = useState(false);
   return (
-    <div className={cn("h-10",width,height,className)}>
+    <div className={cn('h-10', width, height, className)}>
       <Autocomplete
         noOptionsText="Project not found"
         open={open}
         onOpen={() => setOpen(true)}
         disablePortal
-        options={data||testData}
+        options={data || testData}
         onInputChange={onChange}
         getOptionLabel={(option) => option}
         sx={{
           height: '100%',
         }}
         renderInput={(params) => (
-          <div
-          ref={params.InputProps.ref}
-          className='h-full '
-          >
+          <div ref={params.InputProps.ref} className="h-full ">
             <InputBase
               {...params}
               onKeyDown={(e) => {
@@ -74,7 +77,7 @@ const SearchInput:FC<SearchInputProps> = ({width,height,onChange,className,data}
           const matches = match(option, inputValue, { insideWords: true });
           const parts = parse(option, matches);
           return (
-            <li {...props} >
+            <li {...props}>
               <div>
                 {parts.map((part, index) => (
                   <span
@@ -94,6 +97,5 @@ const SearchInput:FC<SearchInputProps> = ({width,height,onChange,className,data}
     </div>
   );
 };
-
 
 export default SearchInput;

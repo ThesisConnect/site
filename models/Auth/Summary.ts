@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const createSummarySchema = z.object({
   // project_id: z.string(),
@@ -8,7 +8,11 @@ export const createSummarySchema = z.object({
   comment: z.string().optional(),
   // file_id: z.array(z.string()),
   // chat_id: z.string(),
-  progress: z.number().min(0, {message: 'Progress must be greater than 0'}).max(100, {message: 'Progress must be less than 100'}).optional(),
-})
+  progress: z
+    .number()
+    .min(0, { message: 'Progress must be greater than 0' })
+    .max(100, { message: 'Progress must be less than 100' })
+    .optional(),
+});
 
-export type createSummarySchema = z.infer<typeof createSummarySchema>
+export type createSummarySchema = z.infer<typeof createSummarySchema>;

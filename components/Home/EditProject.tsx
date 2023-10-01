@@ -89,28 +89,24 @@ const TableInModal: FC<TableComponentProps> = ({ table = [], onChange }) => {
   );
 };
 
-const EditProject: FC<EditProjectProps> = ({
-  isOpen,
-  onClose,
-  project,
-}) => {
+const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
   const [error, setError] = useState('');
   const user = userStore((state) => state.user);
   const [table, setTable] = useState<TableMember[]>(() => {
     if (project) {
-      const advisee:TableMember[] = project.advisee.map((item) => ({
+      const advisee: TableMember[] = project.advisee.map((item) => ({
         email: item.email,
         role: 'Advisee',
       }));
-      const co_advisor:TableMember[] = project.co_advisors.map((item) => ({
+      const co_advisor: TableMember[] = project.co_advisors.map((item) => ({
         email: item.email,
         role: 'Co_advisor',
       }));
-      const advisor:TableMember[] = project.advisors.map((item) => ({
+      const advisor: TableMember[] = project.advisors.map((item) => ({
         email: item.email,
         role: 'Advisor',
       }));
-      return [...advisor,...co_advisor,...advisee];
+      return [...advisor, ...co_advisor, ...advisee];
     }
     return [];
   });
@@ -134,7 +130,7 @@ const EditProject: FC<EditProjectProps> = ({
         return;
       } else if (data.email) {
         setError('');
-        setTable([ ...table,{ email, role }]);
+        setTable([...table, { email, role }]);
       } else {
         setError(data.error);
       }
@@ -158,7 +154,7 @@ const EditProject: FC<EditProjectProps> = ({
           advisors: [] as string[],
           co_advisors: [] as string[],
           advisee: [] as string[],
-        }
+        };
         for (const user of checkData.data.userInProject) {
           if (user.role === 'Advisor') {
             formatData.advisors.push(user.email);
@@ -168,7 +164,15 @@ const EditProject: FC<EditProjectProps> = ({
             formatData.advisee.push(user.email);
           }
         }
-        updateProject({...formatData,id:project._id,status:project.status,progress:project.progress},project._id)
+        updateProject(
+          {
+            ...formatData,
+            id: project._id,
+            status: project.status,
+            progress: project.progress,
+          },
+          project._id
+        )
           .then(() => {
             console.log('edit success');
             setCreateLoading(false);
@@ -215,7 +219,7 @@ const EditProject: FC<EditProjectProps> = ({
           className="bg-white rounded-lg  flex flex-col w-7/12 h-[75%]  items-center"
         >
           <div className="border-b-[1px] w-full border-teal-800 h-[10%] flex items-center ps-10  font-semibold text-neutral-800">
-          Edit project
+            Edit project
           </div>
           <div className="flex h-full w-full px-10 flex-col overflow-y-scroll ">
             <AutoResizingTextArea

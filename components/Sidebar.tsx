@@ -19,10 +19,8 @@ const Sidebar = () => {
   const back = () => {
     router.back();
   };
-  const currentProject = useProjectStore(
-    (state) => state.currentProject
-  );
-  
+  const currentProject = useProjectStore((state) => state.currentProject);
+
   if (pathname === '/editprofile')
     return (
       <>
@@ -108,7 +106,9 @@ const Sidebar = () => {
         </div>
         <div
           className={`flex flex-col justify-center items-center cursor-pointer pt-2 ${
-            pathname.includes(`/mainPage/${projectID}/files`)? 'bg-neutral-300' : ''
+            pathname.includes(`/mainPage/${projectID}/files`)
+              ? 'bg-neutral-300'
+              : ''
           }`}
           onClick={() => router.push(`/mainPage/${projectID}/files`)}
           onMouseOver={handleHover}
@@ -202,9 +202,15 @@ const Sidebar = () => {
         </div>
         <div
           className={`flex flex-col justify-center items-center cursor-pointer pt-2 ${
-            pathname.includes( `/mainPage/${projectID}/chat`) ? 'bg-neutral-300' : ''
+            pathname.includes(`/mainPage/${projectID}/chat`)
+              ? 'bg-neutral-300'
+              : ''
           } `}
-          onClick={() => router.push(`/mainPage/${projectID}/chat?chatID=${currentProject?.chat_id}`)}
+          onClick={() =>
+            router.push(
+              `/mainPage/${projectID}/chat?chatID=${currentProject?.chat_id}`
+            )
+          }
           onMouseOver={handleHover}
         >
           <ChatIcon

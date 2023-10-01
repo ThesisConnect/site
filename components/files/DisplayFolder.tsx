@@ -24,14 +24,18 @@ export const DisplayFolder: FC<DisplayFolderProps> = ({
         <div className="w-2/5 flex justify-end me-4  ">
           {hoverFolder ? (
             <FcOpenedFolder
-              onMouseLeave={()=>setHoverFolder(false)}
+              onMouseLeave={() => setHoverFolder(false)}
               className="cursor-pointer"
               onClick={onClick}
               size={35}
             />
           ) : (
-            <FcFolder onMouseEnter={()=>setHoverFolder(true)} 
-            className="cursor-pointer" onClick={onClick} size={35} />
+            <FcFolder
+              onMouseEnter={() => setHoverFolder(true)}
+              className="cursor-pointer"
+              onClick={onClick}
+              size={35}
+            />
           )}
         </div>
         <div className="cursor-pointer w-3/5" onClick={onClick}>

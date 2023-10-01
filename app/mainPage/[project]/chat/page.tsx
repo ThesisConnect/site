@@ -40,7 +40,7 @@ const PageChat = () => {
   const chatLengthRef = useRef(chat.length);
   const chatIDRef = useRef(chatID);
   const displayCountRef = useRef(displayCount);
-  const lastMessageRef = useRef<RecieveMessenger|null>(null);
+  const lastMessageRef = useRef<RecieveMessenger | null>(null);
   const canFetchMore = useRef(true);
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
@@ -61,21 +61,27 @@ const PageChat = () => {
 
   useEffect(() => {
     setDisplayCount(30);
-  }
-  , [chatID]);
+  }, [chatID]);
   useEffect(() => {
     const currentLoadMoreRef = loadMoreRef.current;
     let initialRender = true;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !initialRender) {
-          console.log("checkEntry condition",displayCountRef.current <= chatLengthRef.current);
-          console.log("checkEntry condition",displayCountRef.current,chatLengthRef.current);
+          console.log(
+            'checkEntry condition',
+            displayCountRef.current <= chatLengthRef.current
+          );
+          console.log(
+            'checkEntry condition',
+            displayCountRef.current,
+            chatLengthRef.current
+          );
           if (displayCountRef.current <= chatLengthRef.current) {
             // console.log("lastMessage",lastMessageRef.current);
             // console.log("timestamp",DateTime.fromISO(lastMessageRef.current.createdAt).toMillis());
-            console.log("lastMessageRef",lastMessageRef.current);
-            console.log("check",canFetchMore.current ,lastMessageRef.current);
+            console.log('lastMessageRef', lastMessageRef.current);
+            console.log('check', canFetchMore.current, lastMessageRef.current);
             if (canFetchMore.current && lastMessageRef.current) {
               setLoadingChat(true);
               socket.emit(

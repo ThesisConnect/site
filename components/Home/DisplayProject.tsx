@@ -16,8 +16,16 @@ interface DisplayProjectProps {
   project: IProject;
 }
 const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
-  const {name: projectName,progress,status,co_advisors,
-    advisors: advisor,advisee,chat_id: chatID,_id: projectID,} = project;
+  const {
+    name: projectName,
+    progress,
+    status,
+    co_advisors,
+    advisors: advisor,
+    advisee,
+    chat_id: chatID,
+    _id: projectID,
+  } = project;
   const router = useRouter();
   const handleChat = useCallback(() => {
     router.push(`mainPage/${projectID}/chat?chatID=${chatID}`);
@@ -63,9 +71,12 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
   const preloadPage = () => {
     // console.log("pre")
     router.prefetch(`mainPage/${projectID}/chat?chatID=${chatID}`);
-  }
+  };
   return (
-    <div onMouseEnter={preloadPage} className="flex justify-center items-center h-[78px]  border-b-[1px] border-neutral-400" >
+    <div
+      onMouseEnter={preloadPage}
+      className="flex justify-center items-center h-[78px]  border-b-[1px] border-neutral-400"
+    >
       {Delete && (
         <DeletePopup
           show={Delete}

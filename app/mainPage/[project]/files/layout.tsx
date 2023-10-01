@@ -32,7 +32,7 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
     async (e: ChangeEvent<HTMLInputElement>) => {
       const files = e.currentTarget.files;
       if (!files) return;
-      console.log(files)
+      console.log(files);
       let newFiles = [];
       newFiles = await Promise.all(
         Array.from(files).map((file) =>
@@ -92,11 +92,12 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-end">
           {CheckCanCreateFolder() && (
             <div>
-              <button className="bg-teal-800 w-32 h-10
+              <button
+                className="bg-teal-800 w-32 h-10
                text-white rounded-full me-4"
                 onClick={() => {
                   setShowCreateFolder(true);
-                }}  
+                }}
               >
                 Create Folder
               </button>
@@ -157,7 +158,6 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
               onClose={() => {
                 setShowCreateFolder(false);
               }}
-              
             />
           </div>
         )}

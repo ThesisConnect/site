@@ -1,5 +1,3 @@
-
-
 import Link from 'next/link';
 import Button from '@/components/login/Button';
 import userStore, { userAtom } from '@/stores/User';
@@ -9,11 +7,11 @@ import LoadingNormal from '@/components/loading/LoadingNormal';
 import { motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
 const Home = () => {
-  return redirect("/mainPage")
+  return redirect('/mainPage');
   // const user = userStore((state) => state.user);
   // return (
   //   // <ProtectedPage>
-  //   <motion.div 
+  //   <motion.div
   //   initial={{ opacity: 0 }}
   //   animate={{ opacity: 1 }}
   //   transition={{ duration: 0.75 }}
@@ -75,7 +73,7 @@ const Home = () => {
   //       email {user.email}
   //     </div>
   //   </motion.div>
-    // </ProtectedPage>
+  // </ProtectedPage>
   // );
 };
 // const DynamicHome = dynamic(() => Promise.resolve(Home), {

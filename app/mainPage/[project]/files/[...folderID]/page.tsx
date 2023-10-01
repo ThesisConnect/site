@@ -39,7 +39,6 @@ const Pagefiles = ({
     folderID: string[];
   };
 }) => {
-  
   return (
     <div>
       <FolderDisplay showFolderID={folderID[folderID.length - 1]} />

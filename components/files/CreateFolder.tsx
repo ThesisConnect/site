@@ -1,4 +1,4 @@
-import { useState,useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { FcFolder } from 'react-icons/fc';
 import { FC } from 'react';
 import axios from 'axios';
@@ -10,30 +10,30 @@ interface CreateFolderProps {
   onClose?: () => void;
 }
 
-export const CreateFolder: FC<CreateFolderProps> = ({ onCreate,onClose }) => {
+export const CreateFolder: FC<CreateFolderProps> = ({ onCreate, onClose }) => {
   const [name, setName] = useState<string>('');
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const params = useParams();
-  const handleSubmit = useCallback(async() => {
+  const handleSubmit = useCallback(async () => {
     if (name && !isSubmitting) {
       setIsSubmitting(true);
-       await axiosBaseurl.post('/folder/create', {
+      await axiosBaseurl.post('/folder/create', {
         name,
         parent: params.folderID[params.folderID.length - 1],
       });
       onCreate && onCreate(name);
       mutate(`/folder/${params.folderID[params.folderID.length - 1]}`);
-      onClose?.()
+      onClose?.();
       setIsSubmitting(false);
     }
-  }, [name, onCreate,onClose,params.folderID,isSubmitting]);
+  }, [name, onCreate, onClose, params.folderID, isSubmitting]);
   useEffect(() => {
     nameInputRef.current?.focus();
     const handleEscapePress = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose?.();
-      }else if (event.key === 'Enter') {
+      } else if (event.key === 'Enter') {
         handleSubmit();
       }
     };
@@ -42,8 +42,7 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onCreate,onClose }) => {
     return () => {
       document.removeEventListener('keydown', handleEscapePress);
     };
-
-  }, [onClose,handleSubmit]);
+  }, [onClose, handleSubmit]);
   return (
     <div className="h-10 flex">
       <div className="w-1/5 flex items-center">
@@ -51,31 +50,32 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onCreate,onClose }) => {
           <FcFolder size={35} />
         </div>
         <div className="w-3/5">
-          <input 
+          <input
             ref={nameInputRef}
             className="border rounded p-1 w-full"
             placeholder="Folder Name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
       </div>
-      <div className="w-1/5 flex justify-center items-center">
-        
-      </div>
       <div className="w-1/5 flex justify-center items-center"></div>
-      <div className="w-1/5 flex justify-center items-center">
-        
-      </div>
+      <div className="w-1/5 flex justify-center items-center"></div>
+      <div className="w-1/5 flex justify-center items-center"></div>
       <div className="w-1/5 flex justify-center gap-4 items-center">
-        <button className="px-2 py-1 bg-neutral-400 hover:bg-neutral-500  ease-in-out 
-        duration-150 hover:scale-105 text-white rounded" 
-        onClick={onClose}>
+        <button
+          className="px-2 py-1 bg-neutral-400 hover:bg-neutral-500  ease-in-out 
+        duration-150 hover:scale-105 text-white rounded"
+          onClick={onClose}
+        >
           Cancel
         </button>
-        <button className="px-2 py-1 bg-teal-600 hover:bg-teal-700 
+        <button
+          className="px-2 py-1 bg-teal-600 hover:bg-teal-700 
         ease-in-out duration-150 hover:scale-105 transform
-         text-white rounded" onClick={handleSubmit}>
+         text-white rounded"
+          onClick={handleSubmit}
+        >
           Create
         </button>
       </div>

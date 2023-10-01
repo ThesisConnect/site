@@ -58,16 +58,15 @@ export const DisplayFile: FC<DisplayFile> = ({ file, onClick }) => {
   }
   return (
     <div className="h-10 flex">
-      {
-        Delete && <DeleteFileAndFolderPopup deleteType='file' 
-        show={Delete}
-         dataFileOrFolder={file}
-         onClose={showDeletePlan}
-         />
-      }
-      {
-        edit && <FileMemo show={edit} file={file} onClose={showPlanEdit}/>
-      }
+      {Delete && (
+        <DeleteFileAndFolderPopup
+          deleteType="file"
+          show={Delete}
+          dataFileOrFolder={file}
+          onClose={showDeletePlan}
+        />
+      )}
+      {edit && <FileMemo show={edit} file={file} onClose={showPlanEdit} />}
       <div className="w-1/5 flex   items-center">
         <div className="w-2/5 flex justify-end me-4  ">
           <BsFileText

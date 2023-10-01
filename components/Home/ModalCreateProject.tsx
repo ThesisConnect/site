@@ -119,7 +119,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
         return;
       } else if (data.email) {
         setError('');
-        setTable([ ...table,{ email, role }]);
+        setTable([...table, { email, role }]);
       } else {
         setError(data.error);
       }

@@ -16,17 +16,24 @@ export interface SelectRoleRef {
   getValue: () => string;
 }
 
-const SelectRole=  forwardRef<SelectRoleRef,SelectRoleProps>((props, ref) => {
+const SelectRole = forwardRef<SelectRoleRef, SelectRoleProps>((props, ref) => {
   const { className } = props;
-  
+
   const [selectedValue, setSelectedValue] = useState<string>('Advisee');
 
-  useImperativeHandle(ref, () => ({
-    getValue: () => selectedValue,
-  }), [selectedValue]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      getValue: () => selectedValue,
+    }),
+    [selectedValue]
+  );
   return (
-    <Select defaultValue='Advisee' onValueChange={(value: string) => setSelectedValue(value)}>
-      <SelectTrigger className={cn("w-40 rounded-full", className)}>
+    <Select
+      defaultValue="Advisee"
+      onValueChange={(value: string) => setSelectedValue(value)}
+    >
+      <SelectTrigger className={cn('w-40 rounded-full', className)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -38,7 +45,6 @@ const SelectRole=  forwardRef<SelectRoleRef,SelectRoleProps>((props, ref) => {
     </Select>
   );
 });
-
 
 SelectRole.displayName = 'SelectRole';
 export default SelectRole;

@@ -6,7 +6,7 @@ interface SelectProps {
   placeholder: string;
   width?: string;
   control: any;
-  pageType: string; 
+  pageType: string;
   setPage: (data: string) => void;
 }
 
@@ -19,15 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-const DropdownApprove: FC<SelectProps> = (
-  {
-    label,
-    placeholder,
-    control,
-    pageType,
-    setPage,
-  }
-) => {
+const DropdownApprove: FC<SelectProps> = ({
+  label,
+  placeholder,
+  control,
+  pageType,
+  setPage,
+}) => {
   // const [selectedValue, setSelectedValue] = useState<string>(pageType);
   // const handleValueChange = (newValue: string) => {
   //   // setSelectedValue(newValue);
@@ -49,7 +47,9 @@ const DropdownApprove: FC<SelectProps> = (
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem defaultChecked value="Approve">Approve</SelectItem>
+                    <SelectItem defaultChecked value="Approve">
+                      Approve
+                    </SelectItem>
                     <SelectItem value="Reject">Reject</SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -61,6 +61,5 @@ const DropdownApprove: FC<SelectProps> = (
     </div>
   );
 };
-
 
 export default DropdownApprove;

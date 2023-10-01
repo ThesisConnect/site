@@ -1,16 +1,16 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 } from "uuid";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { v4 } from 'uuid';
 
-const uploadFileToFirebase = async (file:File) => {
+const uploadFileToFirebase = async (file: File) => {
   if (!file) {
-    throw new Error("No file provided");
+    throw new Error('No file provided');
   }
 
   try {
     // Step 1: Create a reference
     const storage = getStorage();
-    const uid  = v4()
-    const pathFile = 'uploads/'+ uid+ file.name;
+    const uid = v4();
+    const pathFile = 'uploads/' + uid + file.name;
     const storageRef = ref(storage, pathFile);
 
     // Step 2: Start the upload
@@ -21,7 +21,7 @@ const uploadFileToFirebase = async (file:File) => {
     try {
       const downloadURL = await getDownloadURL(storageRef);
       console.log('File available at', downloadURL);
-      return [downloadURL,pathFile,uid] // Returning the download URL
+      return [downloadURL, pathFile, uid]; // Returning the download URL
     } catch (error) {
       console.error('Failed to get download URL:', error);
       throw error; // Throwing the error to be caught outside of the function
@@ -31,6 +31,5 @@ const uploadFileToFirebase = async (file:File) => {
     throw error; // Throwing the error to be caught outside of the function
   }
 };
-
 
 export default uploadFileToFirebase;

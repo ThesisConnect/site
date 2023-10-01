@@ -13,15 +13,15 @@ import dynamic from 'next/dynamic';
 
 const PageRootFiles = () => {
   const pathName = usePathname();
-  const {currentProject} = useProjectStore((state) => ({
-    currentProject:state.currentProject
-  }))
-  
+  const { currentProject } = useProjectStore((state) => ({
+    currentProject: state.currentProject,
+  }));
+
   return (
     <div>
-      {
-        currentProject && <FolderDisplay  showFolderID={currentProject.folder_id} />
-      }
+      {currentProject && (
+        <FolderDisplay showFolderID={currentProject.folder_id} />
+      )}
       {/* <FileMemo/> */}
     </div>
   );

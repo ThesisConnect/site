@@ -5,7 +5,6 @@ import profileDownload from '@/utils/profileImage';
 import { cn } from '@/lib/utils';
 import CircularProgress from './CircleProgress';
 
-
 interface IProfile extends React.HTMLAttributes<HTMLDivElement> {
   user: Partial<User>;
   width?: string;
@@ -15,15 +14,10 @@ interface IProfile extends React.HTMLAttributes<HTMLDivElement> {
   progress?: number;
 }
 
-const Profile: ForwardRefRenderFunction<HTMLDivElement,IProfile> = ({
-  user,
-  width = '120',
-  height,
-  className,
-  onClick,
-  progress,
-  ...props
-},ref) => {
+const Profile: ForwardRefRenderFunction<HTMLDivElement, IProfile> = (
+  { user, width = '120', height, className, onClick, progress, ...props },
+  ref
+) => {
   return (
     <div
       {...props}

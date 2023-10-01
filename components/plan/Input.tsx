@@ -14,7 +14,18 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
 }
 const InputText = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, width = 'w-10/12', placeholder,className,disabled, eye = false, ...props }, ref) => {
+  (
+    {
+      label,
+      width = 'w-10/12',
+      placeholder,
+      className,
+      disabled,
+      eye = false,
+      ...props
+    },
+    ref
+  ) => {
     const [show, setShow] = useState<boolean>(false);
     const handleShow = useCallback(() => {
       setShow((prev) => !prev);
@@ -22,7 +33,7 @@ const InputText = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={`${width} relative`}>
         <div className="text-xs">
-          <label className={disabled?"opacity-50":""}>
+          <label className={disabled ? 'opacity-50' : ''}>
             {label}
             {eye && (
               <div className="w-full flex absolute">
@@ -43,7 +54,10 @@ const InputText = forwardRef<HTMLInputElement, InputProps>(
             <input
               ref={ref}
               id={label}
-              className={cn("rounded-md border border-solid border-[#949494] w-full h-14 ps-2 ",className)}
+              className={cn(
+                'rounded-md border border-solid border-[#949494] w-full h-14 ps-2 ',
+                className
+              )}
               placeholder={`${placeholder}`}
               type={show ? 'text' : 'password'}
               {...props}

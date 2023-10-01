@@ -14,14 +14,14 @@ const PageHomeRole = () => {
   const projectList = filterProject.length > 0 ? filterProject : project;
   return (
     <>
-      {projectList?.map((item,index) => (
+      {projectList?.map((item, index) => (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
-          key={item._id} 
+          key={item._id}
         >
-          <DisplayProject project={item}  />
+          <DisplayProject project={item} />
         </motion.div>
       ))}
     </>

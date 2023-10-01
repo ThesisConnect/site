@@ -40,11 +40,16 @@ const DeletePopup: React.FC<ModalProps> = ({
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-50 flex-col items-center bg-black bg-opacity-50">
-      <div className={"bg-white rounded-t-lg  p-3 w-96 h-32 flex flex-col  justify-evenly items-center"+  (isLoading ? " rounded-lg" : "")}>
+      <div
+        className={
+          'bg-white rounded-t-lg  p-3 w-96 h-32 flex flex-col  justify-evenly items-center' +
+          (isLoading ? ' rounded-lg' : '')
+        }
+      >
         <h2 className="font-bold">Delete Project</h2>
         {isLoading ? (
-          <div className='flex gap-2 justify-center items-center'>
-            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-red-400"/>
+          <div className="flex gap-2 justify-center items-center">
+            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-red-400" />
             <p>Deleting project {name}</p>
           </div>
         ) : (
@@ -57,23 +62,22 @@ const DeletePopup: React.FC<ModalProps> = ({
           </div>
         )}
       </div>
-      {
-        !isLoading &&
-      <div className="flex flex-row w-96">
-        <button
-          className="bg-neutral-300 rounded-bl-lg w-[50%] h-10 hover:bg-neutral-200 hover:transition hover:ease-in-out"
-          onClick={onClose}
-        >
-          cancel
-        </button>
-        <button
-          className="bg-red-500 rounded-br-lg w-[50%] h-10 text-white hover:bg-red-400 hover:transition hover:ease-in-out"
-          onClick={onDelete}
-        >
-          Delete
-        </button>
-      </div>
-      }
+      {!isLoading && (
+        <div className="flex flex-row w-96">
+          <button
+            className="bg-neutral-300 rounded-bl-lg w-[50%] h-10 hover:bg-neutral-200 hover:transition hover:ease-in-out"
+            onClick={onClose}
+          >
+            cancel
+          </button>
+          <button
+            className="bg-red-500 rounded-br-lg w-[50%] h-10 text-white hover:bg-red-400 hover:transition hover:ease-in-out"
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        </div>
+      )}
     </div>
   );
 };

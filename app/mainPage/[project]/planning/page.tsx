@@ -25,10 +25,12 @@ import useProjectStore from '@/stores/Project';
 import LayoutPlanning from '@/components/plan/PlanLayout';
 import LoadingPlan from '@/components/plan/LoadingUI';
 
-
-const DynamicPlanLayout = dynamic(() => import("@/components/plan/PlanLayout"), {
-  loading: () => <LoadingPlan />,
-});
+const DynamicPlanLayout = dynamic(
+  () => import('@/components/plan/PlanLayout'),
+  {
+    loading: () => <LoadingPlan />,
+  }
+);
 
 export interface DataModelInterface {
   _id: string;
@@ -40,25 +42,27 @@ export interface DataModelInterface {
   end_date: string;
   task: boolean;
   [x: string]: any;
-};
+}
 
-const PagePlanning = ({ params: { project: projectID } }: {
+const PagePlanning = ({
+  params: { project: projectID },
+}: {
   params: {
     project: string;
   };
 }) => {
   const user = userStore((state) => state.user);
   const { currentProject } = useProjectStore((state) => ({
-    currentProject: state.currentProject
-  }))
+    currentProject: state.currentProject,
+  }));
 
-  const [Plans, setPlans] = useState<DataModelInterface[]>([])
-  const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans)
-  const [searchplans, setSearchPlans] = useState(Plans)
+  const [Plans, setPlans] = useState<DataModelInterface[]>([]);
+  const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans);
+  const [searchplans, setSearchPlans] = useState(Plans);
   const [state, setState] = React.useState<boolean>(false);
   const [create, setCreate] = React.useState<boolean>(false);
   const [sort, setSort] = React.useState<boolean>(false);
-  const [role, setRole] = useState<string>("advisor")
+  const [role, setRole] = useState<string>('advisor');
 
   function showCreatePopup() {
     setState(!state);
@@ -72,19 +76,17 @@ const PagePlanning = ({ params: { project: projectID } }: {
     setCreate(!create);
   };
 
-  const [selectedValue, setSelectedValue] = useState<string>("ALL");
+  const [selectedValue, setSelectedValue] = useState<string>('ALL');
   const handleValueChange = (newValue: string) => {
     setSelectedValue(newValue);
-    if (newValue == "ALL") {
+    if (newValue == 'ALL') {
       setSortPlans(Plans);
-    }
-    else if (newValue == "Gantt") {
-      const SortPlan = Plans.filter((obj) => obj.task === true)
-      setSortPlans(SortPlan)
-    }
-    else if (newValue === "notGantt") {
-      const SortPlan = Plans.filter((obj) => obj.task === false)
-      setSortPlans(SortPlan)
+    } else if (newValue == 'Gantt') {
+      const SortPlan = Plans.filter((obj) => obj.task === true);
+      setSortPlans(SortPlan);
+    } else if (newValue === 'notGantt') {
+      const SortPlan = Plans.filter((obj) => obj.task === false);
+      setSortPlans(SortPlan);
     }
   };
   const [projectName, setProjectName] = useState<string>('');
@@ -93,7 +95,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
     (async () => {
       try {
         const projectRes = await axiosBaseurl.get(`/project/${projectID}`, {
-          withCredentials: true
+          withCredentials: true,
         });
         if (projectRes?.data?.name) {
           setProjectName(projectRes.data.name);
@@ -113,10 +115,11 @@ const PagePlanning = ({ params: { project: projectID } }: {
         setPlans(response.data);
         setSortPlans(response.data);
         setRole(user.role);
-      }).catch(err => {
-        console.log(err);
       })
-  }, [projectID,user.role]);
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [projectID, user.role]);
 
   function getDayDiff(StartPlan: string, EndPlan: string): number {
     const msInDay = 24 * 60 * 60 * 1000;
@@ -133,14 +136,12 @@ const PagePlanning = ({ params: { project: projectID } }: {
         </div>
 
         <div className="px-2 flex w-full justify-between items-center h-[50px]">
-          {role === "advisor" && (
-            <div
-              className="hover:bg-teal-700 hover:transition hover:ease-in-out "
-            >
+          {role === 'advisor' && (
+            <div className="hover:bg-teal-700 hover:transition hover:ease-in-out ">
               <div className="text-white"></div>
             </div>
           )}
-          {role === "advisee" && (
+          {role === 'advisee' && (
             <button
               type="button"
               className="bg-teal-800 text-white w-[120px] h-10 rounded-full hover:bg-teal-700 hover:transition hover:ease-in-out "
@@ -157,8 +158,12 @@ const PagePlanning = ({ params: { project: projectID } }: {
         <div className="relative h-full w-full overflow-hidden">
           <div className="flex w-full p-2 h-full">
             <div className="w-full h-full overflow-y-scroll scroll-x-none">
-
-              <DynamicPlanLayout create={create} pageType={selectedValue} projectID={projectID} onSuccess={handleOnSuccess} />
+              <DynamicPlanLayout
+                create={create}
+                pageType={selectedValue}
+                projectID={projectID}
+                onSuccess={handleOnSuccess}
+              />
               {/* <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
                 {SortPlans.map((obj) =>
                   <PlanCard projectID={projectID} id={obj._id}
@@ -169,8 +174,6 @@ const PagePlanning = ({ params: { project: projectID } }: {
                   />
                 )}
               </div> */}
-
-
             </div>
           </div>
         </div>

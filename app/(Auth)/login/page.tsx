@@ -19,7 +19,7 @@ import Link from 'next/link';
 import Modal from '@/components/ModelPopup';
 const Login = () => {
   const router = useRouter();
-  const { user, setUserNew: setUser, isLoading,isAuthenticated } = useAuth();
+  const { user, setUserNew: setUser, isLoading, isAuthenticated } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
@@ -29,7 +29,7 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
   // console.log('isAuthenticated:', isAuthenticated);
-  if (!isLoading&&isAuthenticated) {
+  if (!isLoading && isAuthenticated) {
     router.push('/mainPage');
     return;
   }

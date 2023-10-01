@@ -10,30 +10,33 @@ import {
   parse,
   startOfToday,
   startOfWeek,
-} from "date-fns";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { useState } from "react";
+} from 'date-fns';
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import { useState } from 'react';
 
 interface DatePickerProps {
   DateSelect: Date;
   updateDate: (DateSelect: Date) => void;
 }
 
-const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
+const CalendarPick: React.FC<DatePickerProps> = ({
+  DateSelect,
+  updateDate,
+}) => {
   const today = DateSelect;
-  const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const colStartClasses = [
-    "",
-    "col-start-2",
-    "col-start-3",
-    "col-start-4",
-    "col-start-5",
-    "col-start-6",
-    "col-start-7",
+    '',
+    'col-start-2',
+    'col-start-3',
+    'col-start-4',
+    'col-start-5',
+    'col-start-6',
+    'col-start-7',
   ];
 
-  const [currMonth, setCurrMonth] = useState(() => format(today, "MMM-yyyy"));
-  let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+  const [currMonth, setCurrMonth] = useState(() => format(today, 'MMM-yyyy'));
+  let firstDayOfMonth = parse(currMonth, 'MMM-yyyy', new Date());
 
   const daysInMonth = eachDayOfInterval({
     start: startOfWeek(firstDayOfMonth),
@@ -43,13 +46,13 @@ const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
   const getPrevMonth = (event: React.MouseEvent<SVGSVGElement>) => {
     event.preventDefault();
     const firstDayOfPrevMonth = add(firstDayOfMonth, { months: -1 });
-    setCurrMonth(format(firstDayOfPrevMonth, "MMM-yyyy"));
+    setCurrMonth(format(firstDayOfPrevMonth, 'MMM-yyyy'));
   };
 
   const getNextMonth = (event: React.MouseEvent<SVGSVGElement>) => {
     event.preventDefault();
     const firstDayOfNextMonth = add(firstDayOfMonth, { months: 1 });
-    setCurrMonth(format(firstDayOfNextMonth, "MMM-yyyy"));
+    setCurrMonth(format(firstDayOfNextMonth, 'MMM-yyyy'));
   };
 
   return (
@@ -57,7 +60,7 @@ const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
       <div className="w-full h-auto">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-sm">
-            {format(firstDayOfMonth, "MMMM yyyy")}
+            {format(firstDayOfMonth, 'MMMM yyyy')}
           </p>
           <div className="flex items-center justify-evenly gap-1 sm:gap-2">
             <GrFormPrevious
@@ -83,13 +86,23 @@ const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
         <div className="grid grid-cols-7 gap-1 sm:gap-7 mt-2 place-items-center">
           {daysInMonth.map((day, idx) => {
             return (
-              <div key={idx} className={colStartClasses[getDay(day)]} onClick={() => updateDate(day)} >
+              <div
+                key={idx}
+                className={colStartClasses[getDay(day)]}
+                onClick={() => updateDate(day)}
+              >
                 <p
-                  className={`cursor-pointer flex items-center justify-center font-semibold h-8 w-8 rounded-full ${isSameMonth(day, today) ? "text-gray-900" : "text-gray-400"
-                    } ${day.toDateString() !== DateSelect?.toDateString() && "hover:bg-neutral-200"}  ${day.toDateString() === DateSelect?.toDateString() && "bg-teal-800 text-neutral-100"
-                    }`}
+                  className={`cursor-pointer flex items-center justify-center font-semibold h-8 w-8 rounded-full ${
+                    isSameMonth(day, today) ? 'text-gray-900' : 'text-gray-400'
+                  } ${
+                    day.toDateString() !== DateSelect?.toDateString() &&
+                    'hover:bg-neutral-200'
+                  }  ${
+                    day.toDateString() === DateSelect?.toDateString() &&
+                    'bg-teal-800 text-neutral-100'
+                  }`}
                 >
-                  {format(day, "d")}
+                  {format(day, 'd')}
                 </p>
               </div>
             );
@@ -98,6 +111,6 @@ const CalendarPick:React.FC<DatePickerProps> = ({DateSelect, updateDate}) => {
       </div>
     </div>
   );
-}
+};
 
 export default CalendarPick;

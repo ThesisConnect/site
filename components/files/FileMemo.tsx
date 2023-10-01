@@ -1,6 +1,14 @@
 import Input from '@/components/login/Input';
 import AutoResizingTextArea from '../AutoResizingTextArea';
-import { FC, Ref, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  FC,
+  Ref,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { File } from '@/stores/Files';
 import axiosBaseurl from '@/config/baseUrl';
 import { mutate } from 'swr';
@@ -11,56 +19,57 @@ interface FileMemoProps {
   onSaved?: () => void;
   file: File;
 }
-const FileMemo:FC<FileMemoProps> = (
-  {
-    show,
-    onClose,
-    onSaved,
-    file
-  }
-) => {
+const FileMemo: FC<FileMemoProps> = ({ show, onClose, onSaved, file }) => {
   const params = useParams();
   const inputRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // console.log('submit');
-    if (!inputRef.current || !textAreaRef.current) return;
-    const name = inputRef.current.value.trim();
-    const memo = textAreaRef.current.value.trim();
-    if (!name) return;
-    if (name === file.name && (memo === file.memo||memo==="")) return;
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    try{
-      await axiosBaseurl.put("/file/edit",{
-        _id:file._id,
-        name,
-        memo
-      })
-      await mutate(`/folder/${params.folderID[params.folderID.length - 1]}`);
-      setIsSubmitting(false);
-      // console.log(name, memo);
-      onSaved && onSaved();
-      onClose && onClose();
 
-    }
-    catch(err){
-      console.log(err);
-      setIsSubmitting(false);
-      onClose && onClose();
-
-    }
-  }, [file.name, file.memo, onSaved, onClose,isSubmitting,setIsSubmitting,file._id,params.folderID]);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      // console.log('submit');
+      if (!inputRef.current || !textAreaRef.current) return;
+      const name = inputRef.current.value.trim();
+      const memo = textAreaRef.current.value.trim();
+      if (!name) return;
+      if (name === file.name && (memo === file.memo || memo === '')) return;
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        await axiosBaseurl.put('/file/edit', {
+          _id: file._id,
+          name,
+          memo,
+        });
+        await mutate(`/folder/${params.folderID[params.folderID.length - 1]}`);
+        setIsSubmitting(false);
+        // console.log(name, memo);
+        onSaved && onSaved();
+        onClose && onClose();
+      } catch (err) {
+        console.log(err);
+        setIsSubmitting(false);
+        onClose && onClose();
+      }
+    },
+    [
+      file.name,
+      file.memo,
+      onSaved,
+      onClose,
+      isSubmitting,
+      setIsSubmitting,
+      file._id,
+      params.folderID,
+    ]
+  );
   useEffect(() => {
     inputRef.current?.focus();
     const handleEscapePress = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose?.();
-      }
-      else if (event.key === 'Enter') {
+      } else if (event.key === 'Enter') {
         handleSubmit(event as any);
       }
     };
@@ -69,15 +78,17 @@ const FileMemo:FC<FileMemoProps> = (
     return () => {
       document.removeEventListener('keydown', handleEscapePress);
     };
-
   }, [onClose, handleSubmit]);
-  if(!show) return null;
+  if (!show) return null;
   return (
     <div
       className="fixed top-0 left-0 w-full h-full 
      z-50  bg-black bg-opacity-50 flex  justify-end"
     >
-      <form onSubmit={handleSubmit} className="bg-white h-full w-5/12 flex flex-col relative overflow-y-scroll justify-start ">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white h-full w-5/12 flex flex-col relative overflow-y-scroll justify-start "
+      >
         <div className="h-20 px-5 font-bold text-base border-b-[1px] border-neutral-200 flex items-center">
           Memo
         </div>
@@ -101,7 +112,7 @@ const FileMemo:FC<FileMemoProps> = (
              border-neutral-300 rounded-lg
             p-4
              "
-             ref={textAreaRef}
+              ref={textAreaRef}
               minHeight={500}
               maxHeight={800}
               defaultValue={file.memo}

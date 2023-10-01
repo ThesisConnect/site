@@ -8,7 +8,7 @@ const LoadingNormal = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoadingNormal
+export default LoadingNormal;

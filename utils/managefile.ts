@@ -2,7 +2,13 @@ import fileStore, { File, Folder, Item } from '@/stores/Files';
 import JSZip from 'jszip';
 import { v4 as uuidv4 } from 'uuid';
 import { storage } from '@/config/firebase';
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import bytes from 'bytes';
 import { object } from 'zod';
@@ -96,7 +102,7 @@ export const handleFile = async (
   file: any,
   parentID: string
 ): Promise<File> => {
-  const [downloadURL,pathFile,uid] = await uploadFileToFirebase(file);
+  const [downloadURL, pathFile, uid] = await uploadFileToFirebase(file);
   const newFile: File = {
     type: 'file',
     name: file.name,
@@ -127,8 +133,7 @@ export const handleFile = async (
 //   return url;
 // };
 
-export const deleteFile = async (fileName:string,uid:string) => {
-  const desertRef = ref(storage, 'uploads/'+uid+fileName);
+export const deleteFile = async (fileName: string, uid: string) => {
+  const desertRef = ref(storage, 'uploads/' + uid + fileName);
   await deleteObject(desertRef);
-}
-  
+};

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { use, useEffect, useState } from "react";
-import { Task, ViewMode, Gantt } from "gantt-task-react";
-import axiosBaseurl from "@/config/baseUrl";
-import { ViewSwitcher } from "./components/view-switcher";
-import { ErrorBoundary } from "react-error-boundary";
-import { useParams } from "next/navigation";
+import React, { use, useEffect, useState } from 'react';
+import { Task, ViewMode, Gantt } from 'gantt-task-react';
+import axiosBaseurl from '@/config/baseUrl';
+import { ViewSwitcher } from './components/view-switcher';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useParams } from 'next/navigation';
 
 function PageGantt() {
   const { project } = useParams();
@@ -26,7 +26,7 @@ function PageGantt() {
     (async () => {
       try {
         const res = await axiosBaseurl.get(`/page/plan/${project}`, {
-          withCredentials: true
+          withCredentials: true,
         });
 
         if (Array.isArray(res?.data)) {
@@ -54,7 +54,7 @@ function PageGantt() {
             start: new Date(item.start_date),
             end: new Date(item.end_date),
             progress: item.progress || 0,
-            type: "task",
+            type: 'task',
           }));
           setTasks(tasks);
         } else {
@@ -64,17 +64,17 @@ function PageGantt() {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    })()
+    })();
   }, [project]);
 
   const handleSelect = (task: Task, isSelected: boolean) => {
-    console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+    console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
   };
 
   return (
     <div className="Wrapper">
       <ViewSwitcher
-        onViewModeChange={viewMode => setView(viewMode)}
+        onViewModeChange={(viewMode) => setView(viewMode)}
         onViewListChange={setIsChecked}
         isChecked={isChecked}
       />
@@ -84,13 +84,13 @@ function PageGantt() {
           tasks={tasks}
           viewMode={view}
           onSelect={handleSelect}
-          listCellWidth={isChecked ? "155px" : ""}
+          listCellWidth={isChecked ? '155px' : ''}
           columnWidth={columnWidth}
         />
       )}
     </div>
   );
-};
+}
 
 // const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
 //   return (
