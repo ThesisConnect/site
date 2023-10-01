@@ -49,9 +49,12 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
         </button>
       </div>
       <div className="flex">
-      <ThemeProvider theme={theme}>
-  <Switch defaultChecked={isChecked} onClick={() => onViewListChange(!isChecked)}/>
-</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Switch
+            defaultChecked={isChecked}
+            onClick={() => onViewListChange(!isChecked)}
+          />
+        </ThemeProvider>
         <span className="text-gray-700 flex items-center">Show Task List</span>
       </div>
     </div>
