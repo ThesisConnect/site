@@ -79,7 +79,7 @@ const LayoutPlanning: React.FC<PageType> = ({ pageType, projectID, create, onSuc
           name={obj.name} description={obj.description}
           start_date={obj.start_date} end_date={obj.end_date}
           progress={obj.progress} task={obj.task} onSucces={onSuccess}
-          key={v4()}
+          key={obj._id}
         />
       )}
     </div>

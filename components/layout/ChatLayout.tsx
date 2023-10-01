@@ -1,14 +1,14 @@
 'use client';
 import { DateTime } from 'luxon';
 import { useParams, useRouter } from 'next/navigation';
-import { FC, use, useState } from 'react';
+import { FC,useState } from 'react';
 import usePlanByProjectID from '@/hook/usePlanByProjectID';
 import { v4 } from 'uuid';
 import useProjectStore from '@/stores/Project';
 import { useSearchParams } from 'next/navigation'
 import DisplayFileChat from '../chat/DisplayFileChat';
-import { atom, useSetAtom} from 'jotai';
-import { set } from 'lodash';
+import {motion} from "framer-motion"
+
 interface ChatLayoutProps {
   children?: React.ReactNode;
 }
@@ -39,17 +39,20 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
             {plan?.map((plan) => {
               if (plan.task && !plan.archived) {
                 return (
-                  <div
+                  <motion.div
+                  initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
                     className={"mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer"
                     +(searchParams.get('chatID')===plan.chat_id?" bg-neutral-200":"")}
                     onClick={() => {
                       handleClickChat(plan.chat_id!);
                       setCurrentChatName(plan.name)
                     }}
-                    key={v4()}
+                    key={plan._id}
                   >
                     {plan.name}
-                  </div>
+                  </motion.div>
                 );
               }
               return null;
@@ -65,16 +68,19 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
             {plan?.map((plan) => {
               if (plan.task && plan.archived) {
                 return (
-                  <div
+                  <motion.div
+                  initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
                     className={"mt-1 ps-[10%] hover:bg-neutral-200 cursor-pointer"+(searchParams.get('chatID')===plan.chat_id?" bg-neutral-200":"")}
                     onClick={() => {
                       handleClickChat(plan.chat_id!)
                       setCurrentChatName(plan.name)
                     }}
-                    key={v4()}
+                    key={plan._id}
                   >
                     {plan.name}
-                  </div>
+                  </motion.div>
                 );
               }
               return null;

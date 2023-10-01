@@ -7,6 +7,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import useFile from '@/hook/useFile';
 import { DisplayFile } from './DisplayFile';
 import { handleFilePreview } from '@/utils/PreviewFile';
+import { motion } from "framer-motion"
 interface FolderDisplayProps {
   showFolderID: string;
 }
@@ -21,23 +22,30 @@ const FolderDisplay: FC<FolderDisplayProps> = ({ showFolderID  }) => {
       {allfiles?.map((item) => {
         if (item.type === 'folder') {
           return (
-            <div key={v4()} className="my-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+             key={item._id} className="my-4">
               <DisplayFolder
                 name={item.name}
-                key={v4()}
                 onClick={() => {
                   router.push(`${pathName}/${item._id}`);
                 }}
               />
-            </div>
+            </motion.div>
           );
         } else if (item.type === 'file') {
           return (
-            <div key={v4()} className="my-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              key={item._id} className="my-4">
               <DisplayFile file={item}  
                 onClick={handleFilePreview}
                />
-            </div>
+            </motion.div>
           );
         } else {
           return <div key={v4()}></div>;

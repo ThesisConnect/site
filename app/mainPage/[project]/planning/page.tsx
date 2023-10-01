@@ -102,10 +102,9 @@ const PagePlanning = ({ params: { project: projectID } }: {
         console.error('Error fetching project data:', error);
       }
     })();
-  }, []);
+  }, [projectID]);
 
   useEffect(() => {
-    console.log(create);
     const res = axiosBaseurl
       .get(`page/plan/${projectID}`, {
         withCredentials: true,
@@ -117,7 +116,7 @@ const PagePlanning = ({ params: { project: projectID } }: {
       }).catch(err => {
         console.log(err);
       })
-  }, [create]);
+  }, [projectID,user.role]);
 
   function getDayDiff(StartPlan: string, EndPlan: string): number {
     const msInDay = 24 * 60 * 60 * 1000;
@@ -177,7 +176,6 @@ const PagePlanning = ({ params: { project: projectID } }: {
         </div>
       </div>
       <CreatePopup
-        key={v4()}
         show={state}
         onClose={handleCancel}
         projectID={projectID}
