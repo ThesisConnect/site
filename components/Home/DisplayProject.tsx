@@ -72,6 +72,9 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     // console.log("pre")
     router.prefetch(`mainPage/${projectID}/chat?chatID=${chatID}`);
   };
+  const handleClickProject = () => {
+    router.push(`mainPage/${projectID}/planning`);
+  }
   return (
     <div
       onMouseEnter={preloadPage}
@@ -90,13 +93,13 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
       {edit && (
         <EditProject isOpen={edit} onClose={showPlanEdit} project={project} />
       )}
-      <div className="w-1/5 justify-center items-center flex ">
+      <div onClick={handleClickProject} className="w-1/5 justify-center items-center flex cursor-pointer h-full ">
         {projectName}
       </div>
-      <div className="w-1/5 h-full">
+      <div onClick={handleClickProject} className="w-1/5 h-full cursor-pointer">
         <Progress progress={progress} />
       </div>
-      <div className="w-1/5 justify-center items-center flex ps-20">
+      <div onClick={handleClickProject} className="w-1/5 justify-center items-center flex ps-20 cursor-pointer h-full">
         {status.name}
       </div>
       <div className="w-2/5  flex-row  justify-center items-center flex ">
