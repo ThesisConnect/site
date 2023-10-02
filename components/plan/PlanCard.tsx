@@ -214,8 +214,10 @@ const PlanCard: React.FC<DataPlan> = ({
                 </div>
                 <div className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center ">
                   <div className="text-white text-sm">
-                    {getDayDiff()}
-                    {getDayDiff() > 1 ? ' Days Left' : ' Day Left'}
+                    {getDayDiff() > 1 ? Math.abs(getDayDiff()) + " Days" : ''}
+                    {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''}
+                    {/* {Math.abs(getDayDiff()) > 1 && getDayDiff() >= 0 ? ' days' : ' day'} */}
+                    {getDayDiff() >= 0 ? ' Left' : ' Past Due'}
                   </div>
                 </div>
               </div>

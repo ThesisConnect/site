@@ -29,9 +29,9 @@ const DropdownSummary: FC<SelectProps> = ({ pageType, setPage }) => {
                 <SelectItem defaultChecked value="pending">
                   Pending
                 </SelectItem>
-                <SelectItem value="approve">Approve</SelectItem>
-                <SelectItem value="reject">Reject</SelectItem>
-                <SelectItem value="complete">Complete</SelectItem>
+                <SelectItem value="approved">Approve</SelectItem>
+                <SelectItem value="rejected">Reject</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="all">All</SelectItem>
               </SelectGroup>
             </SelectContent>

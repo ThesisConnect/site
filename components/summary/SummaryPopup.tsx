@@ -161,6 +161,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
 
   const user = userStore((state) => state.user);
   const [selectedValue, setSelectedValue] = useState<string>('Approve');
+  const [sendStatus, setsendStatus] = React.useState<string>('');
   const [table, setTable] = useState<TableFile[]>(files);
   const [File, setFile] = useState<File | null>(null);
 
@@ -175,6 +176,20 @@ const SummaryPopup: React.FC<DataPlan> = ({
     console.log('data : ', data);
     console.log('table : ', { folder_id: chat_id, files: table });
     console.log(table.map((item) => item));
+    let SendStatus = '';
+    if (selectedValue === 'Approve' && progress != 100) {
+      setsendStatus('approved');
+      SendStatus = 'approved'
+    }
+    else if (selectedValue === 'Reject') {
+      setsendStatus('rejected');
+      SendStatus = 'rejected'
+    }
+    else if (selectedValue === 'Approve' && progress == 100) {
+      setsendStatus('completed');
+      SendStatus = 'completed'
+    }
+    console.log(selectedValue)
     try {
       const fileSend = await axiosBaseurl.post('/file/create/', {
         folder_id: chat_id,
@@ -187,10 +202,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
       const sendData = {
         id: id,
         comment: data.comment,
-        status:
-          selectedValue.toLowerCase() === 'approve' && progress === 100
-            ? 'complete'
-            : selectedValue.toLowerCase(),
+        status: SendStatus,
         files: table.map((obj) => obj._id),
         progress: data.progress || progress,
       };

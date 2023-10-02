@@ -64,7 +64,7 @@ const DeletePopup: React.FC<ModalProps> = ({
           className="bg-neutral-300 rounded-bl-lg w-[50%] h-10 hover:bg-neutral-200 hover:transition hover:ease-in-out"
           onClick={onClose}
         >
-          cancel
+          Cancel
         </button>
         <button
           className="bg-red-500 rounded-br-lg w-[50%] h-10 text-white hover:bg-red-400 hover:transition hover:ease-in-out"

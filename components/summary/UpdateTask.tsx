@@ -159,17 +159,17 @@ const UpdateTask: React.FC<DataSummary> = ({
                 {status.toUpperCase()}
               </div>
             )}
-            {status === 'reject' && (
+            {status === 'rejected' && (
               <div className="flex font-bold rounded-full items-center text-[12px] text-red-700 py-0 px-3 border border-red-700 bg-red-100">
                 {status.toUpperCase()}
               </div>
             )}
-            {status === 'approve' && (
+            {status === 'approved' && (
               <div className="flex font-bold rounded-full items-center text-[12px] text-sky-700 py-0 px-3 border border-sky-700 bg-sky-100">
                 {status.toUpperCase()}
               </div>
             )}
-            {status === 'complete' && (
+            {status === 'completed' && (
               <div className="flex font-bold rounded-full items-center text-[12px] text-teal-700 py-0 px-3 border border-teal-700 bg-teal-100">
                 {status.toUpperCase()}
               </div>
