@@ -31,10 +31,11 @@ export interface DataModelInterface {
   start_date: string;
   end_date: string;
   task: boolean;
-  [x: string]: any;
+  // [x: string]: any;
 }
 
 interface PageType {
+  search: string;
   pageType: string;
   projectID: string;
   create: boolean;
@@ -45,20 +46,14 @@ const LayoutPlanning: React.FC<PageType> = ({
   pageType,
   projectID,
   create,
+  search,
   onSuccess,
 }) => {
   const user = userStore((state) => state.user);
-
   const [Plans, setPlans] = useState<DataModelInterface[]>([]);
   const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans);
+  const [SearchPlans, setSearchPlans] = useState<DataModelInterface[]>([]);
   const [state, setState] = React.useState<boolean>(false);
-  // const [create, setCreate] = React.useState<boolean>(false);
-
-  // const handleOnSuccess = () => {
-  //   console.log(create);
-  //   setState(false);
-  //   setCreate(!create);
-  // };
 
   useEffect(() => {
     console.log(create);
@@ -68,16 +63,43 @@ const LayoutPlanning: React.FC<PageType> = ({
       })
       .then((response) => {
         setPlans(response.data);
-        setSortPlans(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [create, projectID]);
 
+  useEffect(() => {
+    if (search === '') {
+      setSearchPlans([]);
+    }
+    else {
+      setSearchPlans(Plans.filter((item) =>
+        item.name.toLowerCase().trim().includes(search)
+      ));
+    }
+  }, [search, Plans]);
+
+
   return (
     <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
-      {Plans.filter((obj) => (pageType === 'Gantt' ? obj.task === true : obj))
+      {SearchPlans.length === 0 && Plans.filter((obj) => (pageType === 'Gantt' ? obj.task === true : obj))
+        .filter((obj) => (pageType === 'notGantt' ? obj.task === false : obj))
+        .map((obj) => (
+          <PlanCard
+            projectID={projectID}
+            id={obj._id}
+            name={obj.name}
+            description={obj.description}
+            start_date={obj.start_date}
+            end_date={obj.end_date}
+            progress={obj.progress}
+            task={obj.task}
+            onSucces={onSuccess}
+            key={obj._id}
+          />
+        ))}
+      {SearchPlans.length !== 0 && SearchPlans.filter((obj) => (pageType === 'Gantt' ? obj.task === true : obj))
         .filter((obj) => (pageType === 'notGantt' ? obj.task === false : obj))
         .map((obj) => (
           <PlanCard

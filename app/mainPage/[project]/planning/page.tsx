@@ -58,7 +58,7 @@ const PagePlanning = ({
 
   const [Plans, setPlans] = useState<DataModelInterface[]>([]);
   const [SortPlans, setSortPlans] = useState<DataModelInterface[]>(Plans);
-  const [searchplans, setSearchPlans] = useState(Plans);
+  const [searchplans, setSearchPlans] = useState<string>('');
   const [state, setState] = React.useState<boolean>(false);
   const [create, setCreate] = React.useState<boolean>(false);
   const [sort, setSort] = React.useState<boolean>(false);
@@ -79,15 +79,6 @@ const PagePlanning = ({
   const [selectedValue, setSelectedValue] = useState<string>('ALL');
   const handleValueChange = (newValue: string) => {
     setSelectedValue(newValue);
-    if (newValue == 'ALL') {
-      setSortPlans(Plans);
-    } else if (newValue == 'Gantt') {
-      const SortPlan = Plans.filter((obj) => obj.task === true);
-      setSortPlans(SortPlan);
-    } else if (newValue === 'notGantt') {
-      const SortPlan = Plans.filter((obj) => obj.task === false);
-      setSortPlans(SortPlan);
-    }
   };
   const [projectName, setProjectName] = useState<string>('');
 
@@ -128,11 +119,21 @@ const PagePlanning = ({
     );
   }
 
+  const handleSearch = useCallback(
+    (e: React.SyntheticEvent, value: string, reason: string) => {
+      const searchValue = value.toLowerCase().trim();
+      // console.log(searchValue)
+      setSearchPlans(searchValue)
+    },
+    []
+  );
+
+  console.log(searchplans);
   return (
     <div className="flex relative flex-row h-full  overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">
         <div className="flex w-full h-[50px] p-2 p-b-0 items-center text-lg font-semibold">
-          {projectName}
+          {currentProject?.name}
         </div>
 
         <div className="px-2 flex w-full justify-between items-center h-[50px]">
@@ -152,13 +153,14 @@ const PagePlanning = ({
           )}
           <div className="flex gap-2 items-center">
             <SortByPlan pageType={selectedValue} setPage={handleValueChange} />
-            <SearchPlanInput data={SortPlans.map((obj) => obj.name)} />
+            <SearchPlanInput data={SortPlans.map((obj) => obj.name)} onChange={handleSearch} />
           </div>
         </div>
         <div className="relative h-full w-full overflow-hidden">
           <div className="flex w-full p-2 h-full">
             <div className="w-full h-full overflow-y-scroll scroll-x-none">
               <DynamicPlanLayout
+                search={searchplans}
                 create={create}
                 pageType={selectedValue}
                 projectID={projectID}

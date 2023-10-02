@@ -31,33 +31,12 @@ const SearchPlanInput: FC<SearchInputProps> = ({
   className,
   data,
 }) => {
-  const useOutsideClick = (callback: () => void) => {
-    const ref = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-      const handleClickOutside = (event: Event) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-          callback();
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [callback]);
-    return ref;
-  };
-  const [open, setOpen] = useState(false);
-  const ref = useOutsideClick(() => {
-    setOpen(false);
-  });
-
   return (
     <div className={cn('h-10', width, height, className)}>
       <Autocomplete
+        autoComplete
+        includeInputInList
         noOptionsText="Plan not found"
-        open={open}
-        onOpen={() => setOpen(true)}
-        disablePortal
         options={data || []}
         onInputChange={onChange}
         getOptionLabel={(option) => option}
@@ -67,13 +46,7 @@ const SearchPlanInput: FC<SearchInputProps> = ({
         renderInput={(params) => (
           <div ref={params.InputProps.ref} className="h-full ">
             <InputBase
-              ref={ref}
               {...params}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setOpen(false);
-                }
-              }}
               sx={{
                 border: '1px solid #d4d4d4',
                 borderRadius: 50,
@@ -90,26 +63,26 @@ const SearchPlanInput: FC<SearchInputProps> = ({
             />
           </div>
         )}
-        renderOption={(props, option, { inputValue }) => {
-          const matches = match(option, inputValue, { insideWords: true });
-          const parts = parse(option, matches);
-          return (
-            <li {...props}>
-              <div>
-                {parts.map((part, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      fontWeight: part.highlight ? 700 : 400,
-                    }}
-                  >
-                    {part.text}
-                  </span>
-                ))}
-              </div>
-            </li>
-          );
-        }}
+      renderOption={(props, option, { inputValue }) => {
+        const matches = match(option, inputValue, { insideWords: true });
+        const parts = parse(option, matches);
+        return (
+          <li {...props}>
+            <div>
+              {parts.map((part, index) => (
+                <span
+                  key={index}
+                  style={{
+                    fontWeight: part.highlight ? 700 : 400,
+                  }}
+                >
+                  {part.text}
+                </span>
+              ))}
+            </div>
+          </li>
+        );
+      }}
       />
     </div>
   );

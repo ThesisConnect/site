@@ -31,7 +31,6 @@ const PlanCard: React.FC<DataPlan> = ({
   projectID,
   onSucces,
 }) => {
-  console.log(start_date);
   const user = userStore((state) => state.user);
   const Start = start_date.slice(0, 10).split('-');
   const StartDate = Start[2] + '/' + Start[1] + '/' + Start[0];
