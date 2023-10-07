@@ -1,25 +1,23 @@
 'use client';
-import { FaHome } from 'react-icons/fa';
-import { VscSignOut } from 'react-icons/vsc';
+
 import { FC, useEffect, useState } from 'react';
-import Link from 'next/link';
+
 import axiosBaseurl from '@/config/baseUrl';
 import { auth } from '@/config/firebase';
 import { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
 import userStore from '@/stores/User';
-import Image from 'next/image';
-import profileDownload from '@/utils/profileImage';
+
 import Profile from './Profile';
 import LoadingNavbar from './loading/LoadingNavbar';
-import { Skeleton } from './ui/skeleton';
-import { AnimatePresence, motion } from 'framer-motion';
-import IconButton from '@mui/material/IconButton';
-import { LuSettings } from 'react-icons/lu';
+
+import {  motion } from 'framer-motion';
+
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { FiLogOut } from 'react-icons/fi';
 import { signOut } from 'firebase/auth';
+
 const ShowTootip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -55,6 +53,7 @@ const Navbar: FC = () => {
       withCredentials: true,
     });
     signOut(auth);
+    sessionStorage.clear();
     if (res.status === 200) {
       clearUser();
       route.push('/login');

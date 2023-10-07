@@ -6,7 +6,7 @@ interface ProgressProps {
 
 const Progress: FC<ProgressProps> = ({ progress = 65 }) => {
   return (
-    <div className="h-full flex flex-col ">
+    <div className="h-full flex flex-col w-full ">
       <div className="h-2/5" />
       <div className="bg-neutral-400 h-1/6 rounded-sm">
         <div

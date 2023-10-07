@@ -25,10 +25,111 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ProtectedPage from '@/components/ProtectedPage';
-const EditProfile = () => {
+import useProjectStore from '@/stores/Project';
+import CardProject from '@/app/editprofile/components/CardProject';
+
+const ShowProFile = () => {
   const route = useRouter();
-  const { user, clearUser, isAuthenticated, updateUser } = useAuth();
+  const { user, clearUser} = useAuth();
+  const project = useProjectStore((state) => state.project);
   const [edit, setEdit] = useState<boolean>(false);
+  const logout = async () => {
+    console.log('logout');
+    const res = await axiosBaseurl.get('/auth/logout', {
+      withCredentials: true,
+    });
+    signOut(auth);
+    sessionStorage.clear()
+    if (res.status === 200) {
+      clearUser();
+      route.push('/login');
+      mutate('/auth/checkAuth', null, false);
+    }
+  };
+  return (
+    <>
+      {edit ? (
+        <EditProfile onCancel={()=>setEdit(false)} onSave={()=>setEdit(false)} />
+      ) : (
+        <div className="flex relative flex-row">
+          <Sidebar />
+          <div className="flex flex-col w-full   ">
+            <div className="flex items-center ps-5 text-lg  h-16 font-semibold">
+              My Profile
+            </div>
+            <div className="mx-10 bg-neutral-100 h-full px-5 py-10 flex justify-center ">
+              <div className="w-2/12 flex flex-col">
+                <div className={'w-full flex py-5 justify-center '}>
+                  <Profile user={user} width="120" />
+                </div>
+                <div className="flex justify-center  items-center">
+                  <button
+                    className="bg-neutral-200 h-10 px-5 rounded-full hover:bg-neutral-300 ease-in-out duration-150 hover:scale-[102%]  "
+                    type="button"
+                    onClick={logout}
+                  >
+                    logout
+                  </button>
+                </div>
+              </div>
+              {/*section2*/}
+              <div className="flex flex-col w-8/12 h-full ">
+                <div className="flex h-1/4 ">
+                  <div className="flex flex-col me-5 ">
+                    <div className="font-bold text-teal-800 text-[20px] mb-2 ">
+                      {user.name}
+                    </div>
+                    <div className="flex flex-col text-base text-neutral-400 h-4/5 justify-around">
+                      <span>Role</span>
+                      <span>Username</span>
+                      <span>Email</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="font-bold text-teal-800 text-[20px] mb-2">
+                      {user.surname}
+                    </div>
+                    <div className="flex flex-col text-base text-neutral-800 h-4/5 justify-around">
+                      <span>{user.role}</span>
+                      <span>{user.username}</span>
+                      <span>{user.email}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="my-2  w-full border border-b-[1px] border-solid border-teal-800" />
+                <div className="flex flex-col flex-grow">
+                  <div className="text-teal-800 text-[20px] font-bold my-3">
+                    Projects
+                  </div>
+                  <div className="bg-white  h-4/5 rounded-lg overflow-y-scroll px-8">
+                    {project?.map((item) => (
+                      <CardProject key={item._id} project={item} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="w-2/12 flex justify-center  ">
+                <button
+                  className="bg-teal-700 text-white hover:bg-teal-800 ease-in-out duration-150 hover:scale-[102%] h-10 px-6 rounded-full me-3"
+                  type="button"
+                  onClick={() => setEdit(true)}
+                >
+                  Edit Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+const EditProfile = ({onCancel,onSave}:{
+  onCancel?:()=>void,
+    onSave?:()=>void
+}) => {
+  const { user, updateUser } = useAuth();
   const [uploadProgess, setUploadProgess] = useState<number>(0);
   const {
     register,
@@ -38,24 +139,11 @@ const EditProfile = () => {
     resolver: zodResolver(EditProfileSchema),
   });
   const inputFileRef = useRef<HTMLInputElement | null>(null);
-  const logout = async () => {
-    console.log('logout');
-    const res = await axiosBaseurl.get('/auth/logout', {
-      withCredentials: true,
-    });
-    signOut(auth);
-    if (res.status === 200) {
-      clearUser();
-      route.push('/login');
-      mutate('/auth/checkAuth', null, false);
-    }
-  };
+
   const handleButtonUploadImage = () => {
     inputFileRef.current?.click();
   };
-  const handleEditProfile = useCallback(() => {
-    setEdit(true);
-  }, []);
+ 
   const handleUploadImageProfile = useCallback(async () => {
     let filename = '';
     try {
@@ -103,7 +191,6 @@ const EditProfile = () => {
       console.log(filename);
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
-      const data = { avatar: '' };
       updateUser({ avatar: '' });
     } catch (err) {
       console.log(err);
@@ -115,12 +202,12 @@ const EditProfile = () => {
       try {
         console.log(data);
         updateUser(data);
-        setEdit(false);
+        onSave&&onSave()
       } catch (err) {
         console.log(err);
       }
     },
-    [updateUser]
+    [updateUser,onSave]
   );
 
   return (
@@ -171,8 +258,6 @@ const EditProfile = () => {
                 type="text"
                 width="w-6/12"
                 defaultValue={user.name}
-                readOnly={!edit}
-                disabled={!edit}
                 className="read-only:border-none   focus:outline-none"
                 {...register('name')}
               />
@@ -182,8 +267,6 @@ const EditProfile = () => {
                 type="text"
                 width="w-6/12"
                 defaultValue={user.surname}
-                readOnly={!edit}
-                disabled={!edit}
                 className="read-only:border-none  focus:outline-none"
                 {...register('surname')}
               />
@@ -196,8 +279,6 @@ const EditProfile = () => {
                 type="text"
                 width="w-6/12"
                 className="read-only:border-none  focus:outline-none"
-                readOnly={!edit}
-                disabled={!edit}
                 defaultValue={user.username}
                 {...register('username')}
               />
@@ -221,66 +302,40 @@ const EditProfile = () => {
               readOnly
               disabled
             />
-            {edit && (
-              <>
-                <div className="flex flex-row w-10/12 items-center">
-                  <div className="w-3/12">Change password</div>
-                  <div className="border-b-[1px] border-solid border-black w-9/12" />
-                </div>
-                <Input
-                  label="newPassword"
-                  className="disabled:opacity-50 focus:outline-none"
-                  disabled={!edit}
-                  readOnly={!edit}
-                  eye
-                  placeholder="newPassword"
-                  {...register('newPassword')}
-                />
-              </>
-            )}
+
+            <div className="flex flex-row w-10/12 items-center">
+              <div className="w-3/12">Change password</div>
+              <div className="border-b-[1px] border-solid border-black w-9/12" />
+            </div>
+            <Input
+              label="newPassword"
+              className="disabled:opacity-50 focus:outline-none"
+              eye
+              placeholder="newPassword"
+              {...register('newPassword')}
+            />
+
             {errors.newPassword && (
               <div className="text-red-500 text-sm">
                 {errors.newPassword?.message}
               </div>
             )}
-            {!edit && (
-              <div className="flex">
-                <button
-                  className="bg-neutral-200 h-10 px-5 rounded-full me-3"
-                  type="button"
-                  onClick={handleEditProfile}
-                >
-                  Edit Profile
-                </button>
-                {isAuthenticated && (
-                  <button
-                    className="bg-neutral-200 h-10 px-5 rounded-full "
-                    type="button"
-                    onClick={logout}
-                  >
-                    logout
-                  </button>
-                )}
-              </div>
-            )}
 
-            {edit && (
-              <div className="flex flex-row justify-end w-10/12">
-                <button
-                  className="bg-neutral-200 h-10 px-5 rounded-full me-5"
-                  type="button"
-                  onClick={() => setEdit(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-neutral-200 h-10 px-5 rounded-full"
-                  type="submit"
-                >
-                  Save
-                </button>
-              </div>
-            )}
+            <div className="flex flex-row justify-end w-10/12">
+              <button
+                className="bg-neutral-200 h-10 px-5 rounded-full me-5"
+                type="button"
+                onClick={onCancel}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-neutral-200 h-10 px-5 rounded-full"
+                type="submit"
+              >
+                Save
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -297,7 +352,7 @@ const ProtectEditProfile = () => {
   // }
   return (
     <ProtectedPage>
-      <EditProfile />
+      <ShowProFile />
     </ProtectedPage>
   );
 };

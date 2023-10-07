@@ -40,6 +40,4 @@ const MainPage = () => {
     </ProtectedPage>
   );
 };
-export default dynamic(() => Promise.resolve(MainPage), {
-  loading: () => <LoadingNormal />,
-});
+export default MainPage;
