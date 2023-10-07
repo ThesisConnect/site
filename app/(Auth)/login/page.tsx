@@ -106,7 +106,7 @@ const Login = () => {
         )}
         <div className="flex mt-2 w-10/12">
           <div>
-            <label htmlFor="remember" className="flex">
+            {/* <label htmlFor="remember" className="flex">
               <input
                 type="checkbox"
                 id="remember"
@@ -114,7 +114,7 @@ const Login = () => {
                 {...register('rememberMe')}
               />
               <div className="ms-2 text-sm text-gray-400">Remember me</div>
-            </label>
+            </label> */}
           </div>
           <div className="flex-grow"></div>
           <div className="text-sm text-gray-400 hover:underline">
