@@ -133,7 +133,7 @@ const PagePlanning = ({
     <div className="flex relative flex-row h-full  overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">
         <div className="flex w-full h-[50px] p-2 p-b-0 items-center text-lg font-semibold">
-          {currentProject?.name}
+          {projectName}
         </div>
 
         <div className="px-2 flex w-full justify-between items-center h-[50px]">
