@@ -45,6 +45,14 @@ const PlanCard: React.FC<DataPlan> = ({
     return days + 1;
   }
 
+  function Duration(): number {
+    const now = new Date();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+    const duration = new Date(end_date).getTime() - new Date(start_date).getTime(); // Difference in milliseconds
+    const days = Math.floor(duration / millisecondsPerDay);
+    return days + 1;
+  }
+
   const [select, setSelect] = useState<boolean>(false);
   function showEdit() {
     setSelect(!select);
@@ -107,7 +115,7 @@ const PlanCard: React.FC<DataPlan> = ({
         end_date={EndDate}
         progress={progress}
         task={task}
-        duration={getDayDiff()}
+        duration={Duration()}
         onClose={showPlanDetail}
       />
       <EditPopup
