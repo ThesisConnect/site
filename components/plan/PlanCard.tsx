@@ -208,7 +208,7 @@ const PlanCard: React.FC<DataPlan> = ({
                       className={`bg-teal-800 h-2 rounded-full`}
                       style={{
                         width: `${progress}%`,
-                        backgroundColor: getDayDiff() < 0 ? "#ef4444" : "#115e59"
+                        backgroundColor: getDayDiff() < 0 && progress < 100 ? "#ef4444" : "#115e59"
                       }}
 
                     ></div>
@@ -228,15 +228,19 @@ const PlanCard: React.FC<DataPlan> = ({
                 </div>
                 <div
                   className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center "
-                  style={{ backgroundColor: getDayDiff() < 0 ? "#f87171" : "#115e59" }}
+                  style={{ backgroundColor: getDayDiff() < 0 && progress < 100 ? "#f87171" : "#115e59" }}
                 >
+                  {progress < 100 ? (
+                    <div className="text-white text-sm">
+                      {Math.abs(getDayDiff())}
+                      {/* {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''} */}
+                      {Math.abs(getDayDiff()) > 1 && progress < 100 ? ' Days' : ' Day'}
+                      {getDayDiff() >= 0 ? ' Left' : ' Late'}
+                    </div>
+                  ) : (
+                    <div className='text-white text-sm'>Completed</div>
+                  )}
 
-                  <div className="text-white text-sm">
-                    {Math.abs(getDayDiff())}
-                    {/* {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''} */}
-                    {Math.abs(getDayDiff()) > 1 ? ' Days' : ' Day'}
-                    {getDayDiff() >= 0 ? ' Left' : ' Late'}
-                  </div>
                 </div>
               </div>
             </div>
