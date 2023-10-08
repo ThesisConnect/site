@@ -242,7 +242,7 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
             <div className="grid grid-cols-4">
               <div className="text-teal-800 font-semibold p-1">Message</div>
               <div className="col-span-3 h-auto overflow-hidden">
-                <div className="py-2 pr-4 max-h-[150px] w-[105%] overflow-y-scroll">
+                <div className="py-2 pr-4 max-h-[150px] w-[105%] whitespace-pre-wrap overflow-y-scroll">
                   <div>{comment}</div>
                 </div>
               </div>

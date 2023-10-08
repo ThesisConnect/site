@@ -312,7 +312,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
                 <textarea
                   id="comment"
                   className={
-                    'min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
+                    'resize-none min-h-[100px] max-h-[100px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
                   }
                   placeholder="Add comment.."
                   {...register('comment', { required: true })}

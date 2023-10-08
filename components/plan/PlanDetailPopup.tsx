@@ -97,8 +97,11 @@ const DetailPopup: React.FC<DataPlan> = ({
               </div>
             </div>
             <div className="text-xl p-1">{name}</div>
-            <div className="p-1">
-              <div>{description}</div>
+            <div className="p-1 w-[100%] overflow-hidden">
+              <div className='pr-2 h-[100px] w-[105%] overflow-y-scroll'>
+                <p className='whitespace-pre-wrap'>{description}</p>
+              </div>
+              
               {/* <div>And let’s end all this nonsense about how long sentences = run-on sentences. You can have a six-word run-on sentence (“I went shopping I ate donuts.”), while most of the sentences below are much, much longer than that and are not run-ons (except for a few examples like Jose Saramago).  But whether the sentence is grammatically correct isn’t nearly as important as whether the sentence is fun or beautiful.</div> */}
             </div>
             <hr></hr>
