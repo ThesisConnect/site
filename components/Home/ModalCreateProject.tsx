@@ -19,6 +19,8 @@ import { set } from 'lodash';
 import { create } from 'zustand';
 import useProject from '@/hook/useProject';
 import userStore from '@/stores/User';
+import axiosBaseurl from "@/config/baseUrl";
+import {IUserInProject} from "@/stores/Project";
 
 interface ModalCreateProjectProps {
   isOpen: boolean;
@@ -93,6 +95,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
 }) => {
   const [error, setError] = useState('');
   const user = userStore((state) => state.user);
+  const [isLoad, setIsLoad] = useState(false);
   const [table, setTable] = useState<TableMember[]>(() => {
     if (user) {
       return [{ email: user.email, role: 'Advisor' }];
@@ -102,24 +105,31 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
   const [createLoading, setCreateLoading] = useState(false);
   const { createNewProject } = useProject();
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const selectorRole = useRef<SelectRoleRef>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const handleAddMember = () => {
+  const handleAddMember = async() => {
     const email = emailInputRef.current?.value;
-
-    const role = selectorRole.current?.getValue() as
-      | 'Co_advisor'
-      | 'Advisee'
-      | 'Advisor';
-    if (email && role) {
+    if (email) {
       const data = checkEmail(email);
       //console.log(data);
       if (table.some((item) => item.email === email)) {
         setError(`Email ${email} already exists in the table`);
         return;
       } else if (data.email) {
-        setError('');
-        setTable([...table, { email, role }]);
+        setIsLoad(true);
+        try {
+            const dataUser = (await axiosBaseurl.get(`/user/email/${email}`)).data as IUserInProject;
+            console.log(dataUser)
+            setError('');
+            setTable([...table, { email, role: (dataUser.role==='advisor')?'Co_advisor':'Advisee'}]);
+            setIsLoad(false);
+        }catch (err:any) {
+          // console.log(err.response.data.message||err.message);
+          if(err.response.data.message||err.message)
+            setError(err.response.data.message||err.message);
+          else
+            setError('Something went wrong');
+          setIsLoad(false);
+        }
       } else {
         setError(data.error);
       }
@@ -202,13 +212,14 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
             <div className="relative flex">
               <div className="absolute flex w-full">
                 <div className="flex-grow" />
-                <SelectRole
-                  ref={selectorRole}
-                  className="text-neutral-800 py-1 me-2 rounded-full px-8 translate-y-[64px] z-20"
-                />
+                {isLoad && (
+                    <div className="translate-y-[64px] z-20">
+                      <div className="w-10 h-10 border-t-4 border-teal-400 border-solid rounded-full   animate-spin"/>
+                    </div>
+                )}
                 <button
-                  className="bg-neutral-200 text-neutral-800 py-1 me-2
-               rounded-full px-8 translate-y-[64px] z-20 "
+                  className="bg-neutral-200 text-neutral-800 py-1 h-10 mx-2
+                rounded-full px-8 translate-y-[64px] z-20  "
                   type="button"
                   onClick={handleAddMember}
                 >

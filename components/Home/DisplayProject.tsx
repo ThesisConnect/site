@@ -124,14 +124,14 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
               title={
                 <div>
                   <div className="text-base text-center">Advisor</div>
-                  <div className="text-base">
+                  <div className="text-base text-center truncate">
                     {user?.name} {user?.surname}
                   </div>
                   {
                     co_advisors?.length>0 && <div className="text-base text-center">CoAdvisor</div>
                   }
                   {co_advisors?.map((user) => (
-                      <div className="text-base" key={user._id}>
+                      <div className="text-base text-center truncate" key={user._id}>
                         {user?.name} {user?.surname}
                       </div>
                   ))}
@@ -157,7 +157,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 <div className="text-base text-center">Advisee</div>
                 <div className="flex flex-col">
                   {advisee?.map((user) => (
-                    <div className="text-base" key={user?._id}>
+                    <div className="text-base text-center truncate" key={user?._id}>
                       {user?.name} {user?.surname}
                     </div>
                   ))}

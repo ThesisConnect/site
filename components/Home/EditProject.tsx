@@ -19,7 +19,8 @@ import { set, max } from 'lodash';
 import { create } from 'zustand';
 import useProject from '@/hook/useProject';
 import userStore from '@/stores/User';
-import { IProject } from '@/stores/Project';
+import {IProject, IUserInProject} from '@/stores/Project';
+import axiosBaseurl from "@/config/baseUrl";
 
 interface EditProjectProps {
   isOpen: boolean;
@@ -92,6 +93,7 @@ const TableInModal: FC<TableComponentProps> = ({ table = [], onChange }) => {
 const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
   const [error, setError] = useState('');
   const user = userStore((state) => state.user);
+  const [isLoad, setIsLoad] = useState(false);
   const [table, setTable] = useState<TableMember[]>(() => {
     if (project) {
       const advisee: TableMember[] = project.advisee.map((item) => ({
@@ -113,24 +115,27 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
   const [createLoading, setCreateLoading] = useState(false);
   const { updateProject } = useProject();
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const selectorRole = useRef<SelectRoleRef>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     const email = emailInputRef.current?.value;
-
-    const role = selectorRole.current?.getValue() as
-      | 'Co_advisor'
-      | 'Advisee'
-      | 'Advisor';
-    if (email && role) {
+    if (email) {
+      
       const data = checkEmail(email);
       //console.log(data);
       if (table.some((item) => item.email === email)) {
         setError(`Email ${email} already exists in the table`);
         return;
       } else if (data.email) {
-        setError('');
-        setTable([...table, { email, role }]);
+        setIsLoad(true);
+        try {
+            const dataUser = (await axiosBaseurl.get(`/user/email/${email}`)).data as IUserInProject;
+            setError('');
+            setTable([...table, { email, role: (dataUser.role==='advisor')?'Co_advisor':'Advisee' }]);
+            setIsLoad(false);
+        }catch (e: any){
+            setError(e.message);
+            setIsLoad(false);
+        }
       } else {
         setError(data.error);
       }
@@ -147,7 +152,7 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
         userInProject: [...table],
       });
       if (checkData.data) {
-        console.log(checkData.data);
+        // console.log(checkData.data);
         setError('');
         const formatData = {
           name: projectName,
@@ -179,9 +184,11 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
             onClose();
           })
           .catch((err) => {
-            console.log(err);
-            setCreateLoading(false);
-            setError(err.message);
+            if(err.response.data.message||err.message)
+              setError(err.response.data.message||err.message);
+            else
+              setError('Something went wrong');
+            setIsLoad(false);
           });
         // onClose();
       } else {
@@ -238,12 +245,13 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
             <div className="relative flex">
               <div className="absolute flex w-full">
                 <div className="flex-grow" />
-                <SelectRole
-                  ref={selectorRole}
-                  className="text-neutral-800 py-1 me-2 rounded-full px-8 translate-y-[64px] z-20"
-                />
+                {isLoad && (
+                    <div className="translate-y-[64px] z-20">
+                      <div className="w-10 h-10 border-t-4 border-teal-400 border-solid rounded-full   animate-spin"/>
+                    </div>
+                )}
                 <button
-                  className="bg-neutral-200 text-neutral-800 py-1 me-2
+                  className="bg-neutral-200 text-neutral-800 py-1 mx-2 h-10
                rounded-full px-8 translate-y-[64px] z-20 "
                   type="button"
                   onClick={handleAddMember}
