@@ -3,7 +3,7 @@ import SortBy from '@/components/files/SortBy';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import FolderPathInput from '../../../../components/files/FolderPathInput';
 import { useParams } from 'next/navigation';
-import { ChangeEvent, MouseEvent, useCallback, useRef, useState } from 'react';
+import {ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState} from 'react';
 import { deleteFile, handleFile } from '@/utils/managefile';
 import dynamic from 'next/dynamic';
 import LoadingNormal from '@/components/loading/LoadingNormal';
@@ -13,14 +13,21 @@ import fileStore from '@/stores/Files';
 import { mutate } from 'swr';
 import axiosBaseurl from '@/config/baseUrl';
 import CreateFolder from '@/components/files/CreateFolder';
+import {effect} from "zod";
 const FileLayout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams();
   const Inputfile = useRef<HTMLInputElement | null>(null);
   const route = useRouter();
   const [showCreateFolder, setShowCreateFolder] = useState<boolean>(false);
+  const parentFolder = params.folderID?params.folderID[params.folderID.length - 1]:null;
   const { currentProject } = useProjectStore((state) => ({
     currentProject: state.currentProject,
   }));
+  useEffect(() => {
+    // console.log('parentFolder', parentFolder);
+    setShowCreateFolder(false)
+  }, [parentFolder]);
+  
   const { currentFolder } = fileStore((state) => ({
     currentFolder: state.getCurrentFolder,
   }));
@@ -28,6 +35,7 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
   const handleClickFile = useCallback(() => {
     Inputfile.current?.click();
   }, []);
+  
   const handleChooseFile = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       const files = e.currentTarget.files;
@@ -83,6 +91,7 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
     else if (baseFolder?.name === 'Literature review') return true;
     return false;
   }, [currentFolder, params.folderID]);
+  
   return (
     <div className="mx-10 h-full flex flex-col ">
       <div className="h-32 flex flex-col justify-evenly  ">

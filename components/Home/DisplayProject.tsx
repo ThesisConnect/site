@@ -12,9 +12,11 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import DeletePopup from './DeleteProject';
 
 import EditProject from './EditProject';
+
 interface DisplayProjectProps {
   project: IProject;
 }
+
 const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
   const {
     name: projectName,
@@ -52,6 +54,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     }, [callback]);
     return ref;
   };
+
   function showPlanEdit() {
     setEdit(!edit);
     setSelect(false);
@@ -61,20 +64,23 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     setDelete(!Delete);
     setSelect(false);
   }
+
   const ref = useOutsideClick(() => {
     setSelect(!select);
   });
+
   function showEdit() {
     setSelect(!select);
     return select;
   }
+
   const preloadPage = () => {
     // console.log("pre")
     router.prefetch(`mainPage/${projectID}/chat?chatID=${chatID}`);
   };
   const handleClickProject = () => {
     router.push(`mainPage/${projectID}/planning`);
-  }
+  };
   return (
     <div
       onMouseEnter={preloadPage}
@@ -93,13 +99,19 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
       {edit && (
         <EditProject isOpen={edit} onClose={showPlanEdit} project={project} />
       )}
-      <div onClick={handleClickProject} className="w-1/5 justify-center items-center flex cursor-pointer h-full ">
+      <div
+        onClick={handleClickProject}
+        className="w-1/5 justify-center items-center flex cursor-pointer h-full "
+      >
         {projectName}
       </div>
       <div onClick={handleClickProject} className="w-1/5 h-full cursor-pointer">
         <Progress progress={progress} />
       </div>
-      <div onClick={handleClickProject} className="w-1/5 justify-center items-center flex ps-20 cursor-pointer h-full">
+      <div
+        onClick={handleClickProject}
+        className="w-1/5 justify-center items-center flex ps-20 cursor-pointer h-full"
+      >
         {status.name}
       </div>
       <div className="w-2/5  flex-row  justify-center items-center flex ">
@@ -110,12 +122,22 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 timeout: 80,
               }}
               title={
-                <>
+                <div>
                   <div className="text-base text-center">Advisor</div>
-                  <div className="text-base">{user.email}</div>
-                </>
+                  <div className="text-base">
+                    {user?.name} {user?.surname}
+                  </div>
+                  {
+                    co_advisors?.length>0 && <div className="text-base text-center">CoAdvisor</div>
+                  }
+                  {co_advisors?.map((user) => (
+                      <div className="text-base" key={user._id}>
+                        {user?.name} {user?.surname}
+                      </div>
+                  ))}
+                </div>
               }
-              key={uuid4()}
+              key={user._id}
             >
               <Profile
                 user={user}
@@ -132,11 +154,11 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
             }}
             title={
               <div>
-                <div className="text-base text-center">Advisor</div>
+                <div className="text-base text-center">Advisee</div>
                 <div className="flex flex-col">
                   {advisee?.map((user) => (
-                    <div className="text-base" key={uuid4()}>
-                      {user?.email}
+                    <div className="text-base" key={user?._id}>
+                      {user?.name} {user?.surname}
                     </div>
                   ))}
                 </div>
@@ -147,7 +169,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
               {advisee?.map((user, index) => (
                 <div
                   className="relative flex justify-center items-center"
-                  key={uuid4()}
+                  key={user?._id}
                 >
                   <div className={index !== 0 ? 'absolute -left-2 z-auto' : ''}>
                     <Profile
