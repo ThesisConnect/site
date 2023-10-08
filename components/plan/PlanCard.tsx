@@ -206,7 +206,11 @@ const PlanCard: React.FC<DataPlan> = ({
                   <div className="w-[100%] rounded-lg h-2 bg-neutral-400">
                     <div
                       className={`bg-teal-800 h-2 rounded-full`}
-                      style={{ width: `${progress}%` }}
+                      style={{
+                        width: `${progress}%`,
+                        backgroundColor: getDayDiff() < 0 ? "#ef4444" : "#115e59"
+                      }}
+
                     ></div>
                   </div>
                   <div className="flex flex-row w-full justify-between">
@@ -222,12 +226,16 @@ const PlanCard: React.FC<DataPlan> = ({
                 >
                   <CgDetailsMore className="text-[30px]  text-neutral-400  hover:text-neutral-300 hover:transition hover:ease-in-out" />
                 </div>
-                <div className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center ">
+                <div
+                  className="flex w-auto min-w-[40%] h-[80%] rounded-full px-4 bg-teal-800 items-center justify-center "
+                  style={{ backgroundColor: getDayDiff() < 0 ? "#f87171" : "#115e59" }}
+                >
+
                   <div className="text-white text-sm">
-                    {getDayDiff() > 1 ? Math.abs(getDayDiff()) + " Days" : ''}
-                    {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''}
-                    {/* {Math.abs(getDayDiff()) > 1 && getDayDiff() >= 0 ? ' days' : ' day'} */}
-                    {getDayDiff() >= 0 ? ' Left' : ' Past Due'}
+                    {Math.abs(getDayDiff())}
+                    {/* {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''} */}
+                    {Math.abs(getDayDiff()) > 1 ? ' Days' : ' Day'}
+                    {getDayDiff() >= 0 ? ' Left' : ' Late'}
                   </div>
                 </div>
               </div>
