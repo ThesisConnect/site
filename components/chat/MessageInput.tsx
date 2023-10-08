@@ -77,12 +77,12 @@ const MessageInput: FC<MessageInputProps> = ({
     }
   };
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    // console.log(e.target.files)
+    if (e.target.files && e.target.files?.length > 0) {
+      // console.log("can upload")
       console.log(e.target.files);
       setFile(e.target.files[0]);
-      const [url, path, uid] = await uploadFileToFirebase(e.target.files[0]);
       setInputValue(e.target.files[0].name);
-      return { url, path, uid };
     }
   };
 

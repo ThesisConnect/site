@@ -30,7 +30,7 @@ import CardProject from '@/app/editprofile/components/CardProject';
 
 const ShowProFile = () => {
   const route = useRouter();
-  const { user, clearUser} = useAuth();
+  const { user, clearUser } = useAuth();
   const project = useProjectStore((state) => state.project);
   const [edit, setEdit] = useState<boolean>(false);
   const logout = async () => {
@@ -39,7 +39,7 @@ const ShowProFile = () => {
       withCredentials: true,
     });
     signOut(auth);
-    sessionStorage.clear()
+    sessionStorage.clear();
     if (res.status === 200) {
       clearUser();
       route.push('/login');
@@ -49,7 +49,10 @@ const ShowProFile = () => {
   return (
     <>
       {edit ? (
-        <EditProfile onCancel={()=>setEdit(false)} onSave={()=>setEdit(false)} />
+        <EditProfile
+          onCancel={() => setEdit(false)}
+          onSave={() => setEdit(false)}
+        />
       ) : (
         <div className="flex relative flex-row">
           <Sidebar />
@@ -97,7 +100,7 @@ const ShowProFile = () => {
                   </div>
                 </div>
                 <div className="my-2  w-full border border-b-[1px] border-solid border-teal-800" />
-                <div className="flex flex-col flex-grow">
+                <div className="flex flex-col flex-grow justify-evenly ">
                   <div className="text-teal-800 text-[20px] font-bold my-3">
                     Projects
                   </div>
@@ -125,9 +128,12 @@ const ShowProFile = () => {
   );
 };
 
-const EditProfile = ({onCancel,onSave}:{
-  onCancel?:()=>void,
-    onSave?:()=>void
+const EditProfile = ({
+  onCancel,
+  onSave,
+}: {
+  onCancel?: () => void;
+  onSave?: () => void;
 }) => {
   const { user, updateUser } = useAuth();
   const [uploadProgess, setUploadProgess] = useState<number>(0);
@@ -143,7 +149,7 @@ const EditProfile = ({onCancel,onSave}:{
   const handleButtonUploadImage = () => {
     inputFileRef.current?.click();
   };
- 
+
   const handleUploadImageProfile = useCallback(async () => {
     let filename = '';
     try {
@@ -202,12 +208,12 @@ const EditProfile = ({onCancel,onSave}:{
       try {
         console.log(data);
         updateUser(data);
-        onSave&&onSave()
+        onSave && onSave();
       } catch (err) {
         console.log(err);
       }
     },
-    [updateUser,onSave]
+    [updateUser, onSave]
   );
 
   return (
