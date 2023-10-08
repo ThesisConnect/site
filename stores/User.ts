@@ -71,6 +71,6 @@ export const userStore = createWithEqualityFn<UserStore>()(
   shallow
 );
 
-userStore.subscribe(console.log); // This will log the entire state every time it changes
+// userStore.subscribe(console.log); // This will log the entire state every time it changes
 
 export default userStore;

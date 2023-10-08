@@ -6,7 +6,7 @@ interface FileProp {
 }
 
 const FileSummary: React.FC<FileProp> = ({ files }) => {
-  console.log(files);
+  //console.log(files);
   if (files.length == 0)
     return (
       <div className="w-[120px] flex h-[27px] border border-teal-800 rounded-full bg-neutral-100 px-3  justify-center items-center text-sm scroll-ml-6 snap-start">

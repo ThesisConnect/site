@@ -80,7 +80,7 @@ const MessageInput: FC<MessageInputProps> = ({
     // console.log(e.target.files)
     if (e.target.files && e.target.files?.length > 0) {
       // console.log("can upload")
-      console.log(e.target.files);
+      //console.log(e.target.files);
       setFile(e.target.files[0]);
       setInputValue(e.target.files[0].name);
     }

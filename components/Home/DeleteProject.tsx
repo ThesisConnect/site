@@ -28,7 +28,7 @@ const DeletePopup: React.FC<ModalProps> = ({
       const resData = await axiosBaseurl.delete(`/project/delete/${id}`);
       deleteProject(id);
       setIsLoading(false);
-      console.log('delete success');
+      //console.log('delete success');
       onSuccess();
       onClose();
     } catch (err: any) {

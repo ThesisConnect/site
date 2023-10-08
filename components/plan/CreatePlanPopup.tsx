@@ -72,7 +72,7 @@ const CreatePopup: React.FC<ModalProps> = ({
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
     if (selectedDate < selectedEndDate) {
-      console.log('data', data);
+      //console.log('data', data);
       try {
         const sendData = {
           project_id: projectID,
@@ -100,7 +100,7 @@ const CreatePopup: React.FC<ModalProps> = ({
           ).toISO({ includeOffset: true }),
           task: data.task,
         };
-        console.log(sendData);
+        //console.log(sendData);
         const resData = await axiosBaseurl.post('/plan/create', sendData);
         onSucces();
         reset();

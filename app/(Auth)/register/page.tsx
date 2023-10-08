@@ -47,7 +47,7 @@ const Register: React.FC = () => {
   };
   const onSubmit: SubmitHandler<RegisterSchemaType> = async (data, e) => {
     // console.log("submit")
-    console.log('Form is being submitted');
+    //console.log('Form is being submitted');
     //console.log(data)
     try {
       setPersistence(auth, browserSessionPersistence);
@@ -81,9 +81,9 @@ const Register: React.FC = () => {
       }
       reset();
     } catch (err: any) {
-      console.log('register error:', err);
+      //console.log('register error:', err);
       if (err.name === 'AxiosError') {
-        console.log(err.name);
+        //console.log(err.name);
         setErrorMessage('Network Error');
         auth.currentUser?.delete();
       } else if (err.code) {

@@ -48,7 +48,7 @@ const Navbar: FC = () => {
     setHasMounted(true);
   }, []);
   const logout = async () => {
-    console.log('logout');
+    //console.log('logout');
     const res = await axiosBaseurl.get('/auth/logout', {
       withCredentials: true,
     });

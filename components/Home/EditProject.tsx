@@ -124,7 +124,7 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
       | 'Advisor';
     if (email && role) {
       const data = checkEmail(email);
-      console.log(data);
+      //console.log(data);
       if (table.some((item) => item.email === email)) {
         setError(`Email ${email} already exists in the table`);
         return;

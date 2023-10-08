@@ -34,7 +34,7 @@ const ShowProFile = () => {
   const project = useProjectStore((state) => state.project);
   const [edit, setEdit] = useState<boolean>(false);
   const logout = async () => {
-    console.log('logout');
+    //console.log('logout');
     const res = await axiosBaseurl.get('/auth/logout', {
       withCredentials: true,
     });
@@ -158,7 +158,7 @@ const EditProfile = ({
       filename = `${user.email}_${uuid4()}`;
       let storageRef = ref(storage, `imageProfile/${filename}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-      console.log('uploadTask', uploadTask);
+      //console.log('uploadTask', uploadTask);
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -194,7 +194,7 @@ const EditProfile = ({
     try {
       if (!user.avatar) return;
       const filename = extractFilenameFromURL(user.avatar);
-      console.log(filename);
+      //console.log(filename);
       const storageRef = ref(storage, `imageProfile/${filename}`);
       await deleteObject(storageRef);
       updateUser({ avatar: '' });
@@ -206,7 +206,7 @@ const EditProfile = ({
   const handleSaveEditProfile = useCallback(
     async (data: EditProfileSchemaType) => {
       try {
-        console.log(data);
+       // console.log(data);
         updateUser(data);
         onSave && onSave();
       } catch (err) {

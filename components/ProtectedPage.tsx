@@ -11,28 +11,28 @@ interface ProtectedPageProps {
 }
 
 const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  const [firstLoad, setFirstLoad] = userStore((state) => [
-    state.firstLoad,
-    state.setFirstLoad,
-    state.user,
-  ]);
+  const { isAuthenticated,isLoading,user } = useAuth();
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   useEffect(() => {
     setIsMounted(true);
   }, []);
   useEffect(() => {
-    if (isAuthenticated === false) {
+    //console.log("userFromProtectPage",user)
+    //console.log('isAuthenticatedFromProtectPage', isAuthenticated);
+    if (!isLoading&&isAuthenticated === false) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isLoading,router]);
   if (!isMounted) return null;
   if (isAuthenticated === true)
     return (
       // The rest of your protected page content
       <div>{children}</div>
     );
+  else if (isLoading ) {
+    return null;
+  }
   else if (isAuthenticated === false) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-62px)] bg-gray-200">
@@ -44,18 +44,7 @@ const ProtectedPage: FC<ProtectedPageProps> = ({ children }) => {
         </div>
       </div>
     );
-  } else if (firstLoad) {
-    return (
-      <div className="flex justify-center items-center h-[calc(100vh-62px)] bg-gray-200">
-        <div className="p-6 max-w-md w-full h-52 bg-white shadow-md rounded-lg">
-          <h1 className="text-2xl font-bold mb-4">CheckAuth</h1>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-green-300"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  } 
   return null;
 };
 

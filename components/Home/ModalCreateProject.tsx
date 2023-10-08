@@ -113,7 +113,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
       | 'Advisor';
     if (email && role) {
       const data = checkEmail(email);
-      console.log(data);
+      //console.log(data);
       if (table.some((item) => item.email === email)) {
         setError(`Email ${email} already exists in the table`);
         return;
@@ -136,7 +136,7 @@ const ModalCreateProject: FC<ModalCreateProjectProps> = ({
         userInProject: [...table],
       });
       if (checkData.data) {
-        console.log(checkData.data);
+        //console.log(checkData.data);
         setError('');
         createNewProject(checkData.data)
           .then(() => {

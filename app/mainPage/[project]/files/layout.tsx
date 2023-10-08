@@ -32,7 +32,7 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
     async (e: ChangeEvent<HTMLInputElement>) => {
       const files = e.currentTarget.files;
       if (!files) return;
-      console.log(files);
+      //console.log(files);
       let newFiles = [];
       newFiles = await Promise.all(
         Array.from(files).map((file) =>

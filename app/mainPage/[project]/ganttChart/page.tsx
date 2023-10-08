@@ -47,7 +47,7 @@ function PageGantt() {
           const filteredData = arrData.filter((obj) => obj.task === true);
 
           setData(filteredData);
-          console.log(filteredData);
+          //console.log(filteredData);
           let tasks: Task[] = filteredData.map((item) => ({
             id: item._id,
             name: item.name,
@@ -68,7 +68,7 @@ function PageGantt() {
   }, [project]);
 
   const handleSelect = (task: Task, isSelected: boolean) => {
-    console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
+    //console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
   };
 
   return (

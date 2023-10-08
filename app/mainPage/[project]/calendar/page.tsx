@@ -80,7 +80,7 @@ function PageCalendar({
         const projectRes = await axiosBaseurl.get(`/project/${project}`, {
           withCredentials: true,
         });
-        console.log('projectRes', projectRes);
+        //console.log('projectRes', projectRes);
         if (projectRes?.data?.name) {
           setProjectName(projectRes.data.name);
         }
@@ -112,7 +112,7 @@ function PageCalendar({
           });
           const FilterDate = arrData.filter((obj) => obj.task === false);
           setData(FilterDate);
-          console.log('arrData', FilterDate);
+          //console.log('arrData', FilterDate);
         } else {
           setData([]);
         }
@@ -136,7 +136,7 @@ function PageCalendar({
   };
 
   const GetFormatDate = (data: string) => {
-    console.log(new Date(data).toISOString());
+   // console.log(new Date(data).toISOString());
     const DateFormat = new Date(data).toISOString().slice(0, 10).split('-');
     return DateFormat[2] + '/' + DateFormat[1] + '/' + DateFormat[0];
   };
@@ -158,8 +158,8 @@ function PageCalendar({
       );
     });
     if (isday.length) {
-      console.log('curr', day);
-      console.log(isday);
+      //console.log('curr', day);
+      //console.log(isday);
     }
 
     return isday;

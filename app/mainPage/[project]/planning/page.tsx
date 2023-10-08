@@ -71,7 +71,7 @@ const PagePlanning = ({
     setState(!state);
   };
   const handleOnSuccess = () => {
-    console.log(create);
+    //console.log(create);
     setState(false);
     setCreate(!create);
   };
@@ -128,7 +128,7 @@ const PagePlanning = ({
     []
   );
 
-  console.log(searchplans);
+  //console.log(searchplans);
   return (
     <div className="flex relative flex-row h-full  overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">

@@ -2,7 +2,7 @@
 import Input from '@/components/login/Input';
 import Button from '@/components/login/Button';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import {ChangeEvent, MouseEvent, useEffect, useState} from 'react';
 import { SubmitHandler, set, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema, LoginSchemaType } from '@/models/Auth/Login';
@@ -29,10 +29,14 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
   // console.log('isAuthenticated:', isAuthenticated);
-  if (!isLoading && isAuthenticated) {
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
     router.push('/mainPage');
     return;
-  }
+    }
+    
+  }, [isLoading, isAuthenticated, router]);
+  
   const clickRegister = (event: MouseEvent<HTMLButtonElement>) => {
     // console.log("click")
     event.preventDefault();
@@ -61,10 +65,11 @@ const Login = () => {
         { idToken: token },
         { withCredentials: true }
       );
+      //console.log('resData', resData.data);
       setUser(resData.data);
       // console.log("user:",user)
-      if (resData.data.role) {
-        router.push('/');
+      if (resData.data.isAuthenticated) {
+        router.push('/mainPage');
       }
     } catch (err: any) {
       console.log(err);

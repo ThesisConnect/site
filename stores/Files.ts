@@ -69,7 +69,7 @@ const fileStore = createWithEqualityFn<FileStore>()(
       },
       setChildren: (children: Item[]) => {
         const childrenWithKey: Record<string, Item> = {};
-        console.log('children', children);
+        //console.log('children', children);
         children.forEach((child) => {
           if (child.type === 'file') {
             childrenWithKey[child._id] = child;

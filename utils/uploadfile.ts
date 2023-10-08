@@ -15,12 +15,12 @@ const uploadFileToFirebase = async (file: File) => {
 
     // Step 2: Start the upload
     await uploadBytes(storageRef, file);
-    console.log('Upload completed');
+    //console.log('Upload completed');
 
     // Step 3: Get the download URL
     try {
       const downloadURL = await getDownloadURL(storageRef);
-      console.log('File available at', downloadURL);
+      //console.log('File available at', downloadURL);
       return [downloadURL, pathFile, uid]; // Returning the download URL
     } catch (error) {
       console.error('Failed to get download URL:', error);

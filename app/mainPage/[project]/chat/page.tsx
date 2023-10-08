@@ -68,20 +68,20 @@ const PageChat = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !initialRender) {
-          console.log(
-            'checkEntry condition',
-            displayCountRef.current <= chatLengthRef.current
-          );
-          console.log(
-            'checkEntry condition',
-            displayCountRef.current,
-            chatLengthRef.current
-          );
+          // console.log(
+          //   'checkEntry condition',
+          //   displayCountRef.current <= chatLengthRef.current
+          // );
+          // console.log(
+          //   'checkEntry condition',
+          //   displayCountRef.current,
+          //   chatLengthRef.current
+          // );
           if (displayCountRef.current <= chatLengthRef.current) {
             // console.log("lastMessage",lastMessageRef.current);
             // console.log("timestamp",DateTime.fromISO(lastMessageRef.current.createdAt).toMillis());
-            console.log('lastMessageRef', lastMessageRef.current);
-            console.log('check', canFetchMore.current, lastMessageRef.current);
+            //console.log('lastMessageRef', lastMessageRef.current);
+            //console.log('check', canFetchMore.current, lastMessageRef.current);
             if (canFetchMore.current && lastMessageRef.current) {
               setLoadingChat(true);
               socket.emit(
@@ -131,7 +131,7 @@ const PageChat = () => {
         console.error('Socket error:', error);
       });
       socket.on('more messages', (messages: RecieveMessenger[]) => {
-        console.log('more', messages);
+        //console.log('more', messages);
         if (messages.length === 0) {
           canFetchMore.current = false;
           setLoadingChat(false);

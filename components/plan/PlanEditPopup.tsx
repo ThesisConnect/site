@@ -120,7 +120,7 @@ const EditPopup: React.FC<DataPlan> = ({
 
   const onSubmit: SubmitHandler<PlanEditSchemaType> = async (data) => {
     if (selectedDate < selectedEndDate) {
-      console.log(data);
+      //console.log(data);
       try {
         const sendData = {
           id: id,

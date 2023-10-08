@@ -104,7 +104,7 @@ const PageDetail = ({
         withCredentials: true,
       })
       .then((response) => {
-        console.log('response', response.data);
+       // console.log('response', response.data);
         setSummary(response.data);
       })
       .catch((err) => {

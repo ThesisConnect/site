@@ -56,7 +56,7 @@ const LayoutPlanning: React.FC<PageType> = ({
   const [state, setState] = React.useState<boolean>(false);
 
   useEffect(() => {
-    console.log(create);
+    //console.log(create);
     const res = axiosBaseurl
       .get(`page/plan/${projectID}`, {
         withCredentials: true,

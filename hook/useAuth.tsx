@@ -26,7 +26,7 @@ const fetcher = async (url: string) => {
 };
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 export const useAuth = (): Auth => {
-  const { user, clearUser, setUser } = userStore((state) => ({
+  const { user , clearUser, setUser } = userStore((state) => ({
     user: state.user,
     clearUser: state.clearUser,
     setUser: state.setUser,
@@ -41,7 +41,7 @@ export const useAuth = (): Auth => {
   const updateUser = useCallback(
     async (updateData: Partial<User>) => {
       try {
-        console.log('updateData', updateData);
+        //console.log('updateData', updateData);
         const updateNew = { ...user, ...updateData };
         setUser(updateNew);
         await axiosBaseurl.post('/auth/update/profile', updateNew, {
@@ -56,13 +56,15 @@ export const useAuth = (): Auth => {
   );
   const setUserNew = useCallback(
     (user: User) => {
+      // console.log('setUserNew', user);
       setUser(user);
-      mutate();
+      mutate(user);
     },
     [setUser, mutate]
   );
 
   useEffect(() => {
+    // console.log("trigger")
     if (!data && !error) {
       // If there's no data and no error, it means the SWR fetching is still ongoing
       // Do nothing and wait for the fetching to complete
@@ -70,12 +72,17 @@ export const useAuth = (): Auth => {
     }
     if (data?.isAuthenticated) {
       signInWithCustomToken(auth, data.customToken!)
-        .then(() => setUser(data))
+        .then(() => {
+          
+          setUser(data)
+          
+        })
         .catch((err) => {
           console.log('sign', err);
           clearUser();
           mutate();
-        });
+        })
+      
     } else if (error || !data?.isAuthenticated) {
       clearUser();
     }

@@ -89,7 +89,7 @@ const useProjectStore = createWithEqualityFn<ProjectStore>()(
       setProject: (project) => set({ project }),
       createProject: async (data: createSchema) => {
         const newProject = await axiosBaseurl.post('/project/create', data);
-        console.log(newProject.data);
+        //console.log(newProject.data);
         set({ project: [...get().project, newProject.data] });
         return get().project;
       },

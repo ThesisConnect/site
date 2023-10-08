@@ -27,7 +27,7 @@ const DisplayFileChat = () => {
         <div>loading...</div>
       </div>
     );
-  console.log(data);
+  //console.log(data);
   return (
     <div className="w-full flex flex-col">
       {data?.filter(Boolean).map((file) => {

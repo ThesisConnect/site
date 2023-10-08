@@ -21,10 +21,10 @@ const DeletePopup: React.FC<ModalProps> = ({
   if (!show) return null;
   const onDelete = async () => {
     setIsLoading(true);
-    console.log('Begin Delete');
+    //console.log('Begin Delete');
     try {
       const resData = await axiosBaseurl.delete(`/plan/delete/${id}`);
-      console.log('delete success');
+      //console.log('delete success');
       setIsLoading(false);
       onSuccess();
       onClose();
