@@ -108,9 +108,9 @@ const TableFileModal: FC<TableComponentProps> = ({
                     className={`grid grid-cols-5 items-center bg-neutral-100 w-full h-[40px]`}
                     key={index}
                   >
-                    <div className="col-span-4 py-2 px-4">
+                    <div className="col-span-4 py-2 px-4 flex">
                       <div
-                        className="hover:underline truncate"
+                        className="truncate w-auto hover:underline hover:cursor-pointer"
                         onClick={() => handleClick(item.url, item.file_type)}
                       >
                         {item.name}
@@ -198,9 +198,9 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
   if (!show) return null;
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[650px] h-auto flex flex-col">
+      <div className=" bg-white rounded-lg w-[650px] max-h-[660px] flex flex-col">
         <div className="grid grid-cols-1 h-full p-4">
-          <div className="flex flex-col py-3 px-5 gap-1">
+          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll">
             <div className="w-full flex justify-end">
               <div className="flex justify-center items-center gap-2">
                 {status === 'pending' && (
@@ -225,7 +225,8 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
                 )}
               </div>
             </div>
-            <div className="text-xl font-semibold p-1">{plan_name}</div>
+            
+            <div className="text-xl whitespace-pre-wrap font-semibold p-1 overflow-auto">{plan_name}</div>
             <hr></hr>
             <div className="grid grid-cols-4 items-center">
               <div className="text-teal-800 font-semibold p-1">Date</div>
@@ -242,7 +243,7 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
             <div className="grid grid-cols-4">
               <div className="text-teal-800 font-semibold p-1">Message</div>
               <div className="col-span-3 h-auto overflow-hidden">
-                <div className="py-2 pr-4 max-h-[150px] w-[105%] overflow-y-scroll">
+                <div className="py-2 pr-4 max-h-[150px] w-[105%] whitespace-pre-wrap overflow-y-scroll">
                   <div>{comment}</div>
                 </div>
               </div>

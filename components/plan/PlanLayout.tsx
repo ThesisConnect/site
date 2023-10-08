@@ -82,7 +82,7 @@ const LayoutPlanning: React.FC<PageType> = ({
 
 
   return (
-    <div className="grid relative lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 w-full gap-4 ">
+    <div className="grid relative xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 w-full gap-4">
       {SearchPlans.length === 0 && Plans.filter((obj) => (pageType === 'Gantt' ? obj.task === true : obj))
         .filter((obj) => (pageType === 'notGantt' ? obj.task === false : obj))
         .map((obj) => (

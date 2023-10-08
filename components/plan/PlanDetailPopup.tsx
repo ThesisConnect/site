@@ -79,10 +79,10 @@ const DetailPopup: React.FC<DataPlan> = ({
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[550px] h-auto flex flex-col">
+      <div className=" bg-white rounded-lg w-[550px] max-h-[650px] flex flex-col">
         <div className="grid grid-cols-1 h-full p-4">
           {/* <h2 className="flex h-full p-5 items-center text-lg font-semibold">Plan Detail</h2> */}
-          <div className="flex flex-col py-3 px-5 gap-1">
+          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll">
             <div className="w-full flex justify-end">
               <div className="flex justify-center items-center gap-2">
                 {task ? (
@@ -96,9 +96,16 @@ const DetailPopup: React.FC<DataPlan> = ({
                 )}
               </div>
             </div>
-            <div className="text-xl p-1">{name}</div>
-            <div className="p-1">
-              <div>{description}</div>
+            {/* <div className="text-xl p-1 whitespace-pre overflow-hidden">And let’s end all this nonsense about how long sentences = run-on sentences</div> */}
+            <div className="p-1 w-[100%]">
+              <div className='text-xl font-semibold'>
+                <p className='whitespace-pre-wrap'>{name}</p>
+              </div>
+            </div>
+            <div className="p-1 w-[100%]">
+              <div className=''>
+                <p className='whitespace-pre-wrap'>{description}</p>
+              </div>
               {/* <div>And let’s end all this nonsense about how long sentences = run-on sentences. You can have a six-word run-on sentence (“I went shopping I ate donuts.”), while most of the sentences below are much, much longer than that and are not run-ons (except for a few examples like Jose Saramago).  But whether the sentence is grammatically correct isn’t nearly as important as whether the sentence is fun or beautiful.</div> */}
             </div>
             <hr></hr>
