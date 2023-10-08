@@ -164,8 +164,9 @@ const PlanCard: React.FC<DataPlan> = ({
           <div className="grid w-full h-full content-between">
             <div className="flex flex-row justify-between gap-2">
               <div className=" w-full grid grid-rows-2  items-center gap-2">
-                <div className="row-span-1 text-base font-semibold truncate">
+                <div className="row-span-1 whitespace-pre text-base font-semibold truncate">
                   {name}
+                  {/* This works for every utility class in the framework, which means you can change literally anything at a given breakpoint — even things like letter spacing or cursor styles. */}
                 </div>
                 {task ? (
                   <div className="flex items-center">

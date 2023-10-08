@@ -198,9 +198,9 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
   if (!show) return null;
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[650px] h-auto flex flex-col">
+      <div className=" bg-white rounded-lg w-[650px] max-h-[660px] flex flex-col">
         <div className="grid grid-cols-1 h-full p-4">
-          <div className="flex flex-col py-3 px-5 gap-1">
+          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll">
             <div className="w-full flex justify-end">
               <div className="flex justify-center items-center gap-2">
                 {status === 'pending' && (
@@ -225,7 +225,8 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
                 )}
               </div>
             </div>
-            <div className="text-xl font-semibold p-1">{plan_name}</div>
+            
+            <div className="text-xl whitespace-pre-wrap font-semibold p-1 overflow-auto">{plan_name}</div>
             <hr></hr>
             <div className="grid grid-cols-4 items-center">
               <div className="text-teal-800 font-semibold p-1">Date</div>
