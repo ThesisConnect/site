@@ -108,9 +108,9 @@ const TableFileModal: FC<TableComponentProps> = ({
                     className={`grid grid-cols-5 items-center bg-neutral-100 w-full h-[40px]`}
                     key={index}
                   >
-                    <div className="col-span-4 py-2 px-4">
+                    <div className="col-span-4 py-2 px-4 flex">
                       <div
-                        className="hover:underline truncate"
+                        className="truncate w-auto hover:underline hover:cursor-pointer"
                         onClick={() => handleClick(item.url, item.file_type)}
                       >
                         {item.name}
