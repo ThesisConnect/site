@@ -98,7 +98,7 @@ const DetailPopup: React.FC<DataPlan> = ({
             </div>
             <div className="text-xl p-1">{name}</div>
             <div className="p-1 w-[100%] overflow-hidden">
-              <div className='pr-2 h-[100px] w-[105%] overflow-y-scroll'>
+              <div className='pr-2 max-h-[100px] w-[105%] overflow-y-scroll'>
                 <p className='whitespace-pre-wrap'>{description}</p>
               </div>
               

@@ -161,7 +161,7 @@ const PlanCard: React.FC<DataPlan> = ({
           </div>
         )}
         <div className="z-0 relative flex flex-col h-full w-full gap-2 ">
-          <div className=" grid w-full h-full content-between">
+          <div className="grid w-full h-full content-between">
             <div className="flex flex-row justify-between gap-2">
               <div className=" w-full grid grid-rows-2  items-center gap-2">
                 <div className="row-span-1 text-base font-semibold truncate">
@@ -195,7 +195,9 @@ const PlanCard: React.FC<DataPlan> = ({
             </div>
 
             <div className="flex h-full flex-col gap-2 text-sm">
-              <div>
+              <div className='lg:hidden'>
+              </div>
+              <div className='md:hidden lg:flex xl:flex'>
                 Date : {StartDate} - {EndDate}
               </div>
               <div className="flex w-full h-full">
@@ -212,7 +214,7 @@ const PlanCard: React.FC<DataPlan> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex h-auto items-center justify-between md:hidden lg:flex">
+              <div className="flex h-auto items-center justify-between lg:flex">
                 <div
                   className="flex h-[100%] rounded-full py-1.5 items-center justify-center cursor-pointer"
                   onClick={showPlanDetail}
