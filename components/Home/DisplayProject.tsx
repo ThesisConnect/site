@@ -2,7 +2,6 @@
 import { FC, use, useCallback, useEffect, useRef, useState } from 'react';
 import Progress from './Progress';
 import Profile from '../Profile';
-import { v4 as uuid4 } from 'uuid';
 import { BsFillChatDotsFill } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
 import { IProject, IUserInProject } from '@/stores/Project';
