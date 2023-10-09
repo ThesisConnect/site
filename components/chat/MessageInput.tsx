@@ -12,6 +12,11 @@ import {
 import uploadFileToFirebase from '@/utils/uploadfile';
 import { mutate } from 'swr';
 import { useSearchParams } from 'next/navigation';
+import useOutsideClick from "@/hook/useOutsideClick";
+import {IconButton} from "@mui/material";
+import ModalUploadFileWithProgress from "@/components/chat/Modal/ModalUploadFileWithProgress";
+import {LuFilePlus} from "react-icons/lu";
+import userStore from "@/stores/User";
 interface contents {
   file: File;
   url: string;
@@ -21,17 +26,23 @@ interface contents {
 interface MessageInputProps {
   handleInputHeightChange?: (newHeight: number) => void;
   onClickSend?: (data: string | contents) => void;
+  isGeneralChat?: boolean;
 }
 
 const MessageInput: FC<MessageInputProps> = ({
   handleInputHeightChange = () => {},
   onClickSend = () => {},
+  isGeneralChat = false,
 }) => {
   // const [inputHeight, setInputHeight] = useState(0);
+  const user = userStore((state) => state.user);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [inputValue, setInputValue] = useState('');
   const [File, setFile] = useState<File | null>(null);
   const [isloading, setIsloading] = useState(false);
+  const [selectUpload, setSelectUpload] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showModalUploadFileWithProgress, setShowModalUploadFileWithProgress] = useState(false);
   const searchParams = useSearchParams();
   useEffect(() => {
     const currentInputRef = inputRef.current;
@@ -44,12 +55,20 @@ const MessageInput: FC<MessageInputProps> = ({
     if (currentInputRef) {
       currentInputRef.addEventListener('input', handleInput);
     }
-
     return () => {
       if (currentInputRef)
         currentInputRef.removeEventListener('input', handleInput);
     };
   }, [inputRef, handleInputHeightChange]);
+  const ref = useOutsideClick(() => {
+    setSelectUpload(false);
+  });
+  const handleFileButtonClick = () => {
+    // Programmatically clicking the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
   const handleClickSend = async () => {
     // console.log(inputValue)
     if (inputValue.trim() === '') return;
@@ -88,10 +107,50 @@ const MessageInput: FC<MessageInputProps> = ({
 
   return (
     <div className="flex w-full h-full justify-evenly items-center">
-      <label htmlFor="fileUpload" className="cursor-pointer mb-2 h-10 self-end">
-        <MdAttachFile size={38} className="text-neutral-300" />
-      </label>
+      {user.role !=="advisor" &&!isGeneralChat && showModalUploadFileWithProgress && (
+        <ModalUploadFileWithProgress
+          isOpen={showModalUploadFileWithProgress}
+          onClose={() => {
+            setShowModalUploadFileWithProgress(false);
+          }}
+        />
+      )}
+      <div ref={ref} className="relative flex self-end">
+        {selectUpload && (
+          <div className="z-10 bottom-[52px]  absolute  rounded-[3px] h-auto bg-white divide-y drop-shadow-lg">
+            <button
+              onClick={handleFileButtonClick}
+              className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
+              type="button"
+            >
+              <MdAttachFile size={20} className="text-neutral-400" />
+              uploadFile
+            </button>
+            { user.role !=="advisor"&& !isGeneralChat &&
+              <button
+                className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 "
+                type="button"
+                onClick={() => {
+                  setShowModalUploadFileWithProgress(true);
+                  setSelectUpload(false);
+                }}
+              >
+                <LuFilePlus size={20} className="text-neutral-400" />
+                uploadFile&Progress
+              </button>
+            }
+          </div>
+        )}
+        <IconButton onClick={() => setSelectUpload(!selectUpload)}>
+          <MdAttachFile size={38} className="text-neutral-300" />
+        </IconButton>
+      </div>
+
+      {/*<label htmlFor="fileUpload" className="cursor-pointer mb-2 h-10 self-end">*/}
+      {/*  <MdAttachFile size={38} className="text-neutral-300" />*/}
+      {/*</label>*/}
       <input
+        ref={fileInputRef}
         type="file"
         id="fileUpload"
         className="hidden"

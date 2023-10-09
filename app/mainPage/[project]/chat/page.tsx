@@ -13,6 +13,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { divide, set } from 'lodash';
 import { mutate } from 'swr';
 import { DateTime } from 'luxon';
+import useProjectStore from "@/stores/Project";
 
 interface fileContents {
   file: File;
@@ -42,6 +43,7 @@ const PageChat = () => {
   const displayCountRef = useRef(displayCount);
   const lastMessageRef = useRef<RecieveMessenger | null>(null);
   const canFetchMore = useRef(true);
+  const currentProject = useProjectStore(state => state.currentProject)
   const handleInputHeightChange = (newHeight: number) => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({});
@@ -227,6 +229,7 @@ const PageChat = () => {
         <MessageInput
           handleInputHeightChange={handleInputHeightChange}
           onClickSend={handleSendData}
+          isGeneralChat={currentProject?.chat_id === chatID}
         />
       </div>
     </div>
