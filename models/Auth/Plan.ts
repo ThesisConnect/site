@@ -14,8 +14,9 @@ export const PlanEditSchema = z.object({
   description: z.string().optional(),
   progress: z
     .number()
+    .int()
     .min(0, { message: 'Progress must be greater than 0' })
-    .max(100, { message: 'Progress must be less than 0' })
+    .max(100, { message: 'Progress must be less than 100' })
     .optional(),
   // start_date: z.string(),
   // end_date: z.string(),

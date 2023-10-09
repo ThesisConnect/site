@@ -10,6 +10,7 @@ export const createSummarySchema = z.object({
   // chat_id: z.string(),
   progress: z
     .number()
+    .int()
     .min(0, { message: 'Progress must be greater than 0' })
     .max(100, { message: 'Progress must be less than 100' })
     .optional(),
