@@ -12,6 +12,7 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import DeletePopup from './DeleteProject';
 
 import EditProject from './EditProject';
+import userStore from "@/stores/User";
 
 interface DisplayProjectProps {
   project: IProject;
@@ -29,6 +30,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     _id: projectID,
   } = project;
   const router = useRouter();
+  const currentUser = userStore((state) => state.user)
   const handleChat = useCallback(() => {
     router.push(`mainPage/${projectID}/chat?chatID=${chatID}`);
   }, [chatID, router, projectID]);
@@ -127,13 +129,16 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                   <div className="text-base text-center truncate">
                     {user?.name} {user?.surname}
                   </div>
-                  {
-                    co_advisors?.length>0 && <div className="text-base text-center">CoAdvisor</div>
-                  }
+                  {co_advisors?.length > 0 && (
+                    <div className="text-base text-center">CoAdvisor</div>
+                  )}
                   {co_advisors?.map((user) => (
-                      <div className="text-base text-center truncate" key={user._id}>
-                        {user?.name} {user?.surname}
-                      </div>
+                    <div
+                      className="text-base text-center truncate"
+                      key={user._id}
+                    >
+                      {user?.name} {user?.surname}
+                    </div>
                   ))}
                 </div>
               }
@@ -157,7 +162,10 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 <div className="text-base text-center">Advisee</div>
                 <div className="flex flex-col">
                   {advisee?.map((user) => (
-                    <div className="text-base text-center truncate" key={user?._id}>
+                    <div
+                      className="text-base text-center truncate"
+                      key={user?._id}
+                    >
                       {user?.name} {user?.surname}
                     </div>
                   ))}
@@ -197,13 +205,15 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 <AiOutlineEdit className="text-xl" />
                 Edit
               </button>
-              <button
-                className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
-                onClick={showDeletePlan}
-              >
-                <AiOutlineDelete className="text-xl" />
-                Delete
-              </button>
+              { currentUser.role ==="advisor" &&
+                <button
+                  className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
+                  onClick={showDeletePlan}
+                >
+                  <AiOutlineDelete className="text-xl" />
+                  Delete
+                </button>
+              }
             </div>
           )}
           <BsFillChatDotsFill
