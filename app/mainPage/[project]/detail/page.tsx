@@ -8,6 +8,7 @@ import axiosBaseurl from '@/config/baseUrl';
 import React, { useEffect, useRef, useState } from 'react';
 import DropdownSummary from '@/components/summary/SortBy';
 import { v4 } from 'uuid';
+import '@/components/summary/Scrollbar.css';
 
 interface IPlan {
   _id: string;
@@ -133,7 +134,7 @@ const PageDetail = ({
             />
           </div>
           <div className="flex w-full h-[calc(100vh-175px)] px-2 overflow-hidden">
-            <div className="relative w-full h-full bg-neutral-100 ">
+            <div className="relative w-full bg-neutral-100 ">
               <div className="grid grid-cols-8 gap-1 justify-items-center items-center w-full h-[50px] rounded-t-md font-semibold bg-teal-800 text-white">
                 <div className="col-span-2">Task name</div>
                 <div>Date</div>
@@ -142,7 +143,7 @@ const PageDetail = ({
                 <div>Status</div>
                 <div>Action</div>
               </div>
-              <div className="h-full w-full overflow-y-scroll">
+              <div className="h-[calc(100vh-225px)] w-full custom-scrollbar scroll-smooth focus:scroll-auto">
                 {summary
                   .filter((obj) =>
                     selectedValue !== 'all' ? obj.status === selectedValue : obj
