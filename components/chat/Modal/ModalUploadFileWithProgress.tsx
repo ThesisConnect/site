@@ -81,11 +81,11 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
       }
     }
   };
-  const handleSendData =(message: string | fileContents) => {
+  const handleSendData = async (message: string | fileContents) => {
     const chatIDFromURL = searchParams.get('chatID');
     if (chatIDFromURL) {
       if (typeof message === 'string')
-         socket.emit('send message', chatIDFromURL, message);
+         await socket.emit('send message', chatIDFromURL, message);
       else {
         const typeArr = message.file.type.split('/');
         const fileSent = {
@@ -97,7 +97,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           link: message.url,
           memo: '',
         };
-         socket.emit('send message', chatIDFromURL, fileSent);
+         await socket.emit('send message', chatIDFromURL, fileSent);
       }
     } else {
       console.error('Chat ID not found in URL');
@@ -143,11 +143,11 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           }
         });
         const allFiles = await Promise.all(uploadAllfiles);
-        allFiles.map((items, index) => {
-          const file = files[index] as unknown as File;
-          const [url, path, uid] = items;
-          handleSendData({ file, url, path, uid });
-        });
+        // allFiles.map((items, index) => {
+        //   const file = files[index] as unknown as File;
+        //   const [url, path, uid] = items;
+        //   handleSendData({ file, url, path, uid });
+        // });
         const formatData ={
           project_id: currentProject?._id,
           plan_id: currentPlan()?._id,
@@ -160,8 +160,15 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           progress: Number(progress),
         }
         await axiosBaseurl.post("/summary/create",formatData)
-        handleSendData(message);
-        handleSendData(`Progress: ${progress}%`);
+        await handleSendData(message);
+        await handleSendData(`Progress: ${progress}%`);
+        let index = 0;
+        for(const items of allFiles){
+          const file = files[index] as unknown as File;
+          const [url, path, uid] = items;
+          await handleSendData({ file, url, path, uid });
+          index++;
+        }
         setCreateLoading(false);
         onClose();
       } catch (err: any) {
@@ -199,7 +206,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           className="bg-white rounded-lg  flex flex-col w-7/12 h-[75%]  items-center"
         >
           <div className="border-b-[1px] w-full border-teal-800 h-[10%] flex items-center ps-10  font-semibold text-neutral-800">
-            Create project
+            Upload File with Progress
           </div>
           <div className="flex h-full w-full px-10 flex-col overflow-y-scroll ">
             <AutoResizingTextArea
