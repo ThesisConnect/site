@@ -48,6 +48,7 @@ const CreatePopup: React.FC<ModalProps> = ({
   const [pick_startDate, setPickStart] = React.useState<boolean>(false);
 
   const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
   currentDate.setDate(currentDate.getDate() + 1);
 
   const showDatePicker = () => {
@@ -61,8 +62,11 @@ const CreatePopup: React.FC<ModalProps> = ({
     setPickEnd(!pick_endDate);
     return pick_endDate;
   }
+  
+  const setToday = new Date();
+  setToday.setHours(0, 0, 0, 0);
+  const [selectedDate, setSelectedDate] = React.useState<Date>(setToday);
 
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const updateDate = (selDate: Date) => {
     setSelectedDate(selDate);
   };
@@ -143,7 +147,7 @@ const CreatePopup: React.FC<ModalProps> = ({
   });
 
   const nonvalidateDateRange = (start_date: Date, end_date: Date) => {
-    return start_date > end_date;
+    return start_date >= end_date;
   };
 
   if (!show) return null;
@@ -240,7 +244,15 @@ const CreatePopup: React.FC<ModalProps> = ({
                     }
                     onChange={(event) => setSelectedDate}
                   />
-                  <div className="h-[16px]"></div>
+                  <div className="h-[16px]">
+                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
+                      <div className="text-red-500">
+                        End date must be greater than start date.
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </label>
               </div>
               <hr className="w-[17%] border-b-2 border-t-0 border-dashed border-teal-800" />
@@ -280,13 +292,13 @@ const CreatePopup: React.FC<ModalProps> = ({
                     onChange={(event) => setSelectedEndDate}
                   />
                   <div className="h-[16px]">
-                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
+                    {/* {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
                       <div className="text-red-500">
                         End date must be greater than start date.
                       </div>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                   </div>
                 </label>
               </div>
