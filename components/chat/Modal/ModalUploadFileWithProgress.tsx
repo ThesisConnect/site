@@ -154,7 +154,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           reciever_id: currentProject?.advisors[0]._id,
           sender_id: auth.currentUser?.uid,
           comment: message,
-          files: allFiles.map((items)=>items[0]),
+          files: allFiles.map((items)=>items[2]),
           chat_id: chatID,
           status: 'pending',
           progress: Number(progress),
