@@ -170,12 +170,15 @@ const PagePlanning = ({
           </div>
         </div>
       </div>
-      <CreatePopup
-        show={state}
-        onClose={handleCancel}
-        projectID={projectID}
-        onSucces={handleOnSuccess}
-      />
+      {
+        state && <CreatePopup
+          show={state}
+          onClose={handleCancel}
+          projectID={projectID}
+          onSucces={handleOnSuccess}
+        />
+      }
+
     </div>
   );
 };
