@@ -27,6 +27,7 @@ import uploadFileToFirebase from '@/utils/uploadfile';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
 import { handleFilePreview } from '@/utils/PreviewFile';
+import "@/components/summary/Scrollbar.css";
 
 interface DataPlan {
   show: boolean;
@@ -95,7 +96,7 @@ const TableFileModal: FC<TableComponentProps> = ({
           <div className="col-span-1 flex items-center justify-centers rounded-tr-md font-semibold"></div>
         </div>
         <div className="bg-neutral-100 h-[125px] rounded-b-md overflow-hidden">
-          <div className="h-[115%] w-[105%] overflow-scroll">
+          <div className="h-[100%] w-[100%] full-scrollbar">
             {table.length === 0 && (
               <div className="w-full h-full bg-neutral-100 flex justify-center items-center text-neutral-600">
                 No attach file
@@ -198,9 +199,9 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
   if (!show) return null;
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
-      <div className=" bg-white rounded-lg w-[650px] max-h-[660px] flex flex-col">
+      <div className=" bg-white rounded-lg w-[650px] max-h-[650px] h-[620px] flex flex-col">
         <div className="grid grid-cols-1 h-full p-4">
-          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll">
+          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll full-scrollbar">
             <div className="w-full flex justify-end">
               <div className="flex justify-center items-center gap-2">
                 {status === 'pending' && (
@@ -226,7 +227,9 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
               </div>
             </div>
             
-            <div className="text-xl whitespace-pre-wrap font-semibold p-1 overflow-auto">{plan_name}</div>
+            <div className="text-xl whitespace-pre-wrap font-semibold p-1 ">
+              {plan_name}
+            </div>
             <hr></hr>
             <div className="grid grid-cols-4 items-center">
               <div className="text-teal-800 font-semibold p-1">Date</div>
@@ -243,7 +246,7 @@ const DetailSummaryPopup: React.FC<DataPlan> = ({
             <div className="grid grid-cols-4">
               <div className="text-teal-800 font-semibold p-1">Message</div>
               <div className="col-span-3 h-auto overflow-hidden">
-                <div className="py-2 pr-4 max-h-[150px] w-[105%] whitespace-pre-wrap overflow-y-scroll">
+                <div className="py-2 pr-1 max-h-[80px] w-[100%] whitespace-pre-wrap overflow-y-scroll full-scrollbar">
                   <div>{comment}</div>
                 </div>
               </div>

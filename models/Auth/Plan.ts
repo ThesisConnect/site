@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const PlanSchema = z.object({
-  name: z.string().min(1, { message: 'Please enter plan name' }),
+  name: z.string().min(1, { message: 'Please enter plan name' }).max(150, {message: 'The the title must not be longer than 150'}),
   description: z.string().min(1, { message: 'Please enter description' }),
   // progress: z.number().int().gte(0).lte(100).default(0),
   task: z.boolean().optional(),
@@ -10,7 +10,7 @@ export const PlanSchema = z.object({
 export type PlanSchemaType = z.infer<typeof PlanSchema>;
 
 export const PlanEditSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().min(1, { message: 'Please enter plan name' }).max(150, {message: 'The the title must not be longer than 150'}),
   description: z.string().optional(),
   progress: z
     .number()

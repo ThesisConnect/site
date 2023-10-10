@@ -28,6 +28,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
 import { handleFilePreview } from '@/utils/PreviewFile';
 import socket from '@/config/socket';
+import "@/components/summary/Scrollbar.css";
 
 interface DataPlan {
   show: boolean;
@@ -93,7 +94,7 @@ const TableFileModal: FC<TableComponentProps> = ({
           <div className="col-span-1 flex items-center justify-centers rounded-tr-md font-semibold"></div>
         </div>
         <div className="bg-neutral-100 h-[125px] rounded-b-md overflow-hidden">
-          <div className="h-[115%] w-[105%] overflow-scroll">
+          <div className="h-[100%] w-[100%] full-scrollbar">
             {table.length === 0 && (
               <div className="w-full h-full bg-neutral-100 flex justify-center items-center text-neutral-600">
                 No attach file
@@ -190,8 +191,8 @@ const SummaryPopup: React.FC<DataPlan> = ({
     else if (selectedValue === 'Reject') {
       console.log(initIDfile);
       setsendStatus('rejected');
-      SendStatus = 'rejected' 
-      await handleSendData("Reject : " + data.comment)      
+      SendStatus = 'rejected'
+      await handleSendData("Reject : " + data.comment)
       await handleSendData("Progress : " + data.progress + "%")
       for (const itemintable of table) {
         if (!initIDfile.includes(itemintable._id)) {
@@ -296,7 +297,9 @@ const SummaryPopup: React.FC<DataPlan> = ({
       >
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <div className="flex h-full p-4 justify-between items-center ">
-            <div className="flex text-lg font-semibold pr-2">{plan_name}</div>
+            <div className='flex h-auto'>
+              <div className="flex text-lg font-semibold pr-2 ">{plan_name}</div>
+            </div>
             {user.role === 'advisor' && (
               <div>
                 <DropdownApprove
@@ -316,7 +319,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
                 <label
                   htmlFor="fileUpload"
                   className="cursor-pointer mb-2 h-10 rounded-full flex bg-teal-800 items-center
-                 hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2"
+                  hover:bg-teal-700 hover:transition hover:ease-in-out justify-center w-[20%] px-2"
                 >
                   <div className="text-white items-center justify-center p-2">
                     Attach file

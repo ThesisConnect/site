@@ -195,12 +195,11 @@ const EditPopup: React.FC<DataPlan> = ({
               <input
                 id="name"
                 className={
-                  'rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
+                  ' rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
                 }
-                placeholder="Plan name"
                 defaultValue={name}
+                placeholder="Plan name"
                 {...register('name', { required: true })}
-                // disabled
               />
               {errors.name ? (
                 <div className="text-red-500">{errors.name?.message}</div>
