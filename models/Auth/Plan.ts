@@ -11,7 +11,7 @@ export type PlanSchemaType = z.infer<typeof PlanSchema>;
 
 export const PlanEditSchema = z.object({
   name: z.string().min(1, { message: 'Please enter plan name' }).max(150, {message: 'The the title must not be longer than 150'}),
-  description: z.string().optional(),
+  description: z.string().min(1, { message: 'Please enter plan name' }).optional(),
   progress: z
     .number()
     .int()
