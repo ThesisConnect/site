@@ -21,16 +21,19 @@ const HomePageLayout = ({ children }: { children?: React.ReactNode }) => {
   const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
   const handleSearchDebounced = _.debounce(
     (searchValue, project, setFilterProject) => {
+      // console.log(searchValue);
       if (searchValue === '') {
         setShowNotFound(false);
         return setFilterProject([]);
       }
       const searchResult = _.filter(project, (item) => {
+        setShowNotFound(false)
         return item.name.toLowerCase().trim().includes(searchValue);
       });
       if (searchResult.length === 0) {
         setShowNotFound(true);
       }
+      // console.log("searchResult", searchResult);
       setFilterProject(searchResult);
     },
     200
