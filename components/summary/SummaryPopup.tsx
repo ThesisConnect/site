@@ -105,11 +105,13 @@ const TableFileModal: FC<TableComponentProps> = ({
                     className={`grid grid-cols-5 items-center bg-neutral-100 w-full h-[40px]`}
                     key={index}
                   >
-                    <div
-                      className="col-span-4 py-2 px-4 hover:underline"
-                      onClick={() => handleClick(item.url, item.file_type)}
-                    >
-                      {item.name}
+                    <div className="col-span-4 py-2 px-4 flex">
+                      <div
+                        className="truncate w-auto hover:underline hover:cursor-pointer"
+                        onClick={() => handleClick(item.url, item.file_type)}
+                      >
+                        {item.name}
+                      </div>
                     </div>
                     <div className="flex justify-center flex items-center h-[40px]">
                       {pageType === 'Reject' && (
@@ -245,7 +247,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
       >
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <div className="flex h-full p-4 justify-between items-center ">
-            <div className="flex text-lg font-semibold">{plan_name}</div>
+            <div className="flex text-lg font-semibold pr-2">{plan_name}</div>
             {user.role === 'advisor' && (
               <div>
                 <DropdownApprove
@@ -298,7 +300,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
                 <textarea
                   id="Comment"
                   className={
-                    'min-h-[120px] max-h-[120px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
+                    'resize-none min-h-[120px] max-h-[120px] rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
                   }
                   placeholder="Description"
                   disabled
