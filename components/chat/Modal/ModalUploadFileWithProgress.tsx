@@ -87,6 +87,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
       if (typeof message === 'string')
          await socket.emit('send message', chatIDFromURL, message);
       else {
+        
         const typeArr = message.file.type.split('/');
         const fileSent = {
           name: message.file.name,
@@ -97,6 +98,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
           link: message.url,
           memo: '',
         };
+          console.log(fileSent);
          await socket.emit('send message', chatIDFromURL, fileSent);
       }
     } else {
@@ -107,10 +109,11 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
     e.preventDefault();
     const message = textAreaRef.current?.value;
     const progress = progressInputRef.current?.value;
-    // const singleFile = table[0].file;
-    // console.log(singleFile instanceof File);
-    // const { data:test, error:errortest } = safelyParse(fileSchema, singleFile);
-    // console.log('Single file validation: ', test, errortest);
+    const singleFile = table[0].file;
+    console.log(singleFile instanceof File);
+    const { data:test, error:errortest } = safelyParse(fileSchema, singleFile);
+    console.log('Single file validation: ', test, errortest ,test instanceof File);
+    
     const { data, error } = safelyParse(checkSchemaMessage, {
       message,
       progress,
@@ -286,13 +289,7 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
   );
 };
 const fileSchema = z
-  .object({
-    name: z.string(),
-    type: z.string(),
-    size: z.number(),
-    lastModified: z.number(),
-  })
-  .nonstrict()
+  .any()
   .refine(
     (data) => {
       return (
