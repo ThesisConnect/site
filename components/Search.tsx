@@ -41,6 +41,7 @@ const SearchInput: FC<SearchInputProps> = ({
         noOptionsText="Project not found"
         open={open}
         onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
         disablePortal
         options={data || testData}
         onInputChange={onChange}
