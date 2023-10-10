@@ -68,7 +68,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
   }
 
   const ref = useOutsideClick(() => {
-    setSelect(!select);
+    setSelect(false)
   });
 
   function showEdit() {
@@ -118,7 +118,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
             </div>
           }
         >
-          <span className="w-4/5 truncate">{projectName}</span>
+          <span className="w-4/5  text-center  truncate">{projectName}</span>
         </Tooltip>
       </div>
       <div onClick={handleClickProject} className="w-1/5 h-full cursor-pointer">
@@ -207,9 +207,17 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
         </div>
         <div className="w-1/3 items-center grid grid-cols-3  relative ">
           <div />
-          {select && (
+          
+          <BsFillChatDotsFill
+            size={35}
+            className="text-teal-800 cursor-pointer place-self-center"
+            onClick={handleChat}
+            onMouseOver={handleHoverChat}
+          />
+          <div  ref={ref} className="justify-self-end me-2 relative ">
+            {select && (
             <div
-              ref={ref}
+              
               className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg"
             >
               <button
@@ -230,17 +238,14 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
               )}
             </div>
           )}
-          <BsFillChatDotsFill
-            size={35}
-            className="text-teal-800 cursor-pointer place-self-center"
-            onClick={handleChat}
-            onMouseOver={handleHoverChat}
-          />
-          <IoMdMore
-            size={30}
-            className="text-neutral-400 cursor-pointer me-2  justify-self-end "
-            onClick={showEdit}
-          />
+            <IoMdMore
+              size={30}
+              className="text-neutral-400 cursor-pointer   "
+              onClick={()=>{
+               setSelect(!select)
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
