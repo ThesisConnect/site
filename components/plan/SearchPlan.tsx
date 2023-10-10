@@ -28,7 +28,7 @@ const SearchPlanInput: FC<SearchInputProps> = ({
   width,
   height,
   onChange,
-  className = 'whitespace-pre-wrap',
+  className,
   data,
 }) => {
   return (
@@ -72,6 +72,7 @@ const SearchPlanInput: FC<SearchInputProps> = ({
               {parts.map((part, index) => (
                 <span
                   key={index}
+                  className='whitespace-pre'
                   style={{
                     fontWeight: part.highlight ? 700 : 400,
                   }}
