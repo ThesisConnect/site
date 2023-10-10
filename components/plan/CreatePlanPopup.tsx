@@ -55,6 +55,8 @@ const CreatePopup: React.FC<ModalProps> = ({
     return pick_startDate;
   };
   const [pick_endDate, setPickEnd] = React.useState<boolean>(false);
+  const [create, setCreate] = React.useState<boolean>(false);
+
   function showEndDatePicker() {
     setPickEnd(!pick_endDate);
     return pick_endDate;
@@ -71,6 +73,8 @@ const CreatePopup: React.FC<ModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<PlanSchemaType> = async (data) => {
+    if (create) return
+    setCreate(true)
     if (selectedDate < selectedEndDate) {
       //console.log('data', data);
       try {
@@ -104,10 +108,12 @@ const CreatePopup: React.FC<ModalProps> = ({
         const resData = await axiosBaseurl.post('/plan/create', sendData);
         onSucces();
         reset();
+        setCreate(false);
       } catch (err: any) {
         console.log(err);
         onClose();
         reset();
+        setCreate(false);
       }
     }
   };
@@ -293,7 +299,6 @@ const CreatePopup: React.FC<ModalProps> = ({
               >
                 Cancel
               </button>
-
               <button
                 type="submit"
                 className="bg-teal-800 text-white w-[120px] h-10 rounded-full hover:bg-teal-700 hover:transition hover:ease-in-out "
