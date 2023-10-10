@@ -11,7 +11,7 @@ import {
 } from 'react';
 import uploadFileToFirebase from '@/utils/uploadfile';
 import { mutate } from 'swr';
-import { useSearchParams } from 'next/navigation';
+import {useParams, useSearchParams} from 'next/navigation';
 import useOutsideClick from "@/hook/useOutsideClick";
 import {IconButton} from "@mui/material";
 import ModalUploadFileWithProgress from "@/components/chat/Modal/ModalUploadFileWithProgress";
@@ -43,7 +43,7 @@ const MessageInput: FC<MessageInputProps> = ({
   const [selectUpload, setSelectUpload] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showModalUploadFileWithProgress, setShowModalUploadFileWithProgress] = useState(false);
-  const searchParams = useSearchParams();
+
   useEffect(() => {
     const currentInputRef = inputRef.current;
     const handleInput = () => {
@@ -99,7 +99,7 @@ const MessageInput: FC<MessageInputProps> = ({
     // console.log(e.target.files)
     if (e.target.files && e.target.files?.length > 0) {
       // console.log("can upload")
-      //console.log(e.target.files);
+      // console.log(e.target.files[0]);
       setFile(e.target.files[0]);
       setInputValue(e.target.files[0].name);
     }

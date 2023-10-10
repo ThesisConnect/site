@@ -20,9 +20,8 @@ const FileLayout = ({ children }: { children: React.ReactNode }) => {
   const route = useRouter();
   const [showCreateFolder, setShowCreateFolder] = useState<boolean>(false);
   const parentFolder = params.folderID?params.folderID[params.folderID.length - 1]:null;
-  const { currentProject } = useProjectStore((state) => ({
-    currentProject: state.currentProject,
-  }));
+  const getProjectByID = useProjectStore((state) => state.getProjectByID);
+  const currentProject = getProjectByID(params.project as string);
   useEffect(() => {
     // console.log('parentFolder', parentFolder);
     setShowCreateFolder(false)

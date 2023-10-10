@@ -110,9 +110,10 @@ const ModalUploadFileWithProgress: FC<ModalUploadFileWithProgressProps> = ({
     const message = textAreaRef.current?.value;
     const progress = progressInputRef.current?.value;
     const singleFile = table[0].file;
-    console.log(singleFile instanceof File);
-    const { data:test, error:errortest } = safelyParse(fileSchema, singleFile);
-    console.log('Single file validation: ', test, errortest ,test instanceof File);
+    // console.log("single",singleFile);
+    // console.log(singleFile instanceof File);
+    // const { data:test, error:errortest } = safelyParse(fileSchema, singleFile);
+    // console.log('Single file validation: ', test, errortest ,test instanceof File);
     
     const { data, error } = safelyParse(checkSchemaMessage, {
       message,
