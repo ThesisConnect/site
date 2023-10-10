@@ -59,7 +59,7 @@ const SearchPlanInput: FC<SearchInputProps> = ({
                   <BiSearchAlt2 size={20} className="text-neutral-400 me-2" />
                 </>
               }
-              placeholder="search"
+              placeholder="Search"
             />
           </div>
         )}

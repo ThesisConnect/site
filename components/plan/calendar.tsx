@@ -24,7 +24,7 @@ const CalendarPick: React.FC<DatePickerProps> = ({
   updateDate,
 }) => {
   const today = DateSelect;
-  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const colStartClasses = [
     '',
     'col-start-2',
