@@ -134,7 +134,10 @@ const UpdateTask: React.FC<DataSummary> = ({
       <div className="w-full h-full cursor-default">
         {/* <div className="w-full h-full cursor-pointer " onClick={showSummaryPopup}> */}
         <div className="grid grid-cols-8 gap-2 h-full justify-items-center items-center w-full bg-neutral-100 ">
-          <div className="col-span-2 truncate">{plan_name}</div>
+          <div className=' px-3 col-span-2 overflow-hidden w-full'>
+            <div className=" whitespace-pre  truncate">{plan_name}</div>
+          </div>
+          
           <div>
             {new Date(updateAt).toUTCString().split(' ').slice(0, 4).join(' ')}
           </div>
