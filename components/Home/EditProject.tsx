@@ -279,7 +279,7 @@ const EditProject: FC<EditProjectProps> = ({ isOpen, onClose, project }) => {
               className="bg-neutral-300 rounded-full px-10 py-2"
               onClick={onClose}
             >
-              cancel
+              Cancel
             </button>
             <button
               className="bg-neutral-300 rounded-full ms-2 px-10 py-2"

@@ -11,7 +11,8 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import DeletePopup from './DeleteProject';
 
 import EditProject from './EditProject';
-import userStore from "@/stores/User";
+import userStore from '@/stores/User';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 interface DisplayProjectProps {
   project: IProject;
@@ -29,7 +30,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     _id: projectID,
   } = project;
   const router = useRouter();
-  const currentUser = userStore((state) => state.user)
+  const currentUser = userStore((state) => state.user);
   const handleChat = useCallback(() => {
     router.push(`mainPage/${projectID}/chat?chatID=${chatID}`);
   }, [chatID, router, projectID]);
@@ -104,7 +105,21 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
         onClick={handleClickProject}
         className="w-1/5 justify-center items-center flex cursor-pointer h-full "
       >
-        {projectName}
+        <Tooltip
+          TransitionProps={{
+            timeout: 80,
+          }}
+          title={
+            <div>
+              <div className="text-base text-center">Project Name</div>
+              <div className="text-base text-center break-words">
+                {projectName}
+              </div>
+            </div>
+          }
+        >
+          <span className="w-4/5 truncate">{projectName}</span>
+        </Tooltip>
       </div>
       <div onClick={handleClickProject} className="w-1/5 h-full cursor-pointer">
         <Progress progress={progress} />
@@ -204,7 +219,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                 <AiOutlineEdit className="text-xl" />
                 Edit
               </button>
-              { currentUser.role ==="advisor" &&
+              {currentUser.role === 'advisor' && (
                 <button
                   className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2 text-red-500"
                   onClick={showDeletePlan}
@@ -212,7 +227,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                   <AiOutlineDelete className="text-xl" />
                   Delete
                 </button>
-              }
+              )}
             </div>
           )}
           <BsFillChatDotsFill
