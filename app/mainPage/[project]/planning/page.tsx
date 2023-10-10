@@ -24,6 +24,7 @@ import useProjectStore from '@/stores/Project';
 // import LoadingNormal from '@/components/loading/LoadingNormal';
 import LayoutPlanning from '@/components/plan/PlanLayout';
 import LoadingPlan from '@/components/plan/LoadingUI';
+import "@/components/summary/Scrollbar.css";
 
 const DynamicPlanLayout = dynamic(
   () => import('@/components/plan/PlanLayout'),
@@ -130,7 +131,7 @@ const PagePlanning = ({
 
   //console.log(searchplans);
   return (
-    <div className="flex relative flex-row h-full  overflow-hidden">
+    <div className="flex relative flex-row h-full overflow-hidden">
       <div className="flex flex-col w-full h-full overflow-hidden">
         <div className="flex w-full h-[50px] p-2 p-b-0 items-center text-lg font-semibold">
           {projectName}
@@ -158,7 +159,7 @@ const PagePlanning = ({
         </div>
         <div className="relative h-full w-full overflow-hidden">
           <div className="flex w-full p-2 h-full">
-            <div className="w-full h-full overflow-y-scroll scroll-x-none">
+            <div className="w-full h-full overflow-y-scroll full-scrollbar scroll-x-none">
               <DynamicPlanLayout
                 search={searchplans}
                 create={create}
@@ -170,12 +171,15 @@ const PagePlanning = ({
           </div>
         </div>
       </div>
-      <CreatePopup
-        show={state}
-        onClose={handleCancel}
-        projectID={projectID}
-        onSucces={handleOnSuccess}
-      />
+      {
+        state && <CreatePopup
+          show={state}
+          onClose={handleCancel}
+          projectID={projectID}
+          onSucces={handleOnSuccess}
+        />
+      }
+
     </div>
   );
 };

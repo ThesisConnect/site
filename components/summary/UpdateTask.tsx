@@ -87,7 +87,7 @@ const UpdateTask: React.FC<DataSummary> = ({
   return (
     <div
       className="relative flex flex-col items-center
-        bg-white border border-neutral-200 w-[101%] h-[75px] justify-evenly overflow-hidden "
+        bg-white border border-neutral-200 w-[100%] h-[75px] justify-evenly overflow-hidden "
     >
       {checkstate && (
         <SummaryPopup

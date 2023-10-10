@@ -128,10 +128,10 @@ const EditPopup: React.FC<DataPlan> = ({
           description: data.description,
           start_date: DateTime.fromFormat(
             ('0' + (Number(selectedDate.getMonth()) + 1).toString()).slice(-2) +
-              '/' +
-              ('0' + selectedDate.getDate()).slice(-2) +
-              '/' +
-              selectedDate.getFullYear(),
+            '/' +
+            ('0' + selectedDate.getDate()).slice(-2) +
+            '/' +
+            selectedDate.getFullYear(),
             'M/d/yyyy',
             { zone: 'America/New_York' }
           ).toISO({ includeOffset: true }),
@@ -139,10 +139,10 @@ const EditPopup: React.FC<DataPlan> = ({
             ('0' + (Number(selectedEndDate.getMonth()) + 1).toString()).slice(
               -2
             ) +
-              '/' +
-              ('0' + selectedEndDate.getDate()).slice(-2) +
-              '/' +
-              selectedEndDate.getFullYear(),
+            '/' +
+            ('0' + selectedEndDate.getDate()).slice(-2) +
+            '/' +
+            selectedEndDate.getFullYear(),
             'M/d/yyyy',
             { zone: 'America/New_York' }
           ).toISO({ includeOffset: true }),
@@ -161,7 +161,7 @@ const EditPopup: React.FC<DataPlan> = ({
   };
 
   const nonvalidateDateRange = (start_date: Date, end_date: Date) => {
-    return start_date > end_date;
+    return start_date >= end_date;
   };
 
   if (!show) return null;
@@ -185,7 +185,7 @@ const EditPopup: React.FC<DataPlan> = ({
                   defaultChecked={task}
                   disabled
                   className="w-4 h-4 accent-teal-700 border-teal-300 rounded focus:text-teal-400 "
-                  // {...register('task')}
+                // {...register('task')}
                 />
                 Gantt
               </label>
@@ -195,12 +195,11 @@ const EditPopup: React.FC<DataPlan> = ({
               <input
                 id="name"
                 className={
-                  'rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
+                  ' rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
                 }
-                placeholder="Plan name"
                 defaultValue={name}
+                placeholder="Plan name"
                 {...register('name', { required: true })}
-                // disabled
               />
               {errors.name ? (
                 <div className="text-red-500">{errors.name?.message}</div>
@@ -267,7 +266,15 @@ const EditPopup: React.FC<DataPlan> = ({
                     // {...register('start_date')}
                     onChange={(event) => setSelectedDate}
                   />
-                  <div className="h-[16px]"></div>
+                  <div className="h-[16px]">
+                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
+                      <div className="text-red-500">
+                        End date must be greater than start date.
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </label>
               </div>
               <hr className="w-[12%] h-[0px] border-b-2 border-t-0 border-dashed border-teal-800" />
@@ -309,15 +316,7 @@ const EditPopup: React.FC<DataPlan> = ({
                     // {...register('end_date')}
                     onChange={(event) => setSelectedEndDate}
                   />
-                  <div className="h-[16px]">
-                    {nonvalidateDateRange(selectedDate, selectedEndDate) ? (
-                      <div className="text-red-500">
-                        End date must be greater than start date.
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
+                  <div className="h-[16px]"></div>
                 </label>
               </div>
             </div>

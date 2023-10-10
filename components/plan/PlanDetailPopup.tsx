@@ -19,6 +19,7 @@ import Button from './Button';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import axiosBaseurl from '@/config/baseUrl';
 import CalendarPick from './calendar';
+import "@/components/summary/Scrollbar.css";
 
 interface DataPlan {
   show: boolean;
@@ -82,7 +83,7 @@ const DetailPopup: React.FC<DataPlan> = ({
       <div className=" bg-white rounded-lg w-[550px] max-h-[650px] flex flex-col">
         <div className="grid grid-cols-1 h-full p-4">
           {/* <h2 className="flex h-full p-5 items-center text-lg font-semibold">Plan Detail</h2> */}
-          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll">
+          <div className="flex flex-col py-3 px-5 gap-1 overflow-y-scroll full-scrollbar">
             <div className="w-full flex justify-end">
               <div className="flex justify-center items-center gap-2">
                 {task ? (

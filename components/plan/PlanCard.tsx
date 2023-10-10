@@ -118,19 +118,22 @@ const PlanCard: React.FC<DataPlan> = ({
         duration={Duration()}
         onClose={showPlanDetail}
       />
-      <EditPopup
-        show={edit}
-        id={id}
-        name={name}
-        description={description}
-        start_date={start_date}
-        end_date={end_date}
-        progress={progress}
-        task={task}
-        duration={getDayDiff()}
-        onClose={showPlanEdit}
-        onSucces={onSucces}
-      />
+      {
+        edit && <EditPopup
+          show={edit}
+          id={id}
+          name={name}
+          description={description}
+          start_date={start_date}
+          end_date={end_date}
+          progress={progress}
+          task={task}
+          duration={getDayDiff()}
+          onClose={showPlanEdit}
+          onSucces={onSucces}
+        />
+      }
+
       <DeletePopup
         show={Delete}
         onClose={showDeletePlan}

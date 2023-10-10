@@ -27,6 +27,8 @@ import uploadFileToFirebase from '@/utils/uploadfile';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
 import { handleFilePreview } from '@/utils/PreviewFile';
+import socket from '@/config/socket';
+import "@/components/summary/Scrollbar.css";
 
 interface DataPlan {
   show: boolean;
@@ -45,7 +47,7 @@ interface DataPlan {
 }
 
 interface contents {
-  file: File;
+  file: TableFile;
   url: string;
   path: string;
   uid: string;
@@ -92,7 +94,7 @@ const TableFileModal: FC<TableComponentProps> = ({
           <div className="col-span-1 flex items-center justify-centers rounded-tr-md font-semibold"></div>
         </div>
         <div className="bg-neutral-100 h-[125px] rounded-b-md overflow-hidden">
-          <div className="h-[115%] w-[105%] overflow-scroll">
+          <div className="h-[100%] w-[100%] full-scrollbar">
             {table.length === 0 && (
               <div className="w-full h-full bg-neutral-100 flex justify-center items-center text-neutral-600">
                 No attach file
@@ -166,6 +168,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
   const [sendStatus, setsendStatus] = React.useState<string>('');
   const [table, setTable] = useState<TableFile[]>(files);
   const [File, setFile] = useState<File | null>(null);
+  const initIDfile = files.map((item) => item._id);
 
   const handleValueChange = (newValue: string) => {
     setSelectedValue(newValue);
@@ -182,16 +185,28 @@ const SummaryPopup: React.FC<DataPlan> = ({
     if (selectedValue === 'Approve' && progress != 100) {
       setsendStatus('approved');
       SendStatus = 'approved'
+      await handleSendData("Approve")
+      await handleSendData("Progress : " + progress + "%")
     }
     else if (selectedValue === 'Reject') {
+      console.log(initIDfile);
       setsendStatus('rejected');
       SendStatus = 'rejected'
+      await handleSendData("Reject : " + data.comment)
+      await handleSendData("Progress : " + data.progress + "%")
+      for (const itemintable of table) {
+        if (!initIDfile.includes(itemintable._id)) {
+          console.log("itemintable ", itemintable);
+          await handleSendData(itemintable)
+        }
+      }
     }
     else if (selectedValue === 'Approve' && progress == 100) {
       setsendStatus('completed');
       SendStatus = 'completed'
+      await handleSendData("Approve")
+      await handleSendData("Progress : " + progress + "%")
     }
-    console.log(selectedValue)
     try {
       const fileSend = await axiosBaseurl.post('/file/create/', {
         folder_id: chat_id,
@@ -208,7 +223,6 @@ const SummaryPopup: React.FC<DataPlan> = ({
         files: table.map((obj) => obj._id),
         progress: data.progress || progress,
       };
-
       console.log('send data', sendData);
       const resData = await axiosBaseurl.put('/summary/edit/', sendData);
       onSuccess();
@@ -238,6 +252,42 @@ const SummaryPopup: React.FC<DataPlan> = ({
     }
   };
 
+  const handleSendData = async (message: string | TableFile) => {
+    if (chat_id) {
+      if (typeof message === 'string')
+        await socket.emit('send message', chat_id, message);
+      else {
+        const fileSent = {
+          name: message.name,
+          fileID: message._id,
+          size: message.size,
+          type_file: message.file_type,
+          lastModified: Date.now(),
+          link: message.url,
+          memo: '',
+        };
+        console.log(fileSent);
+        await socket.emit('send message', chat_id, fileSent);
+      }
+    } else {
+      console.error('Chat ID not found in URL');
+    }
+  };
+
+  useEffect(() => {
+    console.log(chat_id)
+    if (chat_id) {
+      socket.emit('join room', chat_id);
+      return () => {
+        if (chat_id) {
+
+          socket.emit('leave room', chat_id);
+        }
+      };
+    }
+
+  }, [chat_id])
+
   if (!show) return null;
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-40 flex-col items-center bg-black bg-opacity-50 cursor-default">
@@ -247,7 +297,9 @@ const SummaryPopup: React.FC<DataPlan> = ({
       >
         <div className="grid grid-cols-1 h-full divide-y divide-teal-800 ">
           <div className="flex h-full p-4 justify-between items-center ">
-            <div className="flex text-lg font-semibold pr-2">{plan_name}</div>
+            <div className='flex h-auto'>
+              <div className="flex text-lg font-semibold pr-2 ">{plan_name}</div>
+            </div>
             {user.role === 'advisor' && (
               <div>
                 <DropdownApprove
@@ -267,7 +319,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
                 <label
                   htmlFor="fileUpload"
                   className="cursor-pointer mb-2 h-10 rounded-full flex bg-teal-800 items-center
-                 hover:bg-teal-700 hover:transition hover:ease-in-out  justify-center w-[20%] px-2"
+                  hover:bg-teal-700 hover:transition hover:ease-in-out justify-center w-[20%] px-2"
                 >
                   <div className="text-white items-center justify-center p-2">
                     Attach file
