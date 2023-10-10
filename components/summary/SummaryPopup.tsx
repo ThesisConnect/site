@@ -177,10 +177,10 @@ const SummaryPopup: React.FC<DataPlan> = ({
     }
   };
 
+  const [send, setSend] = React.useState<boolean>(false);
   const onSubmit: SubmitHandler<createSummarySchema> = async (data) => {
-    console.log('data : ', data);
-    console.log('table : ', { folder_id: chat_id, files: table });
-    console.log(table.map((item) => item));
+    if (send) return
+    setSend(true)
     let SendStatus = '';
     if (selectedValue === 'Approve' && progress != 100) {
       setsendStatus('approved');
@@ -226,11 +226,13 @@ const SummaryPopup: React.FC<DataPlan> = ({
       console.log('send data', sendData);
       const resData = await axiosBaseurl.put('/summary/edit/', sendData);
       onSuccess();
+      setSend(false)
       reset();
     } catch (err: any) {
       console.log(err);
       onClose();
       reset();
+      setSend(false)
     }
   };
 
