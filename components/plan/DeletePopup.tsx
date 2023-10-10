@@ -45,16 +45,14 @@ const DeletePopup: React.FC<ModalProps> = ({
               className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-teal-800 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
               role="status"
             ></div>
-            <p className="text-center text-sm ">Deleting</p>
-            <p className="text-center text-sm font-semibold">{name}</p>
-            <p className="text-center text-sm "></p>
+            <p className="text-center text-sm ">Deleting..</p>
           </div>
         ) : (
-          <div className="flex gap-1">
-            <p className="text-center text-sm ">
+          <div className="grid grid-cols-12 gap-1">
+            <p className="col-span-7 text-center text-sm ">
               Are you sure you want to delete
             </p>
-            <p className="text-center text-sm font-semibold">{name}</p>
+            <p className="col-span-4 text-center text-sm font-semibold truncate">{name}</p>
             <p className="text-center text-sm ">?</p>
           </div>
         )}
