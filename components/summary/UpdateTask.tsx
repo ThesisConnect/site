@@ -135,7 +135,7 @@ const UpdateTask: React.FC<DataSummary> = ({
         {/* <div className="w-full h-full cursor-pointer " onClick={showSummaryPopup}> */}
         <div className="grid grid-cols-8 gap-2 h-full justify-items-center items-center w-full bg-neutral-100 ">
           <div className=' px-3 col-span-2 overflow-hidden w-full'>
-            <div className=" whitespace-pre  truncate">{plan_name}</div>
+            <div className=" whitespace-pre  truncate text-center">{plan_name}</div>
           </div>
           
           <div>
