@@ -28,7 +28,7 @@ const SearchPlanInput: FC<SearchInputProps> = ({
   width,
   height,
   onChange,
-  className,
+  className = 'whitespace-pre-wrap',
   data,
 }) => {
   return (

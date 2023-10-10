@@ -27,6 +27,7 @@ import uploadFileToFirebase from '@/utils/uploadfile';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IUser } from '@/app/mainPage/[project]/detail/page';
 import { handleFilePreview } from '@/utils/PreviewFile';
+import socket from '@/config/socket';
 
 interface DataPlan {
   show: boolean;
@@ -45,7 +46,7 @@ interface DataPlan {
 }
 
 interface contents {
-  file: File;
+  file: TableFile;
   url: string;
   path: string;
   uid: string;
@@ -166,6 +167,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
   const [sendStatus, setsendStatus] = React.useState<string>('');
   const [table, setTable] = useState<TableFile[]>(files);
   const [File, setFile] = useState<File | null>(null);
+  const initIDfile = files.map((item) => item._id);
 
   const handleValueChange = (newValue: string) => {
     setSelectedValue(newValue);
@@ -182,16 +184,28 @@ const SummaryPopup: React.FC<DataPlan> = ({
     if (selectedValue === 'Approve' && progress != 100) {
       setsendStatus('approved');
       SendStatus = 'approved'
+      await handleSendData("Approve")
+      await handleSendData("Progress : " + progress + "%")
     }
     else if (selectedValue === 'Reject') {
+      console.log(initIDfile);
       setsendStatus('rejected');
-      SendStatus = 'rejected'
+      SendStatus = 'rejected' 
+      await handleSendData("Reject : " + data.comment)      
+      await handleSendData("Progress : " + data.progress + "%")
+      for (const itemintable of table) {
+        if (!initIDfile.includes(itemintable._id)) {
+          console.log("itemintable ", itemintable);
+          await handleSendData(itemintable)
+        }
+      }
     }
     else if (selectedValue === 'Approve' && progress == 100) {
       setsendStatus('completed');
       SendStatus = 'completed'
+      await handleSendData("Approve")
+      await handleSendData("Progress : " + progress + "%")
     }
-    console.log(selectedValue)
     try {
       const fileSend = await axiosBaseurl.post('/file/create/', {
         folder_id: chat_id,
@@ -208,7 +222,6 @@ const SummaryPopup: React.FC<DataPlan> = ({
         files: table.map((obj) => obj._id),
         progress: data.progress || progress,
       };
-
       console.log('send data', sendData);
       const resData = await axiosBaseurl.put('/summary/edit/', sendData);
       onSuccess();
@@ -237,6 +250,42 @@ const SummaryPopup: React.FC<DataPlan> = ({
       return { url, path, uid };
     }
   };
+
+  const handleSendData = async (message: string | TableFile) => {
+    if (chat_id) {
+      if (typeof message === 'string')
+        await socket.emit('send message', chat_id, message);
+      else {
+        const fileSent = {
+          name: message.name,
+          fileID: message._id,
+          size: message.size,
+          type_file: message.file_type,
+          lastModified: Date.now(),
+          link: message.url,
+          memo: '',
+        };
+        console.log(fileSent);
+        await socket.emit('send message', chat_id, fileSent);
+      }
+    } else {
+      console.error('Chat ID not found in URL');
+    }
+  };
+
+  useEffect(() => {
+    console.log(chat_id)
+    if (chat_id) {
+      socket.emit('join room', chat_id);
+      return () => {
+        if (chat_id) {
+
+          socket.emit('leave room', chat_id);
+        }
+      };
+    }
+
+  }, [chat_id])
 
   if (!show) return null;
   return (
