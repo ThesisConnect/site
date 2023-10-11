@@ -118,8 +118,11 @@ const ChatLayout: FC<ChatLayoutProps> = ({ children }) => {
         </div>
       </div>
       <div className="w-10/12 flex h-full flex-col">
-        <div className="flex flex-col h-[8%] ps-[3%] bg-neutral-100 justify-center">
-          {currentChatName}
+        <div className="flex flex-col h-[8%] ps-[3%] bg-neutral-100 justify-center ">
+          <span className="truncate pe-4">
+             {currentChatName}
+          </span>
+         
         </div>
         <div className="flex h-[92%]">
           <div className="w-[80%]">{children}</div>

@@ -118,7 +118,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
             </div>
           }
         >
-          <span className="w-4/5  text-center  truncate">{projectName}</span>
+          <span className="w-4/5  text-center truncate">{projectName}</span>
         </Tooltip>
       </div>
       <div onClick={handleClickProject} className="w-1/5 h-full cursor-pointer">
@@ -128,7 +128,9 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
         onClick={handleClickProject}
         className="w-1/5 justify-center items-center flex ps-20 cursor-pointer h-full"
       >
-        {status.name}
+        <span className="w-4/5 text-center truncate ">
+            {status.name}
+        </span>
       </div>
       <div className="w-2/5  flex-row  justify-center items-center flex ">
         <div className="w-1/3 justify-center items-center flex ">
