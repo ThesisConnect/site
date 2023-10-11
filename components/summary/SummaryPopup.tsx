@@ -212,11 +212,8 @@ const SummaryPopup: React.FC<DataPlan> = ({
         folder_id: chat_id,
         files: table,
       });
-      const editProgress = await axiosBaseurl.put('/plan/edit/', {
-        id: plan_id,
-        progress: data.progress || progress,
-      });
       const sendData = {
+        project_id: project_id,
         id: id,
         comment: data.comment,
         status: SendStatus,
