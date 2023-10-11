@@ -7,12 +7,23 @@ import { ViewSwitcher } from './components/view-switcher';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'next/navigation';
 
+
+function NoDataMessage() {
+  return (
+    <div className="NoDataMessage">
+      <h2>No data available yet!</h2>
+      <p>Please add your plan in planning</p>
+    </div>
+  );
+}
+
 function PageGantt() {
   const { project } = useParams();
-  const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
+  const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [dataItem, setData] = useState<any[]>([]);
-  const [tasks, setTasks] = React.useState<Task[]>([]);
-  const [isChecked, setIsChecked] = React.useState(true);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   let columnWidth = 65;
   if (view === ViewMode.Year) {
     columnWidth = 350;
@@ -23,31 +34,27 @@ function PageGantt() {
   }
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
         const res = await axiosBaseurl.get(`/page/plan/${project}`, {
           withCredentials: true,
         });
 
-        if (Array.isArray(res?.data)) {
-          let arrData = (res.data || []).map((o: any) => {
-            let dd = {
-              _id: o._id,
-              project_id: o.project_id,
-              name: o.name,
-              description: o.description,
-              progress: o.progress,
-              task: o.task,
-              start_date: new Date(o.start_date),
-              end_date: new Date(o.end_date),
-            };
-            return dd;
-          });
+        if (Array.isArray(res?.data) && res.data.length > 0) {
+          let arrData = res.data.map((o) => ({
+            _id: o._id,
+            project_id: o.project_id,
+            name: o.name,
+            description: o.description,
+            progress: o.progress,
+            task: o.task,
+            start_date: new Date(o.start_date),
+            end_date: new Date(o.end_date),
+          }));
 
           const filteredData = arrData.filter((obj) => obj.task === true);
 
           setData(filteredData);
-          //console.log(filteredData);
           let tasks: Task[] = filteredData.map((item) => ({
             id: item._id,
             name: item.name,
@@ -58,57 +65,54 @@ function PageGantt() {
           }));
           setTasks(tasks);
         } else {
-          setData([]);
-          setTasks([]);
+          setShowNoDataMessage(true);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    })();
+    };
+
+    const fetchDataTimeout = setTimeout(() => {
+      setShowNoDataMessage(true);
+    }, 10000); // 10 seconds timeout
+
+    fetchData();
+
+    return () => {
+      clearTimeout(fetchDataTimeout);
+    };
   }, [project]);
 
   const handleSelect = (task: Task, isSelected: boolean) => {
     //console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
   };
-  
-return (
-  <div className="Wrapper">
-    <ViewSwitcher
-      onViewModeChange={(viewMode) => setView(viewMode)}
-      onViewListChange={setIsChecked}
-      isChecked={isChecked}
-    />
-    <div className="GanttContainer" style={{ height: '500px', overflow: 'auto' }}>
-      {tasks?.length > 0 && (
-        <Gantt
-          barProgressColor="#115e59"
-          tasks={tasks}
-          viewMode={view}
-          onSelect={handleSelect}
-          listCellWidth={isChecked ? '155px' : ''}
-          columnWidth={columnWidth}
-        />
+
+  return (
+    <div className="Wrapper">
+      <ViewSwitcher
+        onViewModeChange={(viewMode) => setView(viewMode)}
+        onViewListChange={setIsChecked}
+        isChecked={isChecked}
+      />
+      {showNoDataMessage ? (
+        <NoDataMessage />
+      ) : (
+        <div className="GanttContainer" style={{ height: '500px', overflow: 'auto' }}>
+          {tasks?.length > 0 && (
+            <Gantt
+              barProgressColor="#115e59"
+              tasks={tasks}
+              viewMode={view}
+              onSelect={handleSelect}
+              listCellWidth={isChecked ? '155px' : ''}
+              columnWidth={columnWidth}
+            />
+          )}
+        </div>
       )}
     </div>
-  </div>
-);
+  );
 }
 
 export default PageGantt;
-
-
-
-
-
-
-
-// const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
-//   return (
-//     <div role="alert">
-//       <p>Something went wrong:</p>
-//       <pre>{error.message}</pre>
-//       <button onClick={resetErrorBoundary}>Try again</button>
-//     </div>
-//   );
-// }
 
