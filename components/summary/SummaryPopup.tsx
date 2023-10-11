@@ -217,6 +217,7 @@ const SummaryPopup: React.FC<DataPlan> = ({
         progress: data.progress || progress,
       });
       const sendData = {
+        project_id: project_id,
         id: id,
         comment: data.comment,
         status: SendStatus,
