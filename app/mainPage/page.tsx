@@ -6,15 +6,17 @@ import LoadingNormal from '@/components/loading/LoadingNormal';
 import useProjectStore from '@/stores/Project';
 import { motion } from 'framer-motion';
 import ProtectedPage from '@/components/ProtectedPage';
+import useProject from "@/hook/useProject";
 const PageHomeRole = () => {
   const { project, filterProject } = useProjectStore((state) => ({
     project: state.project,
     filterProject: state.filterProject,
   }));
+  const {isLoading} = useProject();
   const projectList = filterProject.length > 0 ? filterProject : project;
   return (
     <>
-      {(project.length===0||!project ) && (
+      {(project.length===0||!project ) &&!isLoading&& (
         <div className="empty-state-container flex flex-col items-center justify-center h-full w-full text-center space-y-4">
           <h2 className="text-2xl font-semibold">No Projects Yet</h2>
           <p className="text-gray-500">It looks like you haven&apos;t created any projects. Let&apos;s get started!</p>
