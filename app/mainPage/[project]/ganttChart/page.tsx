@@ -70,14 +70,15 @@ function PageGantt() {
   const handleSelect = (task: Task, isSelected: boolean) => {
     //console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
   };
-
-  return (
-    <div className="Wrapper">
-      <ViewSwitcher
-        onViewModeChange={(viewMode) => setView(viewMode)}
-        onViewListChange={setIsChecked}
-        isChecked={isChecked}
-      />
+  
+return (
+  <div className="Wrapper">
+    <ViewSwitcher
+      onViewModeChange={(viewMode) => setView(viewMode)}
+      onViewListChange={setIsChecked}
+      isChecked={isChecked}
+    />
+    <div className="GanttContainer" style={{ height: '500px', overflow: 'auto' }}>
       {tasks?.length > 0 && (
         <Gantt
           barProgressColor="#115e59"
@@ -89,8 +90,17 @@ function PageGantt() {
         />
       )}
     </div>
-  );
+  </div>
+);
 }
+
+export default PageGantt;
+
+
+
+
+
+
 
 // const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
 //   return (
@@ -102,4 +112,3 @@ function PageGantt() {
 //   );
 // }
 
-export default PageGantt;
