@@ -18,7 +18,7 @@ const Progress: FC<ProgressProps> = ({ progress = 65 }) => {
       <div className="flex text-sm mt-1 ">
         <span>Progress</span>
         <span className="flex-grow" />
-        <span>{progress}%</span>
+        <span>{progress.toFixed(2)}%</span>
       </div>
       <div className="flex-grow" />
     </div>
