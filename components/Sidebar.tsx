@@ -141,7 +141,7 @@ const Sidebar = () => {
             mt-1 
             text-neutral-400 "
           >
-            Detail
+            Submission
           </h2>
         </div>
         <div
