@@ -15,6 +15,7 @@ const FolderDisplay: FC<FolderDisplayProps> = ({ showFolderID }) => {
   const router = useRouter();
   const pathName = usePathname();
   const { allfiles: allfiles } = useFile(showFolderID);
+  // console.log(allfiles)
   return (
     <div className="h-full w-full">
       {allfiles?.map((item) => {
@@ -28,7 +29,7 @@ const FolderDisplay: FC<FolderDisplayProps> = ({ showFolderID }) => {
               className="my-4"
             >
               <DisplayFolder
-                name={item.name}
+                item={item}
                 onClick={() => {
                   router.push(`${pathName}/${item._id}`);
                 }}

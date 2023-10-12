@@ -2,22 +2,22 @@ import FolderIcon from '../icon/FolderIcon';
 import { FcFolder, FcOpenedFolder } from 'react-icons/fc';
 import { FC, useState } from 'react';
 import { DateTime } from 'luxon';
+import {Folder} from "@/stores/Files";
 
 interface DisplayFolderProps {
-  name: string;
+  item  :Folder;
   onClick?: () => void;
   shareWith?: string[];
   size?: string;
-  dataModified?: string;
 }
 export const DisplayFolder: FC<DisplayFolderProps> = ({
-  name,
   onClick,
   shareWith,
   size,
+  item  
 }) => {
   const [hoverFolder, setHoverFolder] = useState<boolean>(false);
-  const date = DateTime.now().toLocaleString(DateTime.DATETIME_SHORT);
+  const date = DateTime.fromISO(item.lastModifiled || DateTime.now().toISO() as string).toLocaleString(DateTime.DATETIME_MED);
   return (
     <div className="h-10 flex">
       <div className="w-1/5 flex   items-center">
@@ -38,8 +38,8 @@ export const DisplayFolder: FC<DisplayFolderProps> = ({
             />
           )}
         </div>
-        <div className="cursor-pointer w-3/5" onClick={onClick}>
-          {name}
+        <div className="cursor-pointer w-3/5 truncate" onClick={onClick}>
+          {item.name}
         </div>
       </div>
       <div className="w-1/5 flex justify-center items-center">{date}</div>
