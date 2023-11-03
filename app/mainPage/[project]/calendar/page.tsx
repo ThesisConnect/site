@@ -147,6 +147,15 @@ function PageCalendar({
       Math.abs(+new Date(start_date) - +new Date(end_date)) / msInDay
     );
   }
+
+  function getDayLate(start_date: string, end_date: string): number {
+    const now = new Date();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+    const duration = new Date(end_date).getTime() - now.getTime(); // Difference in milliseconds
+    const days = Math.floor(duration / millisecondsPerDay);
+    return days + 1;
+  }
+
   const newDate = (date: Date) =>
     new Date(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
   const isDDay = (day: Date) => {
@@ -191,6 +200,7 @@ function PageCalendar({
             end_date={GetFormatDate(obj.end_date)}
             progress={obj.progress}
             task={obj.task}
+            late={getDayLate(obj.start_date, obj.end_date)}
             duration={getDayDiff(obj.start_date, obj.end_date)}
             onClose={showPlanDetail}
           />
