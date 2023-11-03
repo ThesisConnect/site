@@ -116,6 +116,7 @@ const PlanCard: React.FC<DataPlan> = ({
         progress={progress}
         task={task}
         duration={Duration()}
+        late={getDayDiff()}
         onClose={showPlanDetail}
       />
       {
@@ -205,22 +206,24 @@ const PlanCard: React.FC<DataPlan> = ({
                 Date : {StartDate} - {EndDate}
               </div>
               <div className="flex w-full h-full">
-                <div className="h-[100%] w-full flex flex-col items-center">
-                  <div className="w-[100%] rounded-lg h-2 bg-neutral-400">
-                    <div
-                      className={`bg-teal-800 h-2 rounded-full`}
-                      style={{
-                        width: `${progress}%`,
-                        backgroundColor: getDayDiff() < 0 && progress < 100 ? "#ef4444" : "#115e59"
-                      }}
+                {task && (
+                  <div className="h-[100%] w-full flex flex-col items-center">
+                    <div className="w-[100%] rounded-lg h-2 bg-neutral-400">
 
-                    ></div>
+                      <div
+                        className={`bg-teal-800 h-2 rounded-full`}
+                        style={{
+                          width: `${progress}%`,
+                          backgroundColor: getDayDiff() < 0 && progress < 100 ? "#ef4444" : "#115e59"
+                        }}
+                      ></div>
+                    </div>
+                    <div className="flex flex-row w-full justify-between">
+                      <div>progress</div>
+                      <div>{progress} %</div>
+                    </div>
                   </div>
-                  <div className="flex flex-row w-full justify-between">
-                    <div>progress</div>
-                    <div>{progress} %</div>
-                  </div>
-                </div>
+                )}
               </div>
               <div className="flex h-auto items-center justify-between lg:flex">
                 <div

@@ -321,46 +321,6 @@ const EditPopup: React.FC<DataPlan> = ({
               </div>
             </div>
             <div className="flex flex-row justify-between items-center gap-2 ">
-              <div className=" flex flex-col w-[40%]">
-                <label className="text-xs relative block">
-                  Progress
-                  <div className="text-[20px] w-6 h-6 absolute bottom-[13px] transform -translate-y-1/2 right-3">
-                    %
-                  </div>
-                  {task ? (
-                    <input
-                      id="progress"
-                      className={
-                        'rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
-                      }
-                      placeholder="Progress"
-                      defaultValue={progress}
-                      // type='number'
-                      value={progress}
-                      disabled
-                      {...register('progress', { valueAsNumber: true })}
-                    />
-                  ) : (
-                    <input
-                      id="progress"
-                      className={
-                        'rounded-md border focus:border-teal-800 border-solid border-neutral-400 w-full h-12 p-2 text-base'
-                      }
-                      placeholder="Progress"
-                      defaultValue={progress}
-                      // type='number'
-                      {...register('progress', { valueAsNumber: true })}
-                    />
-                  )}
-                  {errors.progress ? (
-                    <div className="text-red-500">
-                      {errors.progress?.message}
-                    </div>
-                  ) : (
-                    <div className="h-[16px]"></div>
-                  )}
-                </label>
-              </div>
             </div>
             <div className="py-2 flex flex-row justify-end items-center gap-2 h-full">
               <button

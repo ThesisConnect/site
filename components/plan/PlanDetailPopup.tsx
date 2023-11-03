@@ -31,6 +31,7 @@ interface DataPlan {
   end_date: string;
   progress: number;
   task: boolean;
+  late: number;
   duration: number;
 }
 
@@ -38,6 +39,7 @@ const DetailPopup: React.FC<DataPlan> = ({
   show,
   onClose,
   id,
+  late,
   name,
   description,
   start_date,
@@ -131,13 +133,21 @@ const DetailPopup: React.FC<DataPlan> = ({
 
             <div className="flex">
               <div className="flex w-[50%] gap-2 items-center">
-                <div className="text-teal-800 font-semibold p-1">Duration</div>
-                <div>{duration.toString() + ' Days'}</div>
+                <div className="text-teal-800 font-semibold p-1">Time left</div>
+                <div>
+                  {Math.abs(late)}
+                  {/* {getDayDiff() >= 0 && getDayDiff() <= 1 ? Math.abs(getDayDiff()) + " Day" : ''} */}
+                  {Math.abs(late) > 1 && progress < 100 ? ' days' : ' day'}
+                  {late >= 0 ? ' left' : ' late'}
+                </div>
               </div>
-              <div className="gap-2 flex w-[50%] items-center">
-                <div className="text-teal-800 font-semibold p-1">Progress</div>
-                <div>{progress} %</div>
-              </div>
+
+              {task && (
+                <div className="gap-2 flex w-[50%] items-center">
+                  <div className="text-teal-800 font-semibold p-1">Progress</div>
+                  <div>{progress} %</div>
+                </div>
+              )}
             </div>
           </div>
           <div className="px-4 py-3 flex flex-row justify-end items-center gap-2 h-full">
