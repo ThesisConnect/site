@@ -13,6 +13,7 @@ import DeletePopup from './DeleteProject';
 import EditProject from './EditProject';
 import userStore from '@/stores/User';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import {v4} from "uuid";
 
 interface DisplayProjectProps {
   project: IProject;
@@ -151,7 +152,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
                   {co_advisors?.map((user) => (
                     <div
                       className="text-base text-center truncate"
-                      key={user._id}
+                      key={user?._id || v4()}
                     >
                       {user?.name} {user?.surname}
                     </div>
