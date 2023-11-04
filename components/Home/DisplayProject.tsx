@@ -31,6 +31,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     _id: projectID,
   } = project;
   const router = useRouter();
+  const [dropdownPosition, setDropdownPosition] =useState<'top' | 'bottom'>('bottom');
   const currentUser = userStore((state) => state.user);
   const handleChat = useCallback(() => {
     router.push(`mainPage/${projectID}/chat?chatID=${chatID}`);
@@ -41,7 +42,29 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
   const [select, setSelect] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [Delete, setDelete] = useState<boolean>(false);
+  const moreButtonRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   // const [state, setState] = useState<boolean>(false);
+  const handleMoreClick = () => {
+    setSelect(!select);
+
+    setTimeout(() => {
+      if (moreButtonRef.current && dropdownRef.current) {
+        const moreButtonRect = moreButtonRef.current.getBoundingClientRect();
+        const dropdownRect = dropdownRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - moreButtonRect.bottom;
+
+        if (spaceBelow < dropdownRect.height) {
+          setDropdownPosition('top');
+        } else {
+          setDropdownPosition('bottom');
+        }
+      }
+    }, 0);
+  };
+
+
   const useOutsideClick = (callback: () => void) => {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -220,8 +243,8 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
           <div  ref={ref} className="justify-self-end me-2 relative ">
             {select && (
             <div
-              
-              className="z-10 right-[10px] top-[40px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg"
+              ref={dropdownRef}
+              className={`z-10 ${dropdownPosition === 'top' ? 'bottom-[100%] mb-2' : 'top-[40px]'} right-[10px] absolute w-[120px] rounded-[3px] h-auto bg-white divide-y drop-shadow-lg`}
             >
               <button
                 className="flex items-center w-full h-full hover:bg-neutral-100 p-2 gap-2"
@@ -241,13 +264,14 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
               )}
             </div>
           )}
-            <IoMdMore
-              size={30}
-              className="text-neutral-400 cursor-pointer   "
-              onClick={()=>{
-               setSelect(!select)
-              }}
-            />
+            <div ref={moreButtonRef}>
+              <IoMdMore
+                size={30}
+                className="text-neutral-400 cursor-pointer   "
+                onClick={handleMoreClick}
+              />
+            </div>
+            
           </div>
         </div>
       </div>
