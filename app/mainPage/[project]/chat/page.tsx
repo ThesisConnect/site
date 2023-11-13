@@ -38,7 +38,7 @@ const PageChat = () => {
   const [loading, setLoadingChat] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef(null);
-  const chatLengthRef = useRef(chat.length);
+  const chatLengthRef = useRef(chat?.length);
   const chatIDRef = useRef(chatID);
   const displayCountRef = useRef(displayCount);
   const lastMessageRef = useRef<RecieveMessenger | null>(null);

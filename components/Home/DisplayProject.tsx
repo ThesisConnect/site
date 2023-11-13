@@ -4,7 +4,7 @@ import Progress from './Progress';
 import Profile from '../Profile';
 import { BsFillChatDotsFill } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
-import { IProject, IUserInProject } from '@/stores/Project';
+import useProjectStore, { IProject, IUserInProject } from '@/stores/Project';
 import ShowDataHoverProfile from './ShowDataHoverProfile';
 import { IoMdMore } from 'react-icons/io';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
@@ -44,7 +44,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
   const [Delete, setDelete] = useState<boolean>(false);
   const moreButtonRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+ const getProjectByID = useProjectStore((state) => state.getProjectByID);
   // const [state, setState] = useState<boolean>(false);
   const handleMoreClick = () => {
     setSelect(!select);
@@ -105,6 +105,7 @@ const DisplayProject: FC<DisplayProjectProps> = ({ project }) => {
     router.prefetch(`mainPage/${projectID}/chat?chatID=${chatID}`);
   };
   const handleClickProject = () => {
+    getProjectByID(projectID);
     router.push(`mainPage/${projectID}/planning`);
   };
   return (

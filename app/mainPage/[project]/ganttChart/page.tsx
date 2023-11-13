@@ -53,7 +53,6 @@ function PageGantt() {
           }));
 
           const filteredData = arrData.filter((obj) => obj.task === true);
-
           setData(filteredData);
           let tasks: Task[] = filteredData.map((item) => ({
             id: item._id,
@@ -71,17 +70,19 @@ function PageGantt() {
         console.error('Error fetching data:', error);
       }
     };
-
-    const fetchDataTimeout = setTimeout(() => {
-      setShowNoDataMessage(true);
-    }, 10000); // 10 seconds timeout
-
+    
     fetchData();
-
-    return () => {
-      clearTimeout(fetchDataTimeout);
-    };
   }, [project]);
+  useEffect(() => {
+    
+   if(!dataItem||dataItem.length === 0){
+     console.log("pass")
+      setShowNoDataMessage(true);
+   }
+   else{
+    setShowNoDataMessage(false);
+   }
+  }, [dataItem]);
 
   const handleSelect = (task: Task, isSelected: boolean) => {
     //console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
